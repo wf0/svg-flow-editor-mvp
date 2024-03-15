@@ -21,7 +21,7 @@ export class GraphCommon {
    * @returns
    */
   public getX() {
-    const graphBox = this.draw.getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
     return Number(graphBox.style.left.replace("px", ""));
   }
 
@@ -30,7 +30,7 @@ export class GraphCommon {
    * @returns
    */
   public getY() {
-    const graphBox = this.draw.getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
     return Number(graphBox.style.top.replace("px", ""));
   }
 
@@ -39,7 +39,7 @@ export class GraphCommon {
    * @returns
    */
   public getWidth() {
-    const graphBox = this.draw.getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
     return Number(graphBox.style.width.replace("px", ""));
   }
 
@@ -48,7 +48,7 @@ export class GraphCommon {
    * @returns
    */
   public getHeight() {
-    const graphBox = this.draw.getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
     return Number(graphBox.style.height.replace("px", ""));
   }
 
@@ -57,7 +57,7 @@ export class GraphCommon {
    * @param x
    */
   public setX(x: number) {
-    const graphBox = this.draw.getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
     graphBox.style.left = x + "px";
   }
 
@@ -66,7 +66,7 @@ export class GraphCommon {
    * @param y
    */
   public setY(y: number) {
-    const graphBox = this.draw.getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
     graphBox.style.top = y + "px";
   }
 
@@ -75,7 +75,7 @@ export class GraphCommon {
    * @param w
    */
   public setWidth(w: number) {
-    const graphBox = this.draw.getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
     graphBox.style.width = w + "px";
   }
 
@@ -84,7 +84,7 @@ export class GraphCommon {
    * @param h
    */
   public setHeight(h: number) {
-    const graphBox = this.draw.getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
     graphBox.style.height = h + "px";
   }
 

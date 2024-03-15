@@ -111,16 +111,6 @@ export class Draw {
     return document.createElementNS(xmlns, tagName);
   }
 
-  /**
-   * 获取 graph Box
-   * @param nodeID
-   * @returns
-   */
-  public getGraphBox(nodeID: string) {
-    const selector = `div[nodeid="${nodeID}"]`;
-    return this.editorBox.querySelector(selector) as HTMLDivElement;
-  }
-
   // 初始化顶部菜单
 
   // 初始化底部

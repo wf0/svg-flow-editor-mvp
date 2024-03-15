@@ -23,18 +23,30 @@ export class GraphDraw {
     // 创建 graphBox 元件盒子 用于处理层级问题
     const graphBox = this.draw.createHTMLElement("div") as HTMLDivElement;
     graphBox.classList.add("sf-editor-box-graph");
-    graphBox.setAttribute("nodeID", nodeID); // 设置ID属性
+    graphBox.setAttribute("graphboxid", nodeID); // 设置ID属性
 
     // graphBox 内部装 svg
     const svg = this.draw.createSVGElement("svg") as SVGSVGElement;
+    // 使用计算属性
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
 
     // svg 内部装 rect circle ellipse 等基础元件
+    element.setAttribute("graphid", nodeID);
     svg.append(element);
 
     graphBox.append(svg);
 
     this.draw.getEditorBox().append(graphBox);
+  }
+
+  /**
+   * 获取 graph Box
+   * @param nodeID
+   * @returns
+   */
+  public getGraphBox(nodeID: string) {
+    const selector = `div[graphboxid="${nodeID}"]`;
+    return this.draw.getEditorBox().querySelector(selector) as HTMLDivElement;
   }
 }

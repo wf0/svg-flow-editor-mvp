@@ -6,7 +6,6 @@ import { EventBus } from "./EventBus/index.ts";
 import { Listener } from "./Listener/index.ts";
 import { Register } from "./Register/index.ts";
 import { Rect } from "./Graph/Rect.ts";
-import { Circle } from "./Graph/Circle.ts";
 import { Ellipse } from "./Graph/Ellipse.ts";
 import { KeyMap } from "../interface/Event/index.ts";
 import "../style/SFEditor.less";
@@ -37,7 +36,7 @@ class SFEditor {
   }
 
   public Circle(radius: number) {
-    return new Circle(this.draw, radius);
+    return new Ellipse(this.draw, radius, radius);
   }
 
   public Ellipse(width: number, height: number) {

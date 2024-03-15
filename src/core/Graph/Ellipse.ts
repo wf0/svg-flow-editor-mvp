@@ -18,8 +18,8 @@ export class Ellipse extends GraphCommon {
     super.addToEditor(this);
 
     // 设置宽高
-    super.setWidth.call(this, width);
-    super.setHeight.call(this, height);
+    super.setWidth.call(this, width * 2);
+    super.setHeight.call(this, height * 2);
   }
 
   public getElement() {

@@ -25,14 +25,14 @@ export class GraphDraw {
     graphBox.classList.add("sf-editor-box-graph");
     graphBox.setAttribute("nodeID", nodeID); // 设置ID属性
 
-
     // graphBox 内部装 svg
     const svg = this.draw.createSVGElement("svg") as SVGSVGElement;
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
 
-    // svg 内部装 rect circle ellipse
+    // svg 内部装 rect circle ellipse 等基础元件
     svg.append(element);
+
     graphBox.append(svg);
 
     this.draw.getEditorBox().append(graphBox);

@@ -1,14 +1,32 @@
 import { waterMarkText as defaultWaterMarkText } from "../Config/index.ts";
 import { hex, keyword } from "color-convert";
+import { Draw } from "./index.ts";
 
 // canvas 相关绘制类
 export class CanvasDraw {
   private canvas!: HTMLCanvasElement;
-  constructor() {}
-
-  public setCanvas(canvas: HTMLCanvasElement) {
-    this.canvas = canvas;
+  private draw: Draw;
+  constructor(draw: Draw) {
+    this.draw = draw;
   }
+
+  /**
+   * 初始化 canvas
+   * @param width canvas 宽度
+   * @param height canvas 高度
+   * @returns
+   */
+  public initCanvas(width: number, height: number) {
+    // 2. 创建 canvas
+    const canvas = this.draw.createHTMLElement("canvas") as HTMLCanvasElement;
+    // 3. 标记唯一属性id
+    canvas.classList.add("sf-editor-canvas");
+    canvas.width = width;
+    canvas.height = height;
+    this.canvas = canvas;
+    return canvas;
+  }
+
   /**
    * 绘制网格线
    * @param color 支持 rgb hsl hex

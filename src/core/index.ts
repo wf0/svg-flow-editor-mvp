@@ -7,11 +7,11 @@ import { Listener } from "./Listener/index.ts";
 import { Register } from "./Register/index.ts";
 import { Rect } from "./Graph/Rect.ts";
 import { Circle } from "./Graph/Circle.ts";
-
-import "../style/SFEditor.less";
 import { Ellipse } from "./Graph/Ellipse.ts";
+import { KeyMap } from "../interface/Event/index.ts";
+import "../style/SFEditor.less";
 
-export class SFEditor {
+class SFEditor {
   public listener: Listener;
   public eventBus: EventBus<EventBusMap>;
   public register: Register;
@@ -44,3 +44,5 @@ export class SFEditor {
     return new Ellipse(this.draw, width, height);
   }
 }
+
+export { SFEditor, type KeyMap };

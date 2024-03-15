@@ -38,7 +38,7 @@ export class Draw {
     this.register = register;
 
     // 1. 拓展其他绘制类
-    this.canvasDraw = new CanvasDraw();
+    this.canvasDraw = new CanvasDraw(this);
     this.graphDraw = new GraphDraw(this);
 
     /** getter */
@@ -51,7 +51,7 @@ export class Draw {
     // 2. 初始化样式
     setTheme("colorful_theme1");
 
-    // 2. 初始化editor
+    // 3. 初始化editor
     this.initEditor(selector);
   }
 
@@ -89,11 +89,10 @@ export class Draw {
 
     // 5. 初始化 canvas （确保editor Box被添加到dom上，不然宽高获取失败）
     const { clientWidth, clientHeight } = this.root;
-    const canvas = this.initCanvas(clientWidth, clientHeight);
+    const canvas = this.canvasDraw.initCanvas(clientWidth, clientHeight);
     this.editorBox.appendChild(canvas);
 
     // 6. 绘制canvas - 通过继承父类实现
-    this.canvasDraw.setCanvas(canvas);
     this.canvasDraw.origin(); // 绘制小圆点
     this.canvasDraw.waterMark(); // 绘制水印
   }
@@ -110,22 +109,6 @@ export class Draw {
   // 创建 svg 元素
   public createSVGElement(tagName: string) {
     return document.createElementNS(xmlns, tagName);
-  }
-
-  /**
-   * 初始化 canvas
-   * @param width canvas 宽度
-   * @param height canvas 高度
-   * @returns
-   */
-  private initCanvas(width: number, height: number) {
-    // 2. 创建 canvas
-    const canvas = this.createHTMLElement("canvas") as HTMLCanvasElement;
-    // 3. 标记唯一属性id
-    canvas.classList.add("sf-editor-canvas");
-    canvas.width = width;
-    canvas.height = height;
-    return canvas;
   }
 
   /**

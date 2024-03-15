@@ -7,6 +7,7 @@ export class Ellipse extends GraphCommon {
   constructor(draw: Draw, width: number, height: number) {
     super(draw);
     this.ellipse = draw.createSVGElement("ellipse") as SVGEllipseElement;
+
     this.ellipse.setAttribute("rx", "50%");
     this.ellipse.setAttribute("ry", "50%");
 

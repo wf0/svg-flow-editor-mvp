@@ -9,6 +9,7 @@ export class Rect extends GraphCommon {
     this.rect = draw.createSVGElement("rect") as SVGRectElement;
     this.rect.setAttribute("width", "100%");
     this.rect.setAttribute("height", "100%");
+
     // 将当前创建的元件添加到 svg 下
     super.addToEditor(this);
 

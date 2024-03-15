@@ -1,0 +1,33 @@
+{
+  "name": "svg-flow-editor-mvp",
+  "version": "1.0.0",
+  "description": "## 项目简介",
+  "main": "src/core/index.ts",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wf0/svg-flow-editor"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "keyword": [
+    "svg",
+    "flow"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "color-convert": "^2.0.1",
+    "less": "^4.2.0",
+    "less-loader": "^4.1.0",
+    "nanoid": "^5.0.6",
+    "typescript": "^5.4.2",
+    "vite": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/color-convert": "^2.0.3"
+  }
+}

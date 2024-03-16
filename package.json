@@ -21,6 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "color-convert": "^2.0.1",
+    "dayjs": "^1.11.10",
     "less": "^4.2.0",
     "less-loader": "^4.1.0",
     "nanoid": "^5.0.6",

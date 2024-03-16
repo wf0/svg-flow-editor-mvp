@@ -22,8 +22,8 @@ export class GraphDraw {
 
     // 创建 graphBox 元件盒子 用于处理层级问题
     const graphBox = this.draw.createHTMLElement("div") as HTMLDivElement;
-    graphBox.classList.add("sf-editor-box-graph");
-    graphBox.setAttribute("graphboxid", nodeID); // 设置ID属性
+    graphBox.classList.add("sf-editor-box-graphs-item");
+    graphBox.setAttribute("graphid", nodeID); // 设置ID属性
 
     // graphBox 内部装 svg
     const svg = this.draw.createSVGElement("svg") as SVGSVGElement;
@@ -37,7 +37,14 @@ export class GraphDraw {
 
     graphBox.append(svg);
 
-    this.draw.getEditorBox().append(graphBox);
+    const editorBox = this.draw.getEditorBox();
+    const graphsSelector = '[class="sf-editor-box-graphs"]';
+    const graphs = editorBox.querySelector(graphsSelector) as HTMLDivElement;
+
+    graphs.append(graphBox);
+
+    // 给元件添加事件
+    this.draw.getGraphEvent().addGraphEvent(graphBox);
   }
 
   /**
@@ -46,7 +53,7 @@ export class GraphDraw {
    * @returns
    */
   public getGraphBox(nodeID: string) {
-    const selector = `div[graphboxid="${nodeID}"]`;
+    const selector = `div[graphid="${nodeID}"]`;
     return this.draw.getEditorBox().querySelector(selector) as HTMLDivElement;
   }
 }

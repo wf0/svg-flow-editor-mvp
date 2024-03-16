@@ -20,7 +20,7 @@ export class CanvasDraw {
     // 2. 创建 canvas
     const canvas = this.draw.createHTMLElement("canvas") as HTMLCanvasElement;
     // 3. 标记唯一属性id
-    canvas.classList.add("sf-editor-canvas");
+    canvas.classList.add("sf-editor-box-canvas");
     canvas.width = width;
     canvas.height = height;
     this.canvas = canvas;

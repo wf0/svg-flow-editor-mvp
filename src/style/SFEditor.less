@@ -9,16 +9,24 @@
     &-box {
         width: 100%;
         height: 100%;
+        position: relative;
 
+        // 用于绘制 graph
+        &-graphs {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
 
-        &-graph {
-            position: absolute;
-            left: 0;
-            top: 0;
-            cursor: move;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            &-item {
+                position: absolute;
+                left: 0;
+                top: 0;
+                cursor: move;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
 
         // canvas => 用于绘制 网格、小圆点、水印部分
@@ -27,11 +35,74 @@
             left: 0;
             top: 0;
             z-index: -99;
-            background-color: red;
         }
 
+        // 右键菜单
+        &-contextmenu {
+            z-index: 999;
+            width: 220px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: #fff;
+            box-shadow: 0 4px 10px 0 rgba(0, 0, 0, .1);
+
+            // 右键菜单 控制svg模式 元件不显示
+            .editor {
+                .graph-item {
+                    display: none !important;
+                }
+            }
+
+            &-main {
+                padding: 5px;
+
+                // 分割线
+                &-line {
+                    border-bottom: 1px solid #e9edf2;
+                    margin: 2px;
+                }
+
+                // 子元素
+                &-item {
+                    height: 32px;
+                    line-height: 32px;
+                    border-radius: 5px;
+                    padding: 5px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    span:nth-child(2) {
+                        color: #a6b9cd;
+                        font-size: 12px;
+                    }
+
+                    &:hover {
+                        background-color: #f3f5f9;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+
+        // 框选模态框
+        &-selectmask {
+            display: none;
+            overflow: hidden;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: rgb(79, 130, 232);
+            width: 0;
+            height: 0;
+            opacity: 0.3;
+            z-index: 999;
+            pointer-events: none
+        }
 
     }
+
 
     // 元件库
     &-catalog {}

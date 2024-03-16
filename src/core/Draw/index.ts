@@ -5,6 +5,7 @@ import { EventBus } from "../EventBus/index.ts";
 import { Listener } from "../Listener/index.ts";
 import { Register } from "../Register/index.ts";
 import { CanvasDraw } from "./Canvas.ts";
+import { GraphEvent, EditorEvent } from "./EventHandle.ts";
 import { GraphDraw } from "./Graph.ts";
 
 // 重构 draw
@@ -13,18 +14,14 @@ export class Draw {
   private eventBus: EventBus<EventBusMap>;
   private register: Register;
 
-  public getListener: () => Listener;
-  public getEventBus: () => EventBus<EventBusMap>;
-  public getRegister: () => Register;
-  public getGraphDraw: () => GraphDraw;
-  public getEditorBox: () => HTMLDivElement;
-
-  private root!: HTMLDivElement; // 根节点 sf-editor
-  private editorBox!: HTMLDivElement; // svg、canvas 操作区
-
   // 拓展的其他类
   private canvasDraw: CanvasDraw;
   private graphDraw: GraphDraw;
+  private graphEvent: GraphEvent;
+  private editorEvent: EditorEvent;
+
+  private root!: HTMLDivElement; // 根节点 sf-editor
+  private editorBox!: HTMLDivElement; // svg、canvas 操作区
 
   constructor(
     selector: string,
@@ -32,7 +29,6 @@ export class Draw {
     eventBus: EventBus<EventBusMap>,
     register: Register
   ) {
-    /** setter */
     this.listener = listener;
     this.eventBus = eventBus;
     this.register = register;
@@ -40,19 +36,20 @@ export class Draw {
     // 1. 拓展其他绘制类
     this.canvasDraw = new CanvasDraw(this);
     this.graphDraw = new GraphDraw(this);
-
-    /** getter */
-    this.getListener = () => this.listener;
-    this.getEventBus = () => this.eventBus;
-    this.getRegister = () => this.register;
-    this.getGraphDraw = () => this.graphDraw;
-    this.getEditorBox = () => this.editorBox;
+    this.graphEvent = new GraphEvent(this);
+    this.editorEvent = new EditorEvent(this);
 
     // 2. 初始化样式
     setTheme("colorful_theme1");
 
     // 3. 初始化editor
     this.initEditor(selector);
+
+    // 4. 初始化事件
+    this.editorEvent.addEvent();
+
+    // 5. 初始化框选
+    this.initSelectMask();
   }
 
   /**
@@ -70,6 +67,10 @@ export class Draw {
      * 3. 进行编辑器初始化-构建html结构：
      *    div.sf-editor -- 编辑器
      *        div.sf-editor-box -- 编辑器盒子 svg、canvas 绘制区
+     *            div.sf-editor-box-graphs 元件div
+     *            canvas canvas图层
+     *            div.sf-editor-box-selectmask 选区
+     *            div.sf-editor-box-contextmenu 右键菜单
      *        div.sf-editor-catalog -- 元件库（插件配置式）
      *        div.sf-editor-footer -- 底部（插件配置式）
      *    在宽高的处理上，需要使用 style 动态设置，在创建 catalog menu footer 的时候，都需要动态调整，包括canva的宽高
@@ -82,6 +83,10 @@ export class Draw {
     // 3.2 div.sf-editor-box -- 编辑器盒子 svg、canvas 绘制区
     this.editorBox = this.createHTMLElement("div") as HTMLDivElement;
     this.editorBox.classList.add("sf-editor-box");
+
+    const graphsBox = this.createHTMLElement("div") as HTMLDivElement;
+    graphsBox.classList.add('sf-editor-box-graphs')
+    this.editorBox.appendChild(graphsBox);
 
     // 4. 根据上诉结构，添加到 dom 上
     this.root.appendChild(this.editorBox);
@@ -98,6 +103,15 @@ export class Draw {
   }
 
   /**
+   * 初始化框选
+   */
+  private initSelectMask() {
+    const div = this.createHTMLElement("div") as HTMLDivElement;
+    div.classList.add("sf-editor-box-selectmask");
+    this.editorBox.appendChild(div);
+  }
+
+  /**
    * 创建 html 元素
    * @param tagName
    * @returns
@@ -111,14 +125,12 @@ export class Draw {
     return document.createElementNS(xmlns, tagName);
   }
 
-  // 初始化顶部菜单
-
-  // 初始化底部
-
-  // 初始化元件库
-  // private initCatalog() {
-  //   const catalog = this.createHTMLElement("div");
-  //   catalog.classList.add("sf-editor-catalog");
-  //   this.root.appendChild(catalog);
-  // }
+  /** getter */
+  public getListener = () => this.listener;
+  public getEventBus = () => this.eventBus;
+  public getRegister = () => this.register;
+  public getGraphDraw = () => this.graphDraw;
+  public getEditorBox = () => this.editorBox;
+  public getGraphEvent = () => this.graphEvent;
+  public getEditorEvent = () => this.editorEvent;
 }

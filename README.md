@@ -105,6 +105,21 @@ svg flow editor 是一款自研流程图编辑器，提供了一系列流程图�
 
 项目对外暴露流程图操作对象 SFEditor，身上有用户操作的对象属性及方法，例如： svg 构造器（Rect、Circle、Ellipse）、command api操作、event事件中心以及全局api，通过暴露操作对象，实现对内部的数据访问、对象操作等。在核心模块中，需要考虑用户的使用习惯，封装完整的工具类，实现流程图的基本操作、拓展功能。底层依赖了svg对项目元件库的基础元件进行创作，同时使用了canvas对背景网格、水印等进行绘制，使用html进行页面布局，并且提供了typescript的全类型支持。 在API设计的设计上，采取了Command CommandAdapt 两个类实现，Command中不进行用户方法的直接处理，增加adapt类进行方法中转，防止用户通过API直接操作核心类。Command调用 adapt 的实例方法，在adapt 中获取draw、svg 等核心类进行用户的响应。
 
+## graph APIS
+
+1. position - 返回的是当前实例，支持链式调用
+2. setWidth - 返回的是当前实例，支持链式调用
+3. setHeight - 返回的是当前实例，支持链式调用
+4. setStroke - 返回的是当前实例，支持链式调用
+5. setFill - 返回的是当前实例，支持链式调用
+6. getID
+7. getX
+8. getY
+9. getWidth
+10. getHeight
+11. getStroke
+12. getFill
+
 ## Command APIS
 
 1. executeBackground 设置背景
@@ -129,7 +144,13 @@ svg flow editor 是一款自研流程图编辑器，提供了一系列流程图�
 
 ## 插件的使用
 
-## ------------------快捷键
+## 项目 HTML 结构说明
+
+## 坐标系说明
+
+项目使用div做graph元件的外层盒子，因此，位置坐标
+
+## ------------------ 快捷键
 
 向外暴露 register 操作对象，将用户的快捷键统一封装到 SFEditor 上，在注册事件的时候，统一进行事件处理。
 

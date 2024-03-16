@@ -3,7 +3,6 @@ import { Draw } from "../Draw/index.ts";
 import { CommandAdapt } from "./CommandAdapt.ts";
 
 export class Command {
-  // 添加线条
   constructor(draw: Draw) {
     const adapt = new CommandAdapt(draw);
   }

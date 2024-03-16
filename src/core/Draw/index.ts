@@ -1,5 +1,5 @@
 import { EventBusMap } from "../../interface/Event/index.ts";
-import { setTheme } from "../../utils/index.ts";
+import { nextTick, setTheme } from "../../utils/index.ts";
 import { messageInfo, xmlns } from "../Config/index.ts";
 import { EventBus } from "../EventBus/index.ts";
 import { Listener } from "../Listener/index.ts";
@@ -50,6 +50,14 @@ export class Draw {
 
     // 5. 初始化框选
     this.initSelectMask();
+
+    // 6. 发布事件
+    nextTick(() => {
+      console.log("## SFEditor 编辑器初始化完成。");
+      const graphLoadedSubscribe = this.eventBus.isSubscribe("loaded");
+      graphLoadedSubscribe && this.eventBus.emit("loaded");
+      this.listener.loaded && this.listener.loaded();
+    });
   }
 
   /**
@@ -123,6 +131,25 @@ export class Draw {
   // 创建 svg 元素
   public createSVGElement(tagName: string) {
     return document.createElementNS(xmlns, tagName);
+  }
+
+  /**
+   * SFEditor 销毁事件
+   */
+  public destroy() {
+    // 销毁只需要将 this.rootDIV 下的svg 销毁即可
+    this.editorBox.remove();
+    // canvas 也需要销毁
+    this.canvasDraw.removeCanvas();
+    // 销毁事件
+    this.editorEvent.removeEvent();
+    // 执行回调
+    nextTick(() => {
+      // 定义返回参数
+      const graphLoadedSubscribe = this.eventBus.isSubscribe("destroyed");
+      graphLoadedSubscribe && this.eventBus.emit("destroyed");
+      this.listener.destroyed && this.listener.destroyed();
+    });
   }
 
   /** getter */

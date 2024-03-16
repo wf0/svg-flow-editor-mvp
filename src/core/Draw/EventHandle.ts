@@ -19,7 +19,10 @@ export class GraphEvent {
    * @param ele
    */
   public addEvent(ele: HTMLDivElement, graph: IGraph) {
-    ele.addEventListener("click", this.graphClickHandle.bind(this));
+    ele.addEventListener("click", (e) => this.graphClickHandle(e, graph));
+    // ele.addEventListener("mousedown", this.graphMousedownHandle.bind(this));
+    // ele.addEventListener("mouseup", this.graphMousedownHandle.bind(this));
+
     ele.addEventListener("dblclick", this.graphDblclickHandle.bind(this));
     ele.addEventListener("contextmenu", (e) => this.contextmenu(e, graph));
   }
@@ -28,17 +31,36 @@ export class GraphEvent {
    * removeEvent 移除事件
    */
   public removeEvent(ele: HTMLDivElement) {
-    ele.removeEventListener("click", this.graphClickHandle.bind(this));
+    // ele.removeEventListener("click", this.graphClickHandle.bind(this));
     ele.removeEventListener("dblclick", this.graphDblclickHandle);
     ele.removeEventListener("contextmenu", this.contextmenu);
   }
+
+  // private graphMousedownHandle(e: Event) {}
 
   /**
    * 元件单击事件
    * @param e
    */
-  private graphClickHandle(e: Event) {
-    console.log("## graphBox click", e.target);
+  private graphClickHandle(e: Event, graph: IGraph) {
+    console.log("## graphBox click");
+
+    // 支持 ctrl 多选
+    const { ctrlKey } = e as PointerEvent;
+    const nodeID = graph.getID();
+
+    // 1. 先看是否目前选中的就是当前节点，是的话，直接返回，防止频繁点击元素 执行dom操作
+    const selected = this.getSelected();
+    if (selected && selected.getAttribute("graphid") === nodeID) return;
+
+    // 2. 添加 mainBox seleted
+    if (!ctrlKey) this.draw.getGraphDraw().cancelFormatPoint();
+    const mainBox = this.draw.getGraphDraw().getGraphMain(nodeID);
+    mainBox.classList.add("selected");
+
+    // 3. 取消右键菜单
+    this.draw.getEditorEvent().cancelContextmenu();
+
     e.stopPropagation();
     e.preventDefault();
   }
@@ -57,11 +79,31 @@ export class GraphEvent {
    * 元件右键菜单
    */
   private contextmenu(e: Event, graph?: IGraph) {
-    console.log("## graphBox contextmenu");
+    console.log("## graphBox contextmenu => 主动调用 editorEvent 事件");
     const editorEvent = this.draw.getEditorEvent();
     editorEvent.contextmenu(e, graph);
     e.stopPropagation();
     e.preventDefault();
+  }
+
+  /**
+   * 获取当前选中的元素节点
+   * @returns
+   */
+  private getAllSelected() {
+    const selector = "sf-editor-box-graphs-main selected";
+    return this.draw
+      .getEditorBox()
+      .querySelectorAll(selector + '[type="mainBox"]');
+  }
+
+  /**
+   * 获取单个
+   * @returns
+   */
+  private getSelected() {
+    const selector = "sf-editor-box-graphs-main selected";
+    return this.draw.getEditorBox().querySelector(selector);
   }
 }
 
@@ -145,7 +187,7 @@ export class EditorEvent {
 
     // 元件禁止响应
     this.editorBox
-      .querySelectorAll("div[class='sf-editor-box-graphs-item']")
+      .querySelectorAll("div[class='sf-editor-box-graphs-main-item']")
       .forEach((i) => ((i as HTMLDivElement).style.pointerEvents = "none"));
   }
 
@@ -181,7 +223,7 @@ export class EditorEvent {
     mask.style.height = "0";
     mask.style.display = "none";
     this.editorBox
-      .querySelectorAll("div[class='sf-editor-box-graphs-item']")
+      .querySelectorAll("div[class='sf-editor-box-graphs-main-item']")
       .forEach((i) => ((i as HTMLDivElement).style.pointerEvents = ""));
     // 正常情况下，单击左键的时间不会超过 120 毫秒，如果超过，则认为用户在框选
     const et = Number(dayjs().format("mmssSSS"));
@@ -194,7 +236,11 @@ export class EditorEvent {
    */
   private clickHandle(e: Event) {
     console.log("@@ editorBox click");
+    // 取消右键菜单
     this.cancelContextmenu();
+
+    // 取消形变锚点
+    this.draw.getGraphDraw().cancelFormatPoint();
     e.stopPropagation();
     e.preventDefault();
   }

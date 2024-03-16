@@ -2,7 +2,11 @@ import { IGraph } from "../../interface/Graph/index.ts";
 import { Draw } from "../Draw/index.ts";
 import { nanoid } from "nanoid";
 
-// svg 公共类
+/**
+ * GraphCommon graph 公共类
+ *   graphMain - 元件的最外层盒子，用于处理层级、链接、形变锚点、left top 位置信息
+ *   graphBox - 元件的 宽度、高度
+ */
 export class GraphCommon {
   private draw: Draw;
   private nodeID: string;
@@ -21,7 +25,7 @@ export class GraphCommon {
    * @returns
    */
   public getX() {
-    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphMain(this.nodeID);
     return Number(graphBox.style.left.replace("px", ""));
   }
 
@@ -30,7 +34,7 @@ export class GraphCommon {
    * @returns
    */
   public getY() {
-    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphMain(this.nodeID);
     return Number(graphBox.style.top.replace("px", ""));
   }
 
@@ -57,7 +61,7 @@ export class GraphCommon {
    * @param x
    */
   public setX(x: number) {
-    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphMain(this.nodeID);
     graphBox.style.left = x + "px";
   }
 
@@ -66,7 +70,7 @@ export class GraphCommon {
    * @param y
    */
   public setY(y: number) {
-    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphMain(this.nodeID);
     graphBox.style.top = y + "px";
   }
 
@@ -75,8 +79,10 @@ export class GraphCommon {
    * @param w
    */
   public setWidth(w: number) {
+    const graph = this as unknown as IGraph;
     const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
     graphBox.style.width = w + "px";
+    return graph;
   }
 
   /**
@@ -84,8 +90,10 @@ export class GraphCommon {
    * @param h
    */
   public setHeight(h: number) {
+    const graph = this as unknown as IGraph;
     const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
     graphBox.style.height = h + "px";
+    return graph;
   }
 
   /**
@@ -106,6 +114,7 @@ export class GraphCommon {
     const graph = this as unknown as IGraph;
     const element = graph.getElement();
     element.setAttribute("stroke", stroke);
+    return graph;
   }
 
   /**
@@ -126,6 +135,7 @@ export class GraphCommon {
     const graph = this as unknown as IGraph;
     const element = graph.getElement();
     element.setAttribute("fill", fill);
+    return graph;
   }
 
   /**
@@ -138,6 +148,7 @@ export class GraphCommon {
     const graph = this as unknown as IGraph;
     graph.setX(x);
     graph.setY(y);
+    return graph;
   }
 
   protected addToEditor(graph: IGraph) {

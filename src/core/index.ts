@@ -9,7 +9,7 @@ import { Rect } from "./Graph/Rect.ts";
 import { Ellipse } from "./Graph/Ellipse.ts";
 import { KeyMap } from "../interface/Event/index.ts";
 import "../style/SFEditor.less";
-import '../assets/font_4458457_qk4yl715zu/iconfont.css'
+import "../assets/font_4458457_qk4yl715zu/iconfont.css";
 
 class SFEditor {
   public listener: Listener;
@@ -32,14 +32,31 @@ class SFEditor {
     this.command = new Command(this.draw);
   }
 
+  /**
+   * 矩形
+   * @param width 宽度
+   * @param height 高度
+   * @returns
+   */
   public Rect(width: number, height: number) {
     return new Rect(this.draw, width, height);
   }
 
+  /**
+   * 圆 - 为了使得在形变过程中容易操作，故而底层使用椭圆进行重构
+   * @param radius 圆半径
+   * @returns
+   */
   public Circle(radius: number) {
     return new Ellipse(this.draw, radius, radius);
   }
 
+  /**
+   * 椭圆
+   * @param width 椭圆长轴长
+   * @param height 椭圆短轴长
+   * @returns
+   */
   public Ellipse(width: number, height: number) {
     return new Ellipse(this.draw, width, height);
   }

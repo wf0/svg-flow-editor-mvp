@@ -11,6 +11,7 @@
         height: 100%;
         position: relative;
 
+
         // 用于绘制 graph
         &-graphs {
             position: relative;
@@ -18,16 +19,70 @@
             height: 100%;
             overflow: hidden;
 
-            &-item {
+            &-main {
                 position: absolute;
                 left: 0;
                 top: 0;
-                cursor: move;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                border: solid red 1px;
+
+                // graph 元件
+                &-item {
+                    cursor: move;
+                }
+
+                // 链接锚点
+                &-links,
+                &-formats {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                }
+
+                &:hover &-links {
+                    display: block;
+                }
+
+                &-links {
+                    z-index: 2;
+                    display: none;
+
+                    div {
+                        pointer-events: all;
+                        cursor: crosshair;
+                        border: solid transparent 1px;
+                    }
+                }
+
+                // 形变锚点
+                &-formats {
+                    z-index: 1;
+                    display: none;
+
+                    div {
+                        pointer-events: all;
+                        cursor: crosshair;
+                        border: solid transparent 1px;
+                    }
+                }
+            }
+
+            // 处理选中样式
+            .selected {
+                .sf-editor-box-graphs-main-links {
+                    display: none;
+                }
+
+                .sf-editor-box-graphs-main-formats {
+                    display: block;
+                }
+
             }
         }
+
+
 
         // canvas => 用于绘制 网格、小圆点、水印部分
         &-canvas {

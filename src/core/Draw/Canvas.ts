@@ -173,4 +173,11 @@ export class CanvasDraw {
     const { height, width } = this.canvas;
     ctx.clearRect(0, 0, width, height);
   }
+
+  /**
+   * 销毁 canvas
+   */
+  public removeCanvas() {
+    this.canvas.remove();
+  }
 }

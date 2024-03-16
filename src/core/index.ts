@@ -9,6 +9,7 @@ import { Rect } from "./Graph/Rect.ts";
 import { Ellipse } from "./Graph/Ellipse.ts";
 import { KeyMap } from "../interface/Event/index.ts";
 import "../style/SFEditor.less";
+import '../assets/font_4458457_qk4yl715zu/iconfont.css'
 
 class SFEditor {
   public listener: Listener;

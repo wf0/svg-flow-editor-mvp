@@ -1,0 +1,156 @@
+{
+  "id": "4458457",
+  "name": "svg flow",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "23004816",
+      "name": "流程图",
+      "font_class": "icon__liuchengtu",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "12550389",
+      "name": "剪切",
+      "font_class": "jianqie",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "12550357",
+      "name": "放大+",
+      "font_class": "fangda",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "12550359",
+      "name": "保存",
+      "font_class": "baocun",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "12550360",
+      "name": "缩小-",
+      "font_class": "suoxiao-",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "12550361",
+      "name": "全屏",
+      "font_class": "quanping",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "12550390",
+      "name": "粘贴",
+      "font_class": "niantie",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "12550392",
+      "name": "删除",
+      "font_class": "shanchu",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "12550393",
+      "name": "重做",
+      "font_class": "zhongzuo",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "12550394",
+      "name": "撤销",
+      "font_class": "chexiao",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "12550395",
+      "name": "复制",
+      "font_class": "fuzhi",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "12550475",
+      "name": "取消组合",
+      "font_class": "quxiaozuhe",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
+      "icon_id": "12550479",
+      "name": "组合",
+      "font_class": "zuhe",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
+      "icon_id": "12550611",
+      "name": "椭圆",
+      "font_class": "tuoyuan",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "12550612",
+      "name": "曲线",
+      "font_class": "quxian",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "12550614",
+      "name": "矩形",
+      "font_class": "juxing",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "12550673",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "12550473",
+      "name": "置于顶层",
+      "font_class": "zhiyudingceng",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
+      "icon_id": "12550474",
+      "name": "置于底层",
+      "font_class": "zhiyudiceng",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    },
+    {
+      "icon_id": "1594101",
+      "name": "上移一层",
+      "font_class": "shangyiyiceng",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "1594104",
+      "name": "下移一层",
+      "font_class": "xiayiyiceng",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    }
+  ]
+}

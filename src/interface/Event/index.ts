@@ -1,3 +1,5 @@
+import { IGraph } from "../Graph/index.ts";
+
 // 实现SFEditor 事件监听
 export type EventType = () => void;
 
@@ -89,4 +91,35 @@ export enum KeyMap {
   SEVEN = "7",
   EIGHT = "8",
   NINE = "9",
+}
+
+export interface IContextmenu {
+  command: string; // 需要给定command 进行事件绑定
+  title: string;
+  callback: (e: Event, graph?: IGraph) => void;
+  isGraph?: boolean; // 是否处于元件身上才显示
+  shortCut?: string; // 快捷键
+  icon?: string;
+  disable?: boolean; // 是否可用
+  when?: boolean; // 条件显示 未实现
+}
+
+// 注册快捷键回传的参数
+export type cbParams = {
+  ctrl?: boolean;
+  shift?: boolean;
+  key?: string;
+};
+
+// 注册快捷键事件类型
+export interface IShortCut {
+  key: KeyMap;
+  ctrl?: boolean;
+  meta?: boolean;
+  mod?: boolean; // windows:ctrl || mac:command
+  shift?: boolean;
+  alt?: boolean; // windows:alt || mac:option
+  isGlobal?: boolean;
+  callback?: (payload?: cbParams) => void;
+  disable?: boolean;
 }

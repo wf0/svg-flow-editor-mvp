@@ -1,5 +1,6 @@
 // 绘制类相关事件
 import { IGraph } from "../../interface/Graph/index.ts";
+import { nextTick } from "../../utils/index.ts";
 import { contextmenu } from "../Template/index.ts";
 import { Draw } from "./index.ts";
 import dayjs from "dayjs";
@@ -97,7 +98,7 @@ export class EditorEvent {
   }
 
   /**
-   * mouse down
+   * 框选事件 mouse down
    * @param e
    * @returns
    */
@@ -127,7 +128,7 @@ export class EditorEvent {
   }
 
   /**
-   * mousemove
+   * 框选事件 mousemove
    * @param e
    * @returns
    */
@@ -144,7 +145,7 @@ export class EditorEvent {
   }
 
   /**
-   * mouseup
+   * 框选事件 mouseup
    * @param e
    * @returns
    */
@@ -166,7 +167,7 @@ export class EditorEvent {
   }
 
   /**
-   * 单击事件
+   * editorBox 单击事件
    * @param e
    */
   private clickHandle(e: Event) {
@@ -177,7 +178,7 @@ export class EditorEvent {
   }
 
   /**
-   * 右键菜单 contextmenu 事件响应
+   * 右键菜单 contextmenu
    * @param e
    */
   private contextmenu(e: Event, graph?: IGraph) {
@@ -191,7 +192,7 @@ export class EditorEvent {
   }
 
   /**
-   * 更新位置
+   * 更新右键菜单的位置
    */
   private updateContentmenu(e: Event, graph?: IGraph) {
     const menuselector = 'div[class="sf-editor-box-contextmenu"]';
@@ -207,21 +208,87 @@ export class EditorEvent {
    * 创建右键菜单
    */
   private createContextmenu(e: Event, graph?: IGraph) {
-    const div = this.draw.createHTMLElement("div") as HTMLDivElement;
-    div.classList.add("sf-editor-box-contextmenu");
+    const contextmenuBox = this.draw.createHTMLElement("div") as HTMLDivElement;
+    contextmenuBox.classList.add("sf-editor-box-contextmenu");
 
-    div.innerHTML = contextmenu;
+    contextmenuBox.innerHTML = contextmenu;
+
     // 添加到editorbox
-    this.editorBox.append(div);
+    this.editorBox.append(contextmenuBox);
+
     // 控制元件的右键菜单显示隐藏
-    const menuBox = div.querySelector("div") as HTMLDivElement;
+    const menuBox = contextmenuBox.querySelector("div") as HTMLDivElement;
     menuBox.classList.add(graph ? "graph" : "editor");
-    this.correctContextMenuPosition(div, e);
+    this.correctContextMenuPosition(contextmenuBox, e);
+
     // 添加事件
-    this.addContextmenuEvent();
+    this.editorBox
+      .querySelector('div[class="sf-editor-box-contextmenu"]')
+      ?.querySelectorAll("[command]")
+      .forEach((i) =>
+        i.addEventListener("click", (e) =>
+          this.contextmenuClickHandle(e, i.getAttribute("command"))
+        )
+      );
+
+    // 处理用户自定义右键菜单及添加事件
+    nextTick(() => {
+      const { contextMenuList } = this.draw.getRegister();
+      if (!contextMenuList.length) return;
+      // 将用户的自定义事件添加到 菜单中,用户有事件，则需要在末尾先添加分割线
+      const line = this.draw.createHTMLElement("div") as HTMLDivElement;
+      line.classList.add("sf-editor-box-contextmenu-main-line");
+      contextmenuBox.children[0].appendChild(line);
+
+      // 进而处理用户的事件
+      contextMenuList.forEach(
+        ({ title, callback, command, isGraph, shortCut }) => {
+          // 创建用户菜单 div
+          const item = this.draw.createHTMLElement("div") as HTMLDivElement;
+          item.classList.add("sf-editor-box-contextmenu-main-item");
+          item.classList.add(isGraph ? "graph-item" : "editor-item");
+          item.setAttribute("command", command);
+
+          // 创建 标题
+          const titlespan = this.draw.createHTMLElement("span");
+          titlespan.innerHTML = title;
+          titlespan.style["paddingLeft"] = "20px";
+
+          // 创建快捷键
+          const shortCutSpan = this.draw.createHTMLElement("span");
+          shortCutSpan.innerHTML = shortCut || "";
+
+          // 将标题 快捷键 添加到 用户菜单 div
+          item.appendChild(titlespan);
+          item.appendChild(shortCutSpan);
+
+          // 将菜单 div 放到 contextmenuBox 上
+          contextmenuBox.children[0].appendChild(item);
+
+          // 绑定事件
+          item.addEventListener("click", (e) => {
+            callback && callback(e);
+            this.clickHandle(e);
+          });
+        }
+      );
+    });
+
+    // 右键的右键不响应事件，不然会导致位置异常
+    contextmenuBox.addEventListener(
+      "contextmenu",
+      (e) => (e.preventDefault(), e.stopPropagation())
+    );
   }
 
-  private addContextmenuEvent() {}
+  /**
+   * 绑定右键菜单项的点击事件
+   */
+  private contextmenuClickHandle(e: Event, command: string | null) {
+    // 菜单项单击事件
+    console.log(command);
+    this.clickHandle(e);
+  }
 
   /**
    * 右键菜单唤起事件需要矫正位置

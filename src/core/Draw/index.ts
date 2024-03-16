@@ -85,7 +85,7 @@ export class Draw {
     this.editorBox.classList.add("sf-editor-box");
 
     const graphsBox = this.createHTMLElement("div") as HTMLDivElement;
-    graphsBox.classList.add('sf-editor-box-graphs')
+    graphsBox.classList.add("sf-editor-box-graphs");
     this.editorBox.appendChild(graphsBox);
 
     // 4. 根据上诉结构，添加到 dom 上

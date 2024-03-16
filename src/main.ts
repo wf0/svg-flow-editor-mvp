@@ -8,6 +8,16 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       title: "测试",
       command: "demo",
+      shortCut: "Ctrl+O",
+      callback: () => {
+        console.log("测试自定义菜单");
+      },
+    },
+    {
+      isGraph: true,
+      title: "graph",
+      command: "demo",
+      shortCut: "Ctrl+O",
       callback: () => {
         console.log("测试自定义菜单");
       },

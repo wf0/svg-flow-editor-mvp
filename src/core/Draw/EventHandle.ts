@@ -18,9 +18,19 @@ export class GraphEvent {
    * graphBox 添加事件
    * @param ele
    */
-  public addGraphEvent(ele: HTMLDivElement) {
-    ele.addEventListener("click", this.graphClickHandle);
-    ele.addEventListener("dblclick", this.graphDblclickHandle);
+  public addEvent(ele: HTMLDivElement, graph: IGraph) {
+    ele.addEventListener("click", this.graphClickHandle.bind(this));
+    ele.addEventListener("dblclick", this.graphDblclickHandle.bind(this));
+    ele.addEventListener("contextmenu", (e) => this.contextmenu(e, graph));
+  }
+
+  /**
+   * removeEvent 移除事件
+   */
+  public removeEvent(ele: HTMLDivElement) {
+    ele.removeEventListener("click", this.graphClickHandle.bind(this));
+    ele.removeEventListener("dblclick", this.graphDblclickHandle);
+    ele.removeEventListener("contextmenu", this.contextmenu);
   }
 
   /**
@@ -28,7 +38,7 @@ export class GraphEvent {
    * @param e
    */
   private graphClickHandle(e: Event) {
-    console.log("## graphBox click");
+    console.log("## graphBox click", e.target);
     e.stopPropagation();
     e.preventDefault();
   }
@@ -44,9 +54,15 @@ export class GraphEvent {
   }
 
   /**
-   * removeEvent 移除事件
+   * 元件右键菜单
    */
-  public removeEvent() {}
+  private contextmenu(e: Event, graph?: IGraph) {
+    console.log("## graphBox contextmenu");
+    const editorEvent = this.draw.getEditorEvent();
+    editorEvent.contextmenu(e, graph);
+    e.stopPropagation();
+    e.preventDefault();
+  }
 }
 
 /**
@@ -111,17 +127,23 @@ export class EditorEvent {
     // 记录点击的时间
     this.st = Number(dayjs().format("mmssSSS"));
     this.move = true;
+
+    // 如果右键菜单存在，则取消右键菜单
+    this.cancelContextmenu();
+
     // 记录初始位置
     const { offsetX, offsetY } = e;
     this.sx = offsetX;
     this.sy = offsetY;
 
+    // 重置选区样式
     const selector = 'div[class="sf-editor-box-selectmask"]';
     const mask = this.editorBox.querySelector(selector) as HTMLDivElement;
     mask.style.left = offsetX + "px";
     mask.style.top = offsetY + "px";
     mask.style.display = "block";
 
+    // 元件禁止响应
     this.editorBox
       .querySelectorAll("div[class='sf-editor-box-graphs-item']")
       .forEach((i) => ((i as HTMLDivElement).style.pointerEvents = "none"));
@@ -181,7 +203,7 @@ export class EditorEvent {
    * 右键菜单 contextmenu
    * @param e
    */
-  private contextmenu(e: Event, graph?: IGraph) {
+  public contextmenu(e: Event, graph?: IGraph) {
     console.log("editorBox contextmenu");
     // 1. 先看有没有菜单，有的话更新位置，没有再创建
     const menuselector = 'div[class="sf-editor-box-contextmenu"]';
@@ -199,6 +221,8 @@ export class EditorEvent {
     const menu = this.editorBox.querySelector(menuselector) as HTMLDivElement;
     // 控制元件的右键菜单显示隐藏
     const menuBox = menu.querySelector("div") as HTMLDivElement;
+    menuBox.classList.remove("graph");
+    menuBox.classList.remove("editor");
     menuBox.classList.add(graph ? "graph" : "editor");
     // 纠正位置
     this.correctContextMenuPosition(menu, e);
@@ -218,6 +242,8 @@ export class EditorEvent {
 
     // 控制元件的右键菜单显示隐藏
     const menuBox = contextmenuBox.querySelector("div") as HTMLDivElement;
+    menuBox.classList.remove("graph");
+    menuBox.classList.remove("editor");
     menuBox.classList.add(graph ? "graph" : "editor");
     this.correctContextMenuPosition(contextmenuBox, e);
 

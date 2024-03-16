@@ -44,7 +44,8 @@ export class GraphDraw {
     graphs.append(graphBox);
 
     // 给元件添加事件
-    this.draw.getGraphEvent().addGraphEvent(graphBox);
+    const graphEvent = this.draw.getGraphEvent();
+    graphEvent.addEvent(graphBox, graph);
   }
 
   /**

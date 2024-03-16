@@ -56,11 +56,14 @@ export class GraphDraw {
     const graphEvent = this.draw.getGraphEvent();
     graphEvent.addEvent(graphBox, graph);
 
-    // 创建链接锚点
+    // 创建链接锚点【连接锚点的显示隐藏是以是否 hover 及 selected 决定，因此不需要单独提供取消事件】
     this.createLinkPoint(graph);
 
-    // // 创建形变锚点
+    // 创建形变锚点
     this.createFormatPoint(graph);
+
+    // 创建 contenteditable 可编辑 DIV
+    this.createContentEditable(graph);
   }
 
   /**
@@ -170,6 +173,24 @@ export class GraphDraw {
       .getEditorBox()
       .querySelectorAll("div[class='sf-editor-box-graphs-main selected']")
       .forEach((i) => (i as HTMLDivElement).classList.remove("selected"));
+  }
+
+  /**
+   * 双击进行文本输入 - 实现原理： div.contenteditable
+   * @param graph
+   */
+  public createContentEditable(graph: IGraph) {
+    const nodeID = graph.getID();
+    const graphMain = this.getGraphMain(nodeID);
+
+    const editor = this.draw.createHTMLElement("div") as HTMLDivElement;
+    editor.classList.add("sf-editor-box-graphs-main-contenteditable");
+
+    const input = this.draw.createHTMLElement("div") as HTMLDivElement;
+    input.setAttribute("contenteditable", "true");
+
+    editor.appendChild(input);
+    graphMain.appendChild(editor);
   }
 
   /**

@@ -10,6 +10,9 @@ import dayjs from "dayjs";
  */
 export class GraphEvent {
   private draw: Draw;
+  private move!: boolean;
+  private sx!: number;
+  private sy!: number;
   constructor(draw: Draw) {
     this.draw = draw;
   }
@@ -20,23 +23,18 @@ export class GraphEvent {
    */
   public addEvent(ele: HTMLDivElement, graph: IGraph) {
     ele.addEventListener("click", (e) => this.graphClickHandle(e, graph));
-    // ele.addEventListener("mousedown", this.graphMousedownHandle.bind(this));
-    // ele.addEventListener("mouseup", this.graphMousedownHandle.bind(this));
+    ele.addEventListener("mousedown", this.mouseDownHandle.bind(this));
+    ele.addEventListener("mousemove", (e) => this.mouseMoveHandle(e, graph));
+    ele.addEventListener("mouseup", this.mouseUpHandle.bind(this));
 
-    ele.addEventListener("dblclick", this.graphDblclickHandle.bind(this));
+    ele.addEventListener("dblclick", (e) => this.graphDblclickHandle(e, graph));
     ele.addEventListener("contextmenu", (e) => this.contextmenu(e, graph));
   }
 
   /**
    * removeEvent 移除事件
    */
-  public removeEvent(ele: HTMLDivElement) {
-    // ele.removeEventListener("click", this.graphClickHandle.bind(this));
-    ele.removeEventListener("dblclick", this.graphDblclickHandle);
-    ele.removeEventListener("contextmenu", this.contextmenu);
-  }
-
-  // private graphMousedownHandle(e: Event) {}
+  public removeEvent(ele: HTMLDivElement) {}
 
   /**
    * 元件单击事件
@@ -69,10 +67,73 @@ export class GraphEvent {
    * 元件双击事件
    * @param e
    */
-  private graphDblclickHandle(e: Event) {
+  private graphDblclickHandle(e: Event, graph: IGraph) {
     console.log("## graphBox dblclick");
+    const nodeID = graph.getID();
+    // 获取当前 main
+    const graphBox = this.draw.getGraphDraw().getGraphMain(nodeID);
+    const selector = 'div[class="sf-editor-box-graphs-main-contenteditable"]';
+    const editor = graphBox.querySelector(selector) as HTMLDivElement;
+    editor.style.display = "flex";
+    const input = editor.children[0] as HTMLDivElement;
+    // 自动获取焦点
+    input.focus();
+
+    input.addEventListener("blur", () => {
+      // 隐藏
+      editor.style.display = "none";
+
+      // 获取用户输入
+      const text = input.innerHTML;
+
+      // 将该内容添加到 svg 上
+    });
+
     e.stopPropagation();
     e.preventDefault();
+  }
+
+  /**
+   * graph mousedown 移动事件
+   * @param e
+   * @param graph
+   */
+  private mouseDownHandle(e: MouseEvent) {
+    if (e.button === 2) return;
+
+    // 记录点击的时间
+    const { offsetX, offsetY } = e as MouseEvent;
+    this.move = true;
+    this.sx = offsetX;
+    this.sy = offsetY;
+  }
+
+  private mouseMoveHandle(e: MouseEvent, graph: IGraph) {
+    if (!this.move) return;
+
+    // 这个是新的 offset，直接与旧的 offset 进行运算即可得到差值，与当前位置做计算即可
+    const { offsetX, offsetY } = e;
+
+    // 计算差值
+    const diffX = offsetX - this.sx;
+    const diffY = offsetY - this.sy;
+
+    // 设置位置
+    graph.position.call(graph, graph.getX() + diffX, graph.getY() + diffY);
+
+    // 启用线程处理辅助线
+    // this.workerEvent(graph);
+  }
+
+  /**
+   * mouseup
+   * @param e
+   */
+  private mouseUpHandle(e: MouseEvent) {
+    // 获取终点坐标
+    this.move = false;
+    this.sx = 0;
+    this.sy = 0;
   }
 
   /**

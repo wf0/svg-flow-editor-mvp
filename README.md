@@ -13,7 +13,7 @@ svg flow editor 是一款自研流程图编辑器，提供了一系列流程图�
 - 流程图基本元件
   - 矩形 rect 、 圆形 circle 、 椭圆 ellipse
 - 元件基本操作
-  - 创建、删除、移动、定位、属性修改、框选、多选等
+  - 创建、删除、移动、定位、属性修改、框选、多选（ctrl）等
 - 文本
 - global API
 - Command API

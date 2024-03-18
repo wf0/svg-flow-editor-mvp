@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       key: KeyMap["P"],
       callback: () => {
-        console.log('用户 p');
+        console.log("用户 p");
       },
     },
   ];

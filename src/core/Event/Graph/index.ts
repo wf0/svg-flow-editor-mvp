@@ -27,7 +27,6 @@ export class GraphEvent {
     ele.addEventListener("mousedown", this.mouseDownHandle.bind(this));
     ele.addEventListener("mousemove", (e) => this.mouseMoveHandle(e, graph));
     ele.addEventListener("mouseup", this.mouseUpHandle.bind(this));
-
     ele.addEventListener("dblclick", (e) => this.graphDblclickHandle(e, graph));
     ele.addEventListener("contextmenu", (e) => this.contextmenu(e, graph));
   }
@@ -35,7 +34,7 @@ export class GraphEvent {
   /**
    * removeEvent 移除事件
    */
-  public removeEvent(ele: HTMLDivElement) {}
+  public removeEvent(_ele: HTMLDivElement) {}
 
   /**
    * 元件单击事件
@@ -106,7 +105,7 @@ export class GraphEvent {
     sel.removeAllRanges();
     sel.addRange(range);
 
-    input.addEventListener("blur", (e) => {
+    input.addEventListener("blur", () => {
       // 删除编辑器
       editor.remove();
 
@@ -227,10 +226,10 @@ export class GraphEvent {
    * 获取当前选中的元素节点
    * @returns
    */
-  private getAllSelected() {
-    const selector = "sf-editor-box-graphs-main selected";
-    return this.draw.getEditorBox().querySelectorAll(selector);
-  }
+  // private getAllSelected() {
+  //   const selector = "sf-editor-box-graphs-main selected";
+  //   return this.draw.getEditorBox().querySelectorAll(selector);
+  // }
 
   /**
    * 获取单个

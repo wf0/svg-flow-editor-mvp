@@ -14,6 +14,7 @@ export class EditorEvent {
   private editorBox!: HTMLDivElement;
 
   private st!: number; // 记录时间 Number(dayjs().format("mmssSSS")); 毫秒
+  private mode!: "inside";
 
   // 定义框选的相关参数
   private move!: boolean; // 移动标志
@@ -185,8 +186,7 @@ export class EditorEvent {
           if (islt && isrt && isrb && islb) selected.push(nodeID);
         }
 
-        // this.mode === "inside" ? inside() : all();
-        inside(); // 目前默认就是 inside 模式
+        this.mode === "inside" ? inside() : all();
       });
 
       if (!selected.length) resolve();

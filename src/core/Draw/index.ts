@@ -8,7 +8,6 @@ import { CanvasDraw } from "./Canvas.ts";
 import { GraphEvent } from "../Event/Graph/index.ts";
 import { GraphDraw } from "./Graph.ts";
 import { EditorEvent } from "../Event/Editor/index.ts";
-import { RegisterEvent } from "../Event/Register/index.ts";
 
 // 重构 draw
 export class Draw {

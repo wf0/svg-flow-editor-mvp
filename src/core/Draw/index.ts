@@ -5,8 +5,9 @@ import { EventBus } from "../EventBus/index.ts";
 import { Listener } from "../Listener/index.ts";
 import { Register } from "../Register/index.ts";
 import { CanvasDraw } from "./Canvas.ts";
-import { GraphEvent, EditorEvent } from "./EventHandle.ts";
+import { GraphEvent } from "./GraphEvent.ts";
 import { GraphDraw } from "./Graph.ts";
+import { EditorEvent } from "./EditorEvent.ts";
 
 // 重构 draw
 export class Draw {

@@ -61,6 +61,29 @@ export class GraphCommon {
   }
 
   /**
+   * 获取 stroke 边框
+   * @returns
+   */
+  public getStroke() {
+    const graph = this as unknown as IGraph;
+    const element = graph.getElement();
+    return element.getAttribute("stroke");
+  }
+
+  /**
+   * 获取 fill 填充
+   * @returns
+   */
+  public getFill() {
+    const graph = this as unknown as IGraph;
+    const element = graph.getElement();
+    return element.getAttribute("fill");
+  }
+  /** setter */
+  /** setter */
+  /** setter */
+  /** setter */
+  /**
    * 设置X
    * @param x
    */
@@ -88,6 +111,10 @@ export class GraphCommon {
     const graph = this as unknown as IGraph;
     const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
     graphBox.style.width = w + "px";
+    // 重新渲染 连接节点位置
+    // this.draw.getGraphDraw().updateLinkPoint(graph);
+    // 重新渲染形变节点
+    // this.draw.getGraphDraw().updateFormatPoint(graph);
     return graph;
   }
 
@@ -99,17 +126,11 @@ export class GraphCommon {
     const graph = this as unknown as IGraph;
     const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
     graphBox.style.height = h + "px";
+    // 重新渲染 连接节点位置
+    // this.draw.getGraphDraw().updateLinkPoint(graph);
+    // 重新渲染形变节点
+    // this.draw.getGraphDraw().updateFormatPoint(graph);
     return graph;
-  }
-
-  /**
-   * 获取 stroke 边框
-   * @returns
-   */
-  public getStroke() {
-    const graph = this as unknown as IGraph;
-    const element = graph.getElement();
-    return element.getAttribute("stroke");
   }
 
   /**
@@ -121,16 +142,6 @@ export class GraphCommon {
     const element = graph.getElement();
     element.setAttribute("stroke", stroke);
     return graph;
-  }
-
-  /**
-   * 获取 fill 填充
-   * @returns
-   */
-  public getFill() {
-    const graph = this as unknown as IGraph;
-    const element = graph.getElement();
-    return element.getAttribute("fill");
   }
 
   /**

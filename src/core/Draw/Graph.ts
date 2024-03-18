@@ -3,11 +3,16 @@ import { nextTick } from "../../utils/index.ts";
 import { Graph } from "../Graph/index.ts";
 import { Draw } from "./index.ts";
 const OFFSET = 10;
+// 定义元件最值
+const MIN_WIDTH = 50;
+const MIN_HEIGHT = 50;
+const MAX_WIDTH = 500;
+const MAX_HEIGHT = 500;
 
 //  graph svg 元图相关绘制类
 export class GraphDraw {
   private draw: Draw;
-
+  private move = false;
   constructor(draw: Draw) {
     this.draw = draw;
   }
@@ -60,7 +65,7 @@ export class GraphDraw {
     // 创建链接锚点【连接锚点的显示隐藏是以是否 hover 及 selected 决定，因此不需要单独提供取消事件】
     this.createLinkPoint(graph);
 
-    // 创建形变锚点
+    // // 创建形变锚点
     this.createFormatPoint(graph);
   }
 
@@ -112,6 +117,19 @@ export class GraphDraw {
   }
 
   /**
+   * 取消当前节点的连接锚点位置
+   * @param graph
+   */
+  public cancelLinkPoint(graph: IGraph) {
+    // 先清空所有的连接锚点，然后再创建
+    const nodeID = graph.getID();
+    const mainBox = this.getGraphMain(nodeID);
+    mainBox
+      .querySelector('[class="sf-editor-box-graphs-main-links"]')
+      ?.remove();
+  }
+
+  /**
    * 创建形变锚点 - 向 graphMain 添加锚点
    * @param graph
    */
@@ -159,6 +177,11 @@ export class GraphDraw {
         format.appendChild(formatItem);
 
         // 添加事件
+        formatItem.addEventListener("mousedown", (e) => {
+          this.handleFormatMousedown(e, formatItem, graph as IGraph);
+          e.stopPropagation();
+          e.preventDefault();
+        });
       });
     });
   }
@@ -166,7 +189,15 @@ export class GraphDraw {
   /**
    * 取消形变锚点
    */
-  public cancelFormatPoint() {
+  public cancelFormatPoint(graph: IGraph) {
+    const nodeID = graph.getID();
+    const mainBox = this.getGraphMain(nodeID);
+    mainBox
+      .querySelector('[class="sf-editor-box-graphs-main-formats"]')
+      ?.remove();
+  }
+
+  public cancelAllFormatPoint() {
     this.draw
       .getEditorBox()
       .querySelectorAll("div[class='sf-editor-box-graphs-main selected']")
@@ -174,21 +205,142 @@ export class GraphDraw {
   }
 
   /**
-   * 双击进行文本输入 - 实现原理： div.contenteditable
+   * 形变节点具体的实现函数
+   * @param e
+   * @param div
    * @param graph
    */
-  public createContentEditable(graph: IGraph) {
-    const nodeID = graph.getID();
-    const graphMain = this.getGraphMain(nodeID);
+  private handleFormatMousedown(
+    e: MouseEvent,
+    div: HTMLDivElement,
+    graph: IGraph
+  ) {
+    this.move = true;
+    const x = graph.getX();
+    const y = graph.getY();
+    var width = graph.getWidth(); // 初始宽度
+    var height = graph.getHeight(); // 初始高度
 
-    const editor = this.draw.createHTMLElement("div") as HTMLDivElement;
-    editor.classList.add("sf-editor-box-graphs-main-contenteditable");
+    // 定义类型
+    type nodeInfo = { w: number; h: number; x?: number; y?: number };
 
-    const input = this.draw.createHTMLElement("div") as HTMLDivElement;
-    input.setAttribute("contenteditable", "true");
+    // 计算初始位置 相对于 sf-editor-box-graphs
+    const { offsetLeft, offsetTop, offsetWidth, offsetHeight } =
+      e.target as HTMLDivElement;
+    const sx = x + offsetLeft - offsetWidth / 2;
+    const sy = y + offsetTop - offsetHeight / 2;
 
-    editor.appendChild(input);
-    graphMain.appendChild(editor);
+    // 1. 自身不响应实现
+    div.style.pointerEvents = "none";
+
+    // 2. 自身的根元素 sf-editor-box-graphs-main-formats
+    const formatBox = div.parentNode as HTMLDivElement;
+    formatBox.style.pointerEvents = "none";
+
+    // 3. graph box 也不响应
+    const mainBox = formatBox.parentNode as HTMLDivElement;
+    mainBox.style.pointerEvents = "none";
+
+    // 4. 取消当前节点的锚点
+    this.cancelLinkPoint(graph);
+    this.cancelFormatPoint(graph);
+
+    // 通过父节点实现 move 从而流畅拖动
+    this.draw.getEditorBox().addEventListener("mousemove", boxmove);
+    this.draw.getEditorBox().addEventListener("mouseup", () => {
+      if (!this.move) {
+        this.draw.getEditorBox().removeEventListener("mousemove", boxmove);
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      }
+
+      this.move = false;
+      // 最后恢复事件机制
+      div.style.pointerEvents = "";
+      formatBox.style.pointerEvents = "";
+      mainBox.style.pointerEvents = "";
+      // 创建锚点
+      this.createLinkPoint(graph);
+      this.createFormatPoint(graph);
+
+      this.draw.getEditorBox().removeEventListener("mousemove", boxmove);
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    /**
+     * 移动核心函数
+     * 1. 通过 上面的 pointerEvents 操作，确保了 move(e.target) 永远是 sf-editor-box-graphs 在画布内，offset 是准确的
+     * 2. 同时 startX startY 也是相对于 sf-editor-box-graphs 画布，这样的 差值才是宽高的变化量
+     * @param e
+     */
+    function boxmove(e: MouseEvent) {
+      // 取消形变锚点
+      // 取消连接锚点
+      const { offsetX, offsetY } = e;
+      const dx = offsetX - sx;
+      const dy = offsetY - sy;
+
+      // 3. 区分不同的移动方向
+      const cursorEventHandle: { [key: string]: () => void } = {
+        "nw-resize": () => {
+          var x = offsetX;
+          var y = offsetY;
+          var w = dx < 0 ? Math.abs(dx) + width : width - dx;
+          var h = dy < 0 ? Math.abs(dy) + height : height - dy;
+          updateGraphInfo({ w, h, x, y });
+        },
+        "n-resize": () => {
+          var y = offsetY;
+          var w = width;
+          var h = dy < 0 ? Math.abs(dy) + height : height - dy;
+          updateGraphInfo({ y, w, h });
+        },
+        "ne-resize": () => {
+          var y = offsetY;
+          var w = dx < 0 ? width + dx : dx + width;
+          var h = height - dy;
+          updateGraphInfo({ y, w, h });
+        },
+        "e-resize": () => {
+          updateGraphInfo({ w: dx < 0 ? width + dx : dx + width, h: height });
+        },
+        "se-resize": () => {
+          updateGraphInfo({ w: dx + width, h: dy + height });
+        },
+        "s-resize": () => {
+          updateGraphInfo({ w: width, h: height + dy });
+        },
+        "sw-resize": () => {
+          updateGraphInfo({ x: offsetX, w: width - dx, h: height + dy });
+        },
+        "w-resize": () => {
+          updateGraphInfo({ x: offsetX, w: width - dx, h: height });
+        },
+      };
+
+      cursorEventHandle[div.style.cursor]();
+    }
+
+    // 执行最终变化
+    function updateGraphInfo({ x, y, w, h }: nodeInfo) {
+      // 这里也需要判断当前宽高是否小于或大于最值，不然会一直移动圆心，这是不对的
+      var width = w;
+      var height = h;
+      // 通过偏移量来确定圆心位置即可
+      if (w >= MIN_WIDTH && w <= MAX_WIDTH) x && graph.setX(x);
+      if (h >= MIN_HEIGHT && h <= MAX_HEIGHT) y && graph.setY(y);
+      // 临界值处理
+      if (w < MIN_WIDTH) width = MIN_WIDTH;
+      if (w > MAX_WIDTH) width = MAX_WIDTH;
+      if (h < MIN_HEIGHT) height = MIN_HEIGHT;
+      if (h > MAX_HEIGHT) height = MAX_HEIGHT;
+
+      // 设置宽高
+      graph.setWidth(width);
+      graph.setHeight(height);
+    }
   }
 
   /**

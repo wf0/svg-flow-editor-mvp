@@ -2,8 +2,7 @@ import { SFEditor } from "./core/index.ts";
 
 document.addEventListener("DOMContentLoaded", () => {
   const editor = new SFEditor(".box");
-  const rect = editor.Rect(100, 80).setWidth(60).position(20, 20);
-  editor.Circle(50).position(200, 200).setWidth(200);
+  editor.Rect(160, 80).position(20, 20);
   // editor.Ellipse(100, 80).position(300, 300);
   // editor.register.contextMenuList = [
   //   {

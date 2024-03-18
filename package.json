@@ -25,10 +25,12 @@
     "less": "^4.2.0",
     "less-loader": "^4.1.0",
     "nanoid": "^5.0.6",
+    "pako": "^2.1.0",
     "typescript": "^5.4.2",
     "vite": "^4.5.2"
   },
   "devDependencies": {
-    "@types/color-convert": "^2.0.3"
+    "@types/color-convert": "^2.0.3",
+    "@types/pako": "^2.0.3"
   }
 }

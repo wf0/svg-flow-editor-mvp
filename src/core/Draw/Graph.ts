@@ -363,7 +363,7 @@ export class GraphDraw {
   /**
    * 获取节点的位置信息，用于实现框线、辅助线
    */
-  public getNodePosition(): node[] {
+  public getNodeInfo(): node[] {
     const nodes: node[] = [];
 
     this.draw

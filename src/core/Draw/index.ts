@@ -1,7 +1,7 @@
 import { EventBusMap } from "../../interface/Event/index.ts";
 import { nextTick, setTheme } from "../../utils/index.ts";
 import { messageInfo, xmlns } from "../Config/index.ts";
-import { EventBus } from "../EventBus/index.ts";
+import { EventBus } from "../Event/EventBus.ts";
 import { Listener } from "../Listener/index.ts";
 import { Register } from "../Register/index.ts";
 import { CanvasDraw } from "./Canvas.ts";
@@ -161,4 +161,5 @@ export class Draw {
   public getEditorBox = () => this.editorBox;
   public getGraphEvent = () => this.graphEvent;
   public getEditorEvent = () => this.editorEvent;
+  public getCanvasDraw = () => this.canvasDraw;
 }

@@ -1,6 +1,9 @@
 // 绘制类相关事件
-import { IGraph } from "../../interface/Graph/index.ts";
+import { IGraph, node } from "../../interface/Graph/index.ts";
 import { Draw } from "./index.ts";
+const worker = new Worker("/src/core/Worker/AuxiliaryLine.worker.ts", {
+  type: "module",
+});
 
 /**
  * graph 元件事件响应
@@ -10,6 +13,8 @@ export class GraphEvent {
   private move!: boolean;
   private sx!: number;
   private sy!: number;
+
+  private nodes!: node[];
   constructor(draw: Draw) {
     this.draw = draw;
   }
@@ -38,8 +43,6 @@ export class GraphEvent {
    * @param e
    */
   private graphClickHandle(e: Event, graph: IGraph) {
-    console.log("## graphBox click");
-
     // 支持 ctrl 多选
     const { ctrlKey } = e as PointerEvent;
     const nodeID = graph.getID();
@@ -157,6 +160,8 @@ export class GraphEvent {
     this.move = true;
     this.sx = offsetX;
     this.sy = offsetY;
+    // 启用 worker 计算位置(放置move频繁计算导致页面卡顿)
+    this.nodes = this.draw.getGraphDraw().getNodeInfo() as node[];
   }
 
   private mouseMoveHandle(e: MouseEvent, graph: IGraph) {
@@ -173,25 +178,46 @@ export class GraphEvent {
     graph.position.call(graph, graph.getX() + diffX, graph.getY() + diffY);
 
     // 启用线程处理辅助线
-    // this.workerEvent(graph);
+    this.workerEvent(graph);
   }
 
   /**
    * mouseup
    * @param e
    */
-  private mouseUpHandle(e: MouseEvent) {
+  private mouseUpHandle(_e: MouseEvent) {
     // 获取终点坐标
     this.move = false;
     this.sx = 0;
     this.sy = 0;
+    // 取消辅助线
+    this.draw.getCanvasDraw().unDrawAuxiliaryLine();
+  }
+
+  /**
+   * 处理 worker
+   */
+  private workerEvent(graph: IGraph) {
+    // 获取当前正在移动的元件的参数信息
+    const nodeID = graph.getID();
+    const width = graph.getWidth();
+    const height = graph.getHeight();
+    const x = graph.getX();
+    const y = graph.getY();
+    const current: node = { nodeID, width, height, x, y };
+    worker.postMessage({ current, nodes: this.nodes });
+    worker.onmessage = ({ data }) => {
+      // 清空所有的辅助线
+      if (!data.length) return this.draw.getCanvasDraw().unDrawAuxiliaryLine();
+      // 不然绘制辅助线
+      this.draw.getCanvasDraw().drawAuxiliaryLine(data);
+    };
   }
 
   /**
    * 元件右键菜单
    */
   private contextmenu(e: Event, graph?: IGraph) {
-    console.log("## graphBox contextmenu => 主动调用 editorEvent 事件");
     const editorEvent = this.draw.getEditorEvent();
     editorEvent.contextmenu(e, graph);
     e.stopPropagation();
@@ -204,9 +230,7 @@ export class GraphEvent {
    */
   private getAllSelected() {
     const selector = "sf-editor-box-graphs-main selected";
-    return this.draw
-      .getEditorBox()
-      .querySelectorAll(selector + '[type="mainBox"]');
+    return this.draw.getEditorBox().querySelectorAll(selector);
   }
 
   /**

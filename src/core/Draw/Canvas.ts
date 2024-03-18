@@ -1,11 +1,14 @@
 import { waterMarkText as defaultWaterMarkText } from "../Config/index.ts";
 import { hex, keyword } from "color-convert";
 import { Draw } from "./index.ts";
+import pako from "pako"; // imageData 的解压缩
 
 // canvas 相关绘制类
 export class CanvasDraw {
   private canvas!: HTMLCanvasElement;
   private draw: Draw;
+
+  private imageData!: Uint8Array | null;
   constructor(draw: Draw) {
     this.draw = draw;
   }
@@ -163,6 +166,49 @@ export class CanvasDraw {
         .toString()
         .replace(/"\["|"\]"/g, "");
     return result;
+  }
+
+  /**
+   * 绘制 辅助线
+   * @param payload
+   * @returns
+   */
+  public drawAuxiliaryLine(payload: { num: number; type: string }[]) {
+    if (!this.canvas) return;
+    this.unDrawAuxiliaryLine();
+    var ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+    const { width, height } = this.canvas;
+
+    // 1. 绘制之前一定先保存数据，才能实现恢复
+    const imageData = ctx.getImageData(0, 0, width, height);
+    this.imageData = pako.deflate(new Uint8Array(imageData.data)); // 压缩，减小存储开销
+    // 2. 开始绘制
+    payload.forEach(({ num, type }) => {
+      const p = num + 10; // 注意 padding 距离
+      ctx.beginPath();
+      // 定义虚线模式：[线段长度, 间隔长度]
+      ctx.setLineDash([10, 10]);
+      type === "h" ? ctx.moveTo(0, p) : ctx.moveTo(p, 0);
+      type === "h" ? ctx.lineTo(width, p) : ctx.lineTo(p, height);
+      ctx.strokeStyle = `rgb(79, 130, 232)`; // 设置线条颜色
+      ctx.stroke();
+    });
+  }
+
+  // 取消绘制
+  public unDrawAuxiliaryLine() {
+    try {
+      if (!this.canvas || !this.imageData) return;
+      var ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+      const { width, height } = this.canvas;
+      const decompressed = pako.inflate(this.imageData);
+      const uint8ClampedArray = new Uint8ClampedArray(decompressed);
+      const imageData = new ImageData(uint8ClampedArray, width, height);
+      ctx.putImageData(imageData, 0, 0);
+      this.imageData = null;
+    } catch (error) {
+      this.imageData = null;
+    }
   }
 
   /**

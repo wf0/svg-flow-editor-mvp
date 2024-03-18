@@ -153,7 +153,7 @@ export class EditorEvent {
       let yrange = [Math.min(this.sy, this.ey), Math.max(this.sy, this.ey)];
       // 定义被选中的元素数组
       let selected: string[] = [];
-      const nodes = this.draw.getGraphDraw().getNodePosition() as node[];
+      const nodes = this.draw.getGraphDraw().getNodeInfo() as node[];
       if (!nodes) return [];
 
       nodes.forEach(({ nodeID, width, height, x, y }) => {
@@ -213,7 +213,6 @@ export class EditorEvent {
    * @param e
    */
   private clickHandle(e: Event) {
-    console.log("@@ editorBox click");
     // 取消右键菜单
     this.cancelContextmenu();
 
@@ -228,7 +227,6 @@ export class EditorEvent {
    * @param e
    */
   public contextmenu(e: Event, graph?: IGraph) {
-    console.log("editorBox contextmenu");
     // 1. 先看有没有菜单，有的话更新位置，没有再创建
     const menuselector = 'div[class="sf-editor-box-contextmenu"]';
     const menu = this.editorBox.querySelector(menuselector);

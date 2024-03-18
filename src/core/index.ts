@@ -2,7 +2,7 @@ import { EventBusMap } from "../interface/Event/index.ts";
 import { Command } from "./Command/Command.ts";
 import { Draw } from "./Draw/index.ts";
 import { Global } from "./Global/Global.ts";
-import { EventBus } from "./EventBus/index.ts";
+import { EventBus } from "./Event/EventBus.ts";
 import { Listener } from "./Listener/index.ts";
 import { Register } from "./Register/index.ts";
 import { Rect } from "./Graph/Rect.ts";

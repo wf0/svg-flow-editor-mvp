@@ -1,20 +1,19 @@
-import { INodeInfo } from "../../interface/Graph/index.ts";
+import { node } from "../../interface/Graph/index.ts";
 
 /**
  * WebWorker 实现辅助线位置关系计算
- * @param event {current, allNode} 当前元素与所有元素
+ * @param event {current, nodes} 当前元素与所有元素
  */
 self.onmessage = (event) => {
-  const { current, allNode } = event.data;
-  const list = allNode as INodeInfo[];
+  const { current, nodes } = event.data;
   const { v1, v2, v3, h1, h2, h3 } = computedLine(current);
   const varr = [v1, v2, v3];
   const harr = [h1, h2, h3];
   // 定义返回结果
   var result: { num: number; type: string }[] = [];
   // 循环
-  list.forEach((node) => {
-    if (node.ID === current.ID) return;
+  nodes.forEach((node: node) => {
+    if (node.nodeID === current.nodeID) return;
     const nodeLine = computedLine(node);
 
     if (varr.find((i) => i === nodeLine.v1))
@@ -41,20 +40,20 @@ self.onmessage = (event) => {
 };
 
 // 计算当前拖动元素的6条线的坐标
-function computedLine(node: INodeInfo) {
+function computedLine(node: node) {
   var v1 = 0; // 垂直方向三条线
   var v2 = 0; // 垂直方向三条线
   var v3 = 0; // 垂直方向三条线
   var h1 = 0; // 水平方向三条线
   var h2 = 0; // 水平方向三条线
   var h3 = 0; // 水平方向三条线
-  // 1. 解析宽度高度 cx cy
-  const { cx, cy, w, h } = node;
-  v1 = cx - w / 2; // 这里不再区分 rect 是因为在传数据的时候已经处理过了
-  v2 = cx;
-  v3 = cx + w / 2;
-  h1 = cy - h / 2;
-  h2 = cy;
-  h3 = cy + h / 2;
+  // 1. 解析宽度高度 x y
+  const { x, y, width, height } = node;
+  v1 = x; // 这里不再区分 rect 是因为在传数据的时候已经处理过了
+  v2 = x + width / 2;
+  v3 = x + width;
+  h1 = y;
+  h2 = y + height / 2;
+  h3 = y + height;
   return { v1, v2, v3, h1, h2, h3 };
 }

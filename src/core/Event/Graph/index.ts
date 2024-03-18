@@ -1,6 +1,5 @@
-// 绘制类相关事件
-import { IGraph, node } from "../../interface/Graph/index.ts";
-import { Draw } from "./index.ts";
+import { IGraph, node } from "../../../interface/Graph/index.ts";
+import { Draw } from "../../Draw/index.ts";
 const worker = new Worker("/src/core/Worker/AuxiliaryLine.worker.ts", {
   type: "module",
 });

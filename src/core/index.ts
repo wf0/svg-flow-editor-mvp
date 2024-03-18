@@ -62,4 +62,4 @@ class SFEditor {
   }
 }
 
-export { SFEditor, type KeyMap };
+export { SFEditor, KeyMap };

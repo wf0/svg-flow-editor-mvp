@@ -2,11 +2,12 @@
  * Editor 事件响应
  */
 
-import { IGraph, node } from "../../interface/Graph/index.ts";
-import { nextTick } from "../../utils/index.ts";
-import { contextmenu } from "../Template/index.ts";
-import { Draw } from "./index.ts";
+import { IGraph, node } from "../../../interface/Graph/index.ts";
+import { nextTick } from "../../../utils/index.ts";
+import { contextmenu } from "../../Template/index.ts";
+import { Draw } from "../../Draw/index.ts";
 import dayjs from "dayjs";
+import { RegisterEvent } from "../Register/index.ts";
 
 export class EditorEvent {
   private draw: Draw;
@@ -20,6 +21,7 @@ export class EditorEvent {
   private sy!: number; // 起点坐标y
   private ex!: number; // 终点坐标x
   private ey!: number; // 终点坐标x
+  private registerEvent: RegisterEvent;
 
   /**
    * constructor EditorEvent 构造函数
@@ -27,6 +29,8 @@ export class EditorEvent {
    */
   constructor(draw: Draw) {
     this.draw = draw;
+    // 注册快捷键
+    this.registerEvent = new RegisterEvent(this.draw);
   }
 
   /**
@@ -40,6 +44,10 @@ export class EditorEvent {
     editorBox.addEventListener("mousedown", this.mousedownHandle.bind(this));
     editorBox.addEventListener("mousemove", this.mousemoveHandle.bind(this));
     editorBox.addEventListener("mouseup", this.mouseupHandle.bind(this));
+    document.addEventListener(
+      "keydown",
+      this.registerEvent.keydownHandle.bind(this.registerEvent)
+    );
   }
 
   /**
@@ -51,6 +59,7 @@ export class EditorEvent {
     editorBox.removeEventListener("mousedown", this.mousedownHandle);
     editorBox.removeEventListener("mousemove", this.mousemoveHandle);
     editorBox.removeEventListener("mouseup", this.mouseupHandle);
+    document.removeEventListener("keydown", this.registerEvent.keydownHandle);
   }
 
   /**

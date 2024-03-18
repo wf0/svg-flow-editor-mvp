@@ -5,9 +5,10 @@ import { EventBus } from "../Event/EventBus.ts";
 import { Listener } from "../Listener/index.ts";
 import { Register } from "../Register/index.ts";
 import { CanvasDraw } from "./Canvas.ts";
-import { GraphEvent } from "./GraphEvent.ts";
+import { GraphEvent } from "../Event/Graph/index.ts";
 import { GraphDraw } from "./Graph.ts";
-import { EditorEvent } from "./EditorEvent.ts";
+import { EditorEvent } from "../Event/Editor/index.ts";
+import { RegisterEvent } from "../Event/Register/index.ts";
 
 // 重构 draw
 export class Draw {
@@ -46,7 +47,7 @@ export class Draw {
     // 3. 初始化editor
     this.initEditor(selector);
 
-    // 4. 初始化事件
+    // 4. 初始化事件-editorBox、keydown 快捷键
     this.editorEvent.addEvent();
 
     // 5. 初始化框选

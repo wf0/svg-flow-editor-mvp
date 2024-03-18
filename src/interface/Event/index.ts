@@ -108,6 +108,7 @@ export interface IContextmenu {
 
 // 注册快捷键回传的参数
 export type cbParams = {
+  tips: string;
   ctrl?: boolean;
   shift?: boolean;
   key?: string;

@@ -96,13 +96,18 @@ export class GraphEvent {
       textNode.remove();
     }
 
-    editor.style.display = "flex";
-
     // 自动获取焦点
     input.focus();
 
+    // 将光标移动到末尾
+    var range = document.createRange();
+    range.selectNodeContents(input);
+    range.collapse(false);
+    var sel = window.getSelection() as Selection;
+    sel.removeAllRanges();
+    sel.addRange(range);
+
     input.addEventListener("blur", (e) => {
-      console.log("input blur 事件");
       // 删除编辑器
       editor.remove();
 

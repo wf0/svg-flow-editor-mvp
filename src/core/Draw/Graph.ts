@@ -62,9 +62,6 @@ export class GraphDraw {
 
     // 创建形变锚点
     this.createFormatPoint(graph);
-
-    // 创建 contenteditable 可编辑 DIV
-    this.createContentEditable(graph);
   }
 
   /**

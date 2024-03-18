@@ -265,6 +265,23 @@ export class GraphDraw {
       this.createFormatPoint(graph);
 
       this.draw.getEditorBox().removeEventListener("mousemove", boxmove);
+      // 执行事件回调
+      nextTick(() => {
+        console.log("## Graph Resized.");
+        // 回传参数：
+        const params = {
+          nodeID: graph.getID(),
+          width: graph.getWidth(),
+          height: graph.getHeight(),
+          x: graph.getX(),
+          y: graph.getY(),
+        };
+        const eventBus = this.draw.getEventBus();
+        const listener = this.draw.getListener();
+        const graphLoadedSubscribe = eventBus.isSubscribe("resized");
+        graphLoadedSubscribe && eventBus.emit("resized", params);
+        listener.resized && listener.resized(params);
+      });
       e.stopPropagation();
       e.preventDefault();
     });

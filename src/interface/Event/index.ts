@@ -1,12 +1,14 @@
 import { IGraph } from "../Graph/index.ts";
 
 // 实现SFEditor 事件监听
-export type EventType = () => void;
+export type EventType = (payload?: unknown) => void;
 
 // 实现SFEditor eventBus 事件监听，该类型参数与 listener 保持一致！
 export interface EventBusMap {
   loaded: EventType;
+  resized: EventType;
   destroyed: EventType;
+  moved: EventType;
 }
 
 export enum KeyMap {

@@ -1,5 +1,6 @@
-import { IGraph } from "../../interface/Graph/index.ts";
+import { IGraph, node } from "../../interface/Graph/index.ts";
 import { nextTick } from "../../utils/index.ts";
+import { Graph } from "../Graph/index.ts";
 import { Draw } from "./index.ts";
 const OFFSET = 10;
 
@@ -191,6 +192,30 @@ export class GraphDraw {
 
     editor.appendChild(input);
     graphMain.appendChild(editor);
+  }
+
+  /**
+   * 获取节点的位置信息，用于实现框线、辅助线
+   */
+  public getNodePosition(): node[] {
+    const nodes: node[] = [];
+
+    this.draw
+      .getEditorBox()
+      .querySelectorAll(
+        'div[class="sf-editor-box-graphs-main"],div[class="sf-editor-box-graphs-main selected"]'
+      )
+      .forEach((mainBox) => {
+        const nodeID = mainBox.getAttribute("graphid") as string;
+        // 构造 graph 拿到 width height x y stroke fill
+        const graph = new Graph(this.draw, nodeID);
+        const width = graph.getWidth();
+        const height = graph.getHeight();
+        const x = graph.getX();
+        const y = graph.getY();
+        nodes.push({ nodeID, width, height, x, y });
+      });
+    return nodes;
   }
 
   /**

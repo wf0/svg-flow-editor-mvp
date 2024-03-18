@@ -25,7 +25,8 @@ export class GraphCommon {
    * @returns
    */
   public getX() {
-    const graphBox = this.draw.getGraphDraw().getGraphMain(this.nodeID);
+    const graph = this as unknown as IGraph;
+    const graphBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
     return Number(graphBox.style.left.replace("px", ""));
   }
 
@@ -34,7 +35,8 @@ export class GraphCommon {
    * @returns
    */
   public getY() {
-    const graphBox = this.draw.getGraphDraw().getGraphMain(this.nodeID);
+    const graph = this as unknown as IGraph;
+    const graphBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
     return Number(graphBox.style.top.replace("px", ""));
   }
 
@@ -43,7 +45,8 @@ export class GraphCommon {
    * @returns
    */
   public getWidth() {
-    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
+    const graph = this as unknown as IGraph;
+    const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
     return Number(graphBox.style.width.replace("px", ""));
   }
 
@@ -52,7 +55,8 @@ export class GraphCommon {
    * @returns
    */
   public getHeight() {
-    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
+    const graph = this as unknown as IGraph;
+    const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
     return Number(graphBox.style.height.replace("px", ""));
   }
 
@@ -61,7 +65,8 @@ export class GraphCommon {
    * @param x
    */
   public setX(x: number) {
-    const graphBox = this.draw.getGraphDraw().getGraphMain(this.nodeID);
+    const graph = this as unknown as IGraph;
+    const graphBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
     graphBox.style.left = x + "px";
   }
 
@@ -70,7 +75,8 @@ export class GraphCommon {
    * @param y
    */
   public setY(y: number) {
-    const graphBox = this.draw.getGraphDraw().getGraphMain(this.nodeID);
+    const graph = this as unknown as IGraph;
+    const graphBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
     graphBox.style.top = y + "px";
   }
 
@@ -80,7 +86,7 @@ export class GraphCommon {
    */
   public setWidth(w: number) {
     const graph = this as unknown as IGraph;
-    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
     graphBox.style.width = w + "px";
     return graph;
   }
@@ -91,7 +97,7 @@ export class GraphCommon {
    */
   public setHeight(h: number) {
     const graph = this as unknown as IGraph;
-    const graphBox = this.draw.getGraphDraw().getGraphBox(this.nodeID);
+    const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
     graphBox.style.height = h + "px";
     return graph;
   }

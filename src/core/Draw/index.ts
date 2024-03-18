@@ -21,7 +21,7 @@ export class Draw {
   private editorEvent: EditorEvent;
 
   private root!: HTMLDivElement; // 根节点 sf-editor
-  private editorBox!: HTMLDivElement; // svg、canvas 操作区
+  private editorBox!: HTMLDivElement; // svg、canvas 操作区 sf-editor-box
 
   constructor(
     selector: string,

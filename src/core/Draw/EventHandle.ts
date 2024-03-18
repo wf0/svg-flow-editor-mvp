@@ -1,5 +1,5 @@
 // 绘制类相关事件
-import { IGraph } from "../../interface/Graph/index.ts";
+import { IGraph, node } from "../../interface/Graph/index.ts";
 import { nextTick } from "../../utils/index.ts";
 import { contextmenu } from "../Template/index.ts";
 import { Draw } from "./index.ts";
@@ -265,6 +265,9 @@ export class EditorEvent {
     // 如果右键菜单存在，则取消右键菜单
     this.cancelContextmenu();
 
+    // 取消形变锚点
+    this.draw.getGraphDraw().cancelFormatPoint();
+
     // 记录初始位置
     const { offsetX, offsetY } = e;
     this.sx = offsetX;
@@ -279,7 +282,7 @@ export class EditorEvent {
 
     // 元件禁止响应
     this.editorBox
-      .querySelectorAll("div[class='sf-editor-box-graphs-main-item']")
+      .querySelectorAll("div[class='sf-editor-box-graphs-main']")
       .forEach((i) => ((i as HTMLDivElement).style.pointerEvents = "none"));
   }
 
@@ -305,7 +308,7 @@ export class EditorEvent {
    * @param e
    * @returns
    */
-  private mouseupHandle(e: MouseEvent) {
+  private async mouseupHandle(e: MouseEvent) {
     this.move = false;
     const selector = 'div[class="sf-editor-box-selectmask"]';
     const mask = this.editorBox.querySelector(selector) as HTMLDivElement;
@@ -315,11 +318,87 @@ export class EditorEvent {
     mask.style.height = "0";
     mask.style.display = "none";
     this.editorBox
-      .querySelectorAll("div[class='sf-editor-box-graphs-main-item']")
+      .querySelectorAll("div[class='sf-editor-box-graphs-main']")
       .forEach((i) => ((i as HTMLDivElement).style.pointerEvents = ""));
     // 正常情况下，单击左键的时间不会超过 120 毫秒，如果超过，则认为用户在框选
     const et = Number(dayjs().format("mmssSSS"));
     if (et - this.st <= 120) return this.clickHandle(e);
+    const { offsetX, offsetY } = e;
+    this.ex = offsetX;
+    this.ey = offsetY;
+    // 实现相关的框选逻辑
+    await this.selected();
+    // 重置参数
+    this.st = 0;
+    this.sx = 0;
+    this.sy = 0;
+    this.ex = 0;
+    this.ey = 0;
+  }
+
+  /**
+   * 根据框选开始结束，计算那些元素在选区内被选中
+   * @returns string[] 返回 nodeID 构成的数组
+   */
+  private selected() {
+    return new Promise<void>((resolve) => {
+      let xrange = [Math.min(this.sx, this.ex), Math.max(this.sx, this.ex)];
+      let yrange = [Math.min(this.sy, this.ey), Math.max(this.sy, this.ey)];
+      // 定义被选中的元素数组
+      let selected: string[] = [];
+      const nodes = this.draw.getGraphDraw().getNodePosition() as node[];
+      if (!nodes) return [];
+
+      nodes.forEach(({ nodeID, width, height, x, y }) => {
+        const lt = { x, y };
+        const rt = { x: x + width, y };
+        const lb = { x, y: y + height };
+        const rb = { x: x + width, y: y + height };
+
+        // 判断 4 个角是否处于框选范围内
+        const islt = this.computedIsSelected(lt, xrange, yrange);
+        const isrt = this.computedIsSelected(rt, xrange, yrange);
+        const islb = this.computedIsSelected(lb, xrange, yrange);
+        const isrb = this.computedIsSelected(rb, xrange, yrange);
+
+        function inside() {
+          if (islt || isrt || isrb || islb) selected.push(nodeID);
+        }
+
+        function all() {
+          if (islt && isrt && isrb && islb) selected.push(nodeID);
+        }
+
+        // this.mode === "inside" ? inside() : all();
+        inside(); // 目前默认就是 inside 模式
+      });
+
+      if (!selected.length) resolve();
+      // 然后将选中的节点设置 selected 样式
+      selected.forEach((i) =>
+        this.draw.getGraphDraw().getGraphMain(i).classList.add("selected")
+      );
+      resolve();
+    });
+  }
+
+  /**
+   * 框选结束后，判断点是否在范围内
+   * @param current
+   * @param x
+   * @param y
+   * @returns
+   */
+  private computedIsSelected(
+    current: { x: number; y: number },
+    x: number[],
+    y: number[]
+  ) {
+    // 目前只考虑了点的情况，如果框选的是边 也要兼容 暂不考虑
+    let isx = current.x >= x[0] && current.x <= x[1];
+    let isy = current.y >= y[0] && current.y <= y[1];
+    // 对同一个点来说 必须同时满足才算是在框选区
+    return isx && isy;
   }
 
   /**

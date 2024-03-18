@@ -68,25 +68,56 @@ export class GraphEvent {
    * @param e
    */
   private graphDblclickHandle(e: Event, graph: IGraph) {
-    console.log("## graphBox dblclick");
     const nodeID = graph.getID();
-    // 获取当前 main
-    const graphBox = this.draw.getGraphDraw().getGraphMain(nodeID);
     const selector = 'div[class="sf-editor-box-graphs-main-contenteditable"]';
+
+    const graphDraw = this.draw.getGraphDraw();
+
+    // 1. 获取当前 main
+    const graphBox = graphDraw.getGraphMain(nodeID);
+
+    // 2. 创建 editorable
+    graphDraw.createContentEditable(graph);
+
+    // 3. 获取 editorable 的div
     const editor = graphBox.querySelector(selector) as HTMLDivElement;
-    editor.style.display = "flex";
+
+    // 4. 通过 editor 找parent 找 svg
+    const svg = editor.parentNode?.querySelector("svg") as SVGSVGElement;
+
+    // 5. 通过 svg 找 text 节点
+    const textNode = svg.querySelector("text");
+
     const input = editor.children[0] as HTMLDivElement;
+
+    // 6. 如果本身节点存在，则取文字出来显示到 input 中，并且删除 text 节点
+    if (textNode) {
+      input.innerHTML = textNode.innerHTML;
+      textNode.remove();
+    }
+
+    editor.style.display = "flex";
+
     // 自动获取焦点
     input.focus();
 
-    input.addEventListener("blur", () => {
-      // 隐藏
-      editor.style.display = "none";
+    input.addEventListener("blur", (e) => {
+      console.log("input blur 事件");
+      // 删除编辑器
+      editor.remove();
 
       // 获取用户输入
       const text = input.innerHTML;
 
       // 将该内容添加到 svg 上
+      const st = this.draw.createSVGElement("text") as SVGTextElement;
+      st.style.pointerEvents = "none"; // 不响应用户操作
+      st.style.userSelect = "none"; // 无法实现选择复制
+      st.setAttribute("x", "50%");
+      st.setAttribute("y", "50%");
+      st.setAttribute("text-anchor", "middle");
+      st.innerHTML = text;
+      svg.appendChild(st);
     });
 
     e.stopPropagation();

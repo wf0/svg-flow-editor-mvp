@@ -184,12 +184,19 @@
     }
 
     // 元件库
-    &-catalog {}
+    &-catalog {
+        background-color: #fff;
+        width: 220px;
+        height: 100%;
+        border: solid red 1px;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
 
     // 顶部操作区
     &-operation {
         background-color: #fff;
-        border: solid red 1px;
         height: 60px;
         width: 100%;
         display: flex;
@@ -199,6 +206,17 @@
         top: 0;
         left: 0;
 
+        i {
+            position: relative;
+        }
+
+        .line {
+            border-right: solid #ccc 1px;
+            margin: 0 5px;
+            height: 80%;
+            width: 1px;
+        }
+
         &>div {
             flex: 1;
             display: flex;
@@ -206,13 +224,81 @@
         }
 
         &-top {
-            img {
-                height: 30px;
-                width: 30px;
+            border-bottom: solid #ccc 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            &>div {
+                height: 100%;
+                display: flex;
+                align-items: center;
+
             }
+
+
+
+            .left {
+                img {
+                    height: 30px;
+                    width: 30px;
+                }
+
+                span {
+                    margin: 0 5px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 70%;
+                    padding: 0 6px;
+                    font-size: 13px;
+                    border-radius: 4px;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: #dfe2e5;
+
+                    }
+                }
+            }
+
+            .right {
+                padding-right: 10px;
+
+                img {
+                    height: 28px;
+                    width: 28px;
+                    cursor: pointer;
+                    border-radius: 50%;
+                }
+
+                i {
+                    cursor: pointer;
+                    margin: 0 20px;
+                }
+
+                &-shear {
+                    height: 90%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 4px;
+                    color: #fff;
+                    background-color: #3080E9;
+                    border: 1px solid #3080E9;
+                    font-size: 13px;
+                    border-radius: 4px;
+                    padding: 0 12px;
+                    min-width: 42px;
+                    cursor: pointer;
+                }
+            }
+
         }
 
         &-bottom {
+            border-bottom: solid #ccc 1px;
+
             i {
                 cursor: pointer;
                 margin: 0 5px;
@@ -242,7 +328,6 @@
 
         .line {
             border-right: solid #ccc 1px;
-
             height: 80%;
             width: 1px;
         }

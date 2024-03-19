@@ -68,6 +68,7 @@ class SFEditor {
     // name 是插件名称
     if (name === "footer") this.draw.initFooter();
     if (name === "operation") this.draw.initOperation();
+    if (name === "catalog") this.draw.initCatalog();
   }
 }
 

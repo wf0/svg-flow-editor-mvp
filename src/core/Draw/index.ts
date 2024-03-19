@@ -11,6 +11,7 @@ import { EditorEvent } from "../Event/Editor/index.ts";
 import { footerTemp, operationTemp } from "../Template/index.ts";
 import { FooterEvent } from "../Event/Footer/index.ts";
 import { OperationEvent } from "../Event/Operation/index.ts";
+import { CatalogEvent } from "../Event/Catalog/index.ts";
 
 // 重构 draw
 export class Draw {
@@ -25,6 +26,7 @@ export class Draw {
   private editorEvent: EditorEvent;
   private footerEvent!: FooterEvent; // footer 插件事件
   private operationEvent!: OperationEvent; // operation 插件事件
+  private catalogEvent!: CatalogEvent; // catalog 插件事件
 
   private root!: HTMLDivElement; // 根节点 sf-editor 子节点有 box footer catalog operation
   private editorBox!: HTMLDivElement; // svg、canvas 操作区 sf-editor-box
@@ -154,6 +156,19 @@ export class Draw {
   }
 
   /**
+   * 元件库 catalog 插件
+   */
+  public initCatalog() {
+    const catalog = this.createHTMLElement("div") as HTMLDivElement;
+    catalog.classList.add("sf-editor-catalog");
+    this.root.appendChild(catalog);
+    // catalog.innerHTML = operationTemp;
+    // 添加事件
+    this.catalogEvent = new CatalogEvent(this);
+    this.resize();
+  }
+
+  /**
    * 重置宽高信息
    */
   public resize() {
@@ -166,14 +181,24 @@ export class Draw {
       '[class="sf-editor-operation"]'
     ) as HTMLDivElement;
 
+    const catalogBox = this.root.querySelector(
+      '[class="sf-editor-catalog"]'
+    ) as HTMLDivElement;
+
     // 重置绘制区宽高
     this.editorBox.style.height = `calc(100% - 
       ${footerBox ? footerBox.clientHeight + "px" : ""} -
       ${operationBox ? operationBox.clientHeight + "px" : ""}
       )`;
 
+    // 如果顶部菜单存在，则graphBox 需要向下 一定高度
     if (operationBox) {
-      this.editorBox.style.top = "60px";
+      this.editorBox.style.top = operationBox.clientHeight + "px";
+      if (catalogBox) {
+        catalogBox.style.top = operationBox.clientHeight + "px";
+        catalogBox.style.height = this.editorBox.style.height;
+        this.editorBox.style.left = catalogBox.clientWidth + "px";
+      }
     }
 
     // 关键是重置 canvas 宽高与重绘 grid origin watermark

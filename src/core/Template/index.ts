@@ -125,7 +125,21 @@ export const footerTemp = `
 
 export const operationTemp = `
 <div class="sf-editor-operation-top">
-	<img src="" alt="" />
+	<div class="left">
+		<img src="/public/favor.svg" alt="" />
+		<span>文件</span>
+		<span>编辑</span>
+		<span>选择</span>
+		<span>视图</span>
+		<span>插入</span>
+		<span>画布</span>
+		<span>排列</span>
+	</div>
+	<div class="right">
+		<div class="right-shear">分享协作</div>
+		<i class="iconfont icon-xiazai"></i>
+		<img src="/public/user.png" alt="" />
+	</div>
 </div>
 <div class="sf-editor-operation-bottom">
 	<!-- 撤销 -->
@@ -134,10 +148,12 @@ export const operationTemp = `
 	<i class="iconfont icon-zhongzuo"></i>
 	<!-- 美化 -->
 	<i class="iconfont icon-huabumeihua"></i>
+	<div class="line"></div>
 	<!-- 背景颜色 -->
 	<i class="iconfont icon-ibg"></i>
 	<!-- 插入图片 -->
 	<i class="iconfont icon-tupian"></i>
+	<div class="line"></div>
 	<!-- 加粗 -->
 	<i class="iconfont icon-jiacu"></i>
 	<!-- 斜体 -->
@@ -148,6 +164,7 @@ export const operationTemp = `
 	<i class="iconfont icon-zitiyanse"></i>
 	<!-- 填充 -->
 	<i class="iconfont icon-beijingyanse"></i>
+	<div class="line"></div>
 	<!-- 连线宽度 -->
 	<i class="iconfont icon-xiantiaokuandu"></i>
 	<!-- 连线样式 -->
@@ -155,4 +172,4 @@ export const operationTemp = `
 	<!-- 图层 -->
 	<i class="iconfont icon-zhiyudingceng"></i>
 </div>
-	  `;
+`;

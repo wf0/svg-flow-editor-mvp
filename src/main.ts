@@ -1,4 +1,4 @@
-import { SFEditor, KeyMap } from "./core/index.ts";
+import { SFEditor } from "./core/index.ts";
 
 document.addEventListener("DOMContentLoaded", () => {
   const editor = new SFEditor(".box");
@@ -7,8 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
   editor.Ellipse(100, 80).position(300, 300);
 
   // 加载插件
-  editor.plugin("footer");
-  editor.plugin("operation");
+  // editor.plugin("footer");
+  // editor.plugin("operation");
+  // editor.plugin("catalog");
   // editor.register.contextMenuList = [
   //   {
   //     title: "测试",

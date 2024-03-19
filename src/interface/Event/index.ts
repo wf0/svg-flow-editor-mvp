@@ -9,6 +9,8 @@ export interface EventBusMap {
   resized: EventType;
   destroyed: EventType;
   moved: EventType;
+  graphNumberChanged: EventType;
+  pageScale: EventType;
 }
 
 export enum KeyMap {

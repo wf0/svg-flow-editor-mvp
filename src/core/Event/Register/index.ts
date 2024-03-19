@@ -97,7 +97,29 @@ export class RegisterEvent {
   /**
    * 实现删除元件
    */
-  private deleteGraph() {}
+  private deleteGraph() {
+    // 执行回调
+    nextTick(() => {
+      console.log("## 删除元件");
+      const eventBus = this.draw.getEventBus();
+      const listener = this.draw.getListener();
+      const nums = this.draw.getGraphDraw().getNodesNumber();
+      // 同步 footer number 元件数量
+      const footerBox = this.draw
+        .getRoot()
+        .querySelector('[class="sf-editor-footer"]');
+      // 如果用户加载了 footer 插件，则同步更新数据
+      if (footerBox) {
+        const number = footerBox.querySelector(
+          '[command="nums"]'
+        ) as HTMLSpanElement;
+        number.innerHTML = nums.toString();
+      }
+      const graphLoadedSubscribe = eventBus.isSubscribe("graphNumberChanged");
+      graphLoadedSubscribe && eventBus.emit("graphNumberChanged", nums);
+      listener.graphNumberChanged && listener.graphNumberChanged(nums);
+    });
+  }
 
   /**
    * 复制粘贴元件 - 实现思路

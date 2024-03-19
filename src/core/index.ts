@@ -11,6 +11,8 @@ import { KeyMap } from "../interface/Event/index.ts";
 import "../style/SFEditor.less";
 import "../assets/font_4458457_qk4yl715zu/iconfont.css";
 
+type pluginName = "catalog" | "footer" | "operation";
+
 class SFEditor {
   public listener: Listener;
   public eventBus: EventBus<EventBusMap>;
@@ -60,6 +62,11 @@ class SFEditor {
   public Ellipse(width: number, height: number) {
     return new Ellipse(this.draw, width, height);
   }
+
+  // 加载插件函数
+  public plugin(name: pluginName) {
+    // name 是插件名称
+  }
 }
 
-export { SFEditor, KeyMap };
+export { SFEditor, KeyMap, type pluginName };

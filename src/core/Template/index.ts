@@ -1,4 +1,4 @@
-export const contextmenu = `
+export const contextmenuTemp = `
 <div class="sf-editor-box-contextmenu-main">
 	<!-- svg右键 -->
 	<div class="sf-editor-box-contextmenu-main-item graph-item" command="copy">
@@ -83,5 +83,39 @@ export const contextmenu = `
 		</span>
 		<span>Ctrl+A</span>
 	</div>
+</div>
+`;
+
+export const footerTemp = `
+<div class="sf-editor-footer-left">
+	<!-- 多页 -->
+	<i class="iconfont icon-duoye_nor" title="列表" command="list"></i>
+	<!-- 当前画布名称 -->
+	<span>画布1</span>
+	<!-- 分割线 -->
+	<div class="line"></div>
+	<!-- 加页 -->
+	<i class="iconfont icon-jiahao" title="新建画布" command="newpages"></i>
+</div>
+<div class="sf-editor-footer-right">
+	<span>图形: <span  command="nums"></span></span>
+
+	<div class="line"></div>
+
+	<!-- 加减视口大小 -->
+	<i class="iconfont icon-jianhao" title="缩小" command="reduce"></i>
+	<span title="重置视口" style="cursor:pointer" command="resize">100%</span>
+	<i class="iconfont icon-jiahao" title="放大" command="amplify"></i>
+
+	<div class="line"></div>
+
+	<!-- 模板 -->
+	<i class="iconfont icon-moban" title="模板" command="template"></i>
+
+	<!-- 全屏 -->
+	<i class="iconfont icon-quanping" title="全屏" command="fullscreen"></i>
+
+	<!-- 帮助 -->
+	<i class="iconfont icon-bangzhu" title="帮助" command="help"></i>
 </div>
 `;

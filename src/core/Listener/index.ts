@@ -6,7 +6,8 @@ export class Listener {
   public resized: EventType | null;
   public loaded: EventType | null;
   public moved: EventType | null;
-
+  public graphNumberChanged: EventType | null;
+  public pageScale: EventType | null;
   constructor() {
     // 编辑器加载完成
     this.loaded = null;
@@ -16,5 +17,10 @@ export class Listener {
     this.resized = null;
     // 移动位置
     this.moved = null;
+    // 元件数量变化
+    this.graphNumberChanged = null;
+
+    // 页面缩放
+    this.pageScale = null;
   }
 }

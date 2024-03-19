@@ -162,6 +162,13 @@ export class GraphEvent {
     this.nodes = this.draw.getGraphDraw().getNodeInfo() as node[];
   }
 
+
+  /**
+   * mouse move 移动中
+   * @param e 
+   * @param graph 
+   * @returns 
+   */
   private mouseMoveHandle(e: MouseEvent, graph: IGraph) {
     if (!this.move) return;
 
@@ -180,7 +187,7 @@ export class GraphEvent {
   }
 
   /**
-   * mouseup
+   * mouseup 鼠标抬起
    * @param e
    */
   private mouseUpHandle(_e: MouseEvent) {

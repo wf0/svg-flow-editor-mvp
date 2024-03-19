@@ -67,6 +67,28 @@ export class GraphDraw {
 
     // // 创建形变锚点
     this.createFormatPoint(graph);
+
+    // 执行回调
+    nextTick(() => {
+      console.log("## 添加元件");
+      const eventBus = this.draw.getEventBus();
+      const listener = this.draw.getListener();
+      const nums = this.getNodesNumber();
+      // 同步 footer number 元件数量
+      const footerBox = this.draw
+        .getRoot()
+        .querySelector('[class="sf-editor-footer"]');
+      // 如果用户加载了 footer 插件，则同步更新数据
+      if (footerBox) {
+        const number = footerBox.querySelector(
+          '[command="nums"]'
+        ) as HTMLSpanElement;
+        number.innerHTML = nums.toString();
+      }
+      const graphLoadedSubscribe = eventBus.isSubscribe("graphNumberChanged");
+      graphLoadedSubscribe && eventBus.emit("graphNumberChanged", nums);
+      listener.graphNumberChanged && listener.graphNumberChanged(nums);
+    });
   }
 
   /**
@@ -197,6 +219,9 @@ export class GraphDraw {
       ?.remove();
   }
 
+  /**
+   * 取消所有的形变锚点-取消选中
+   */
   public cancelAllFormatPoint() {
     this.draw
       .getEditorBox()
@@ -382,6 +407,13 @@ export class GraphDraw {
         nodes.push({ nodeID, width, height, x, y });
       });
     return nodes;
+  }
+
+  /**
+   * 获取页面的元件数量
+   */
+  public getNodesNumber() {
+    return this.draw.getEditorBox().querySelectorAll('[type="mainBox"]').length;
   }
 
   /**

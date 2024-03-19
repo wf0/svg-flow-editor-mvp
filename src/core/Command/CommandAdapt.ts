@@ -7,4 +7,8 @@ export class CommandAdapt {
   constructor(draw: Draw) {
     this.draw = draw;
   }
+
+  public background() {
+    console.log(this.draw);
+  }
 }

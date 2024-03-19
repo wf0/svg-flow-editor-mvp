@@ -4,7 +4,7 @@
 
 import { IGraph, node } from "../../../interface/Graph/index.ts";
 import { nextTick } from "../../../utils/index.ts";
-import { contextmenu } from "../../Template/index.ts";
+import { contextmenuTemp } from "../../Template/index.ts";
 import { Draw } from "../../Draw/index.ts";
 import dayjs from "dayjs";
 import { RegisterEvent } from "../Register/index.ts";
@@ -49,6 +49,10 @@ export class EditorEvent {
       "keydown",
       this.registerEvent.keydownHandle.bind(this.registerEvent)
     );
+    // 缩放事件
+    document.addEventListener("wheel", this.setScale.bind(this), {
+      passive: false,
+    });
   }
 
   /**
@@ -61,6 +65,7 @@ export class EditorEvent {
     editorBox.removeEventListener("mousemove", this.mousemoveHandle);
     editorBox.removeEventListener("mouseup", this.mouseupHandle);
     document.removeEventListener("keydown", this.registerEvent.keydownHandle);
+    document.removeEventListener("wheel", this.setScale);
   }
 
   /**
@@ -218,6 +223,58 @@ export class EditorEvent {
   }
 
   /**
+   * 滚轮缩放事件-按照等比例进行缩放即可，不需要关心实际的比例是多少
+   * @param evt
+   */
+  private setScale(evt: WheelEvent) {
+    if (!evt.ctrlKey) return;
+    evt.preventDefault();
+    const step = 0.2;
+    // 当前的比例
+    const editorBox = this.draw.getEditorBox() as HTMLDivElement;
+    const currentScale = editorBox.style.transform
+      .split("scale")[1]
+      .replace(/\(|\)/g, "");
+    var result =
+      evt.deltaY < 0
+        ? Number(currentScale) + step
+        : Number(currentScale) - step;
+
+    if (result < 0.4) result = 0.4;
+    if (result > 2) result = 2;
+
+    this.scalePage(result);
+  }
+
+  /**
+   * 实现缩放的关键方法 单独出来是为了供 command 实现调用
+   * @param scale
+   */
+  public scalePage(scale: number) {
+    const editorBox = this.draw.getEditorBox() as HTMLDivElement;
+    // 考虑临界值  实现缩放
+    editorBox.style.transform = `scale(${scale})`;
+    // 同时还需要考虑 footer 的缩放比例同步显示
+    const root = this.draw.getRoot();
+    const footerBox = root.querySelector('[class="sf-editor-footer"]');
+    if (footerBox) {
+      // 修改缩放比例 command=resize
+      const resize = footerBox.querySelector(
+        '[command="resize"]'
+      ) as HTMLSpanElement;
+      resize.innerHTML = Math.ceil(scale * 100).toString() + "%";
+    }
+    // 执行 pageScale 回调
+    nextTick(() => {
+      const eventBus = this.draw.getEventBus();
+      const listener = this.draw.getListener();
+      const graphLoadedSubscribe = eventBus.isSubscribe("pageScale");
+      graphLoadedSubscribe && eventBus.emit("pageScale", scale);
+      listener.pageScale && listener.pageScale(scale);
+    });
+  }
+
+  /**
    * editorBox 单击事件
    * @param e
    */
@@ -266,7 +323,7 @@ export class EditorEvent {
     const contextmenuBox = this.draw.createHTMLElement("div") as HTMLDivElement;
     contextmenuBox.classList.add("sf-editor-box-contextmenu");
 
-    contextmenuBox.innerHTML = contextmenu;
+    contextmenuBox.innerHTML = contextmenuTemp;
 
     // 添加到editorbox
     this.editorBox.append(contextmenuBox);

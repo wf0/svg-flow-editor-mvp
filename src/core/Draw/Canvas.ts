@@ -7,8 +7,8 @@ import pako from "pako"; // imageData 的解压缩
 export class CanvasDraw {
   private canvas!: HTMLCanvasElement;
   private draw: Draw;
+  private imageData!: Uint8Array | null; // canvas 像素数据，用于实现重置及绘制辅助线
 
-  private imageData!: Uint8Array | null;
   constructor(draw: Draw) {
     this.draw = draw;
   }
@@ -53,7 +53,7 @@ export class CanvasDraw {
     // 进行颜色转换
     var covercolor = "211, 211, 211";
 
-    if (color) covercolor = this.handleColor(color);
+    if (color) covercolor = this.colorHandle(color);
 
     // 绘制水平线
     for (let i = 0; i <= rowCount; i++) {
@@ -87,7 +87,7 @@ export class CanvasDraw {
     // 进行颜色转换
     var covercolor = "211, 211, 211";
 
-    if (color) covercolor = this.handleColor(color);
+    if (color) covercolor = this.colorHandle(color);
 
     const { height, width } = this.canvas;
 
@@ -126,7 +126,7 @@ export class CanvasDraw {
 
     var covercolor = "211, 211, 211";
 
-    if (color) covercolor = this.handleColor(color);
+    if (color) covercolor = this.colorHandle(color);
 
     var unitLength = (80 * defaultWidth) / 20;
 
@@ -150,7 +150,7 @@ export class CanvasDraw {
    * @param color
    * @returns
    */
-  private handleColor(color: string) {
+  private colorHandle(color: string) {
     var result = "";
     // 传入了参数要进行颜色类型转换
     if (color.includes("#")) {
@@ -218,6 +218,38 @@ export class CanvasDraw {
     var ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     const { height, width } = this.canvas;
     ctx.clearRect(0, 0, width, height);
+  }
+
+  /**
+   * 重置数据
+   */
+  public resetCanvas() {
+    // 1. 获取当前的数据
+    var ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+    const { width, height } = this.canvas;
+    const imageData = ctx.getImageData(0, 0, width, height);
+    this.imageData = pako.deflate(new Uint8Array(imageData.data)); // 压缩，减小存储开销
+
+    // 2. 清空 canvas 内容
+    this.clearCanvas();
+
+    // 3. 重置 canvas 宽高
+    const editorBox = this.draw.getEditorBox();
+    const { clientWidth, clientHeight } = editorBox;
+    const canvas = editorBox.querySelector("canvas") as HTMLCanvasElement;
+    canvas.setAttribute("width", clientWidth.toString());
+    canvas.setAttribute("height", clientHeight.toString());
+
+    // 4. 重置 canvas 信息
+    canvas.width = clientWidth;
+    canvas.height = clientHeight;
+
+    // 5. 重新绘制之前的数据
+    const decompressed = pako.inflate(this.imageData);
+    const uint8ClampedArray = new Uint8ClampedArray(decompressed);
+    const old = new ImageData(uint8ClampedArray, width, height);
+    ctx.putImageData(old, 0, 0);
+    this.imageData = null;
   }
 
   /**

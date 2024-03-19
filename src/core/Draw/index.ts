@@ -8,6 +8,12 @@ import { CanvasDraw } from "./Canvas.ts";
 import { GraphEvent } from "../Event/Graph/index.ts";
 import { GraphDraw } from "./Graph.ts";
 import { EditorEvent } from "../Event/Editor/index.ts";
+import { footerTemp } from "../Template/index.ts";
+import { FooterEvent } from "../Event/Footer/index.ts";
+// 定义插件的宽高
+const footerHeight = "24px";
+const operationHeight = "120px";
+const catalogWidth = "220px";
 
 // 重构 draw
 export class Draw {
@@ -21,8 +27,10 @@ export class Draw {
   private graphEvent: GraphEvent;
   private editorEvent: EditorEvent;
 
-  private root!: HTMLDivElement; // 根节点 sf-editor
+  private root!: HTMLDivElement; // 根节点 sf-editor 子节点有 box footer catalog operation
   private editorBox!: HTMLDivElement; // svg、canvas 操作区 sf-editor-box
+
+  private footer = false;
 
   constructor(
     selector: string,
@@ -51,6 +59,8 @@ export class Draw {
 
     // 5. 初始化框选
     this.initSelectMask();
+
+    this.initFooter();
 
     // 6. 发布事件
     nextTick(() => {
@@ -92,6 +102,7 @@ export class Draw {
     // 3.2 div.sf-editor-box -- 编辑器盒子 svg、canvas 绘制区
     this.editorBox = this.createHTMLElement("div") as HTMLDivElement;
     this.editorBox.classList.add("sf-editor-box");
+    this.editorBox.style.transform = "scale(1)"; // 实现缩放
 
     const graphsBox = this.createHTMLElement("div") as HTMLDivElement;
     graphsBox.classList.add("sf-editor-box-graphs");
@@ -118,6 +129,31 @@ export class Draw {
     const div = this.createHTMLElement("div") as HTMLDivElement;
     div.classList.add("sf-editor-box-selectmask");
     this.editorBox.appendChild(div);
+  }
+
+  /**
+   * 初始化 footer
+   */
+  public initFooter() {
+    // 需要重置画布的宽高信息
+    const footer = this.createHTMLElement("div") as HTMLDivElement;
+    footer.classList.add("sf-editor-footer");
+    this.root.appendChild(footer);
+    footer.innerHTML = footerTemp;
+    // 添加事件
+    new FooterEvent(this);
+    this.footer = true;
+    this.resize();
+  }
+
+  private resize() {
+    // 有 footer
+    if (this.footer)
+      // 重置绘制区宽高
+      this.editorBox.style.height = `calc(100% - ${footerHeight})`;
+
+    // 关键是重置 canvas
+    this.canvasDraw.resetCanvas();
   }
 
   /**
@@ -162,4 +198,5 @@ export class Draw {
   public getGraphEvent = () => this.graphEvent;
   public getEditorEvent = () => this.editorEvent;
   public getCanvasDraw = () => this.canvasDraw;
+  public getRoot = () => this.root;
 }

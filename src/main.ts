@@ -7,9 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
   editor.Ellipse(100, 80).position(300, 300);
 
   // 加载插件
-  // editor.plugin("footer");
-  // editor.plugin("operation");
-  // editor.plugin("catalog");
+  editor.plugin("footer");
+  editor.plugin("operation");
+  editor.plugin("catalog");
   // editor.register.contextMenuList = [
   //   {
   //     title: "测试",

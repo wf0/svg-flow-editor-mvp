@@ -173,3 +173,33 @@ export const operationTemp = `
 	<i class="iconfont icon-zhiyudingceng"></i>
 </div>
 `;
+
+
+export const catalogTemp=`
+<!-- 基础图形 -->
+<h3 class="sf-editor-catalog-title" command="base">
+	<div class="icon close"></div>
+	基础图形
+</h3>
+<div class="sf-editor-catalog-item" adapt="base">base</div>
+<div class="line"></div>
+
+<!-- Flowchart 流程图 -->
+<h3 class="sf-editor-catalog-title" command="Flowchart">
+	<div class="icon close"></div>
+	Flowchart 流程图
+</h3>
+<div class="sf-editor-catalog-item" adapt="Flowchart">Flowchart</div>
+<div class="line"></div>
+
+<!-- 泳池/泳道 -->
+<h3 class="sf-editor-catalog-title" command="more">
+	<div class="icon close"></div>
+	泳池/泳道
+</h3>
+<div class="sf-editor-catalog-item" adapt="more">more</div>
+<div class="line"></div>
+
+<!-- 提示 -->
+<div class="more">更多图形</div>
+`

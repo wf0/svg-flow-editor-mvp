@@ -8,7 +8,7 @@ import { CanvasDraw } from "./Canvas.ts";
 import { GraphEvent } from "../Event/Graph/index.ts";
 import { GraphDraw } from "./Graph.ts";
 import { EditorEvent } from "../Event/Editor/index.ts";
-import { footerTemp, operationTemp } from "../Template/index.ts";
+import { catalogTemp, footerTemp, operationTemp } from "../Template/index.ts";
 import { FooterEvent } from "../Event/Footer/index.ts";
 import { OperationEvent } from "../Event/Operation/index.ts";
 import { CatalogEvent } from "../Event/Catalog/index.ts";
@@ -162,7 +162,7 @@ export class Draw {
     const catalog = this.createHTMLElement("div") as HTMLDivElement;
     catalog.classList.add("sf-editor-catalog");
     this.root.appendChild(catalog);
-    // catalog.innerHTML = operationTemp;
+    catalog.innerHTML = catalogTemp;
     // 添加事件
     this.catalogEvent = new CatalogEvent(this);
     this.resize();

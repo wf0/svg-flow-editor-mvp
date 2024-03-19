@@ -10,10 +10,6 @@ import { GraphDraw } from "./Graph.ts";
 import { EditorEvent } from "../Event/Editor/index.ts";
 import { footerTemp } from "../Template/index.ts";
 import { FooterEvent } from "../Event/Footer/index.ts";
-// 定义插件的宽高
-const footerHeight = "24px";
-const operationHeight = "120px";
-const catalogWidth = "220px";
 
 // 重构 draw
 export class Draw {
@@ -147,9 +143,13 @@ export class Draw {
    */
   public resize() {
     // 有 footer
-    if (this.footerEvent)
+    if (this.footerEvent) {
+      const footerBox = this.root.querySelector(
+        '[class="sf-editor-footer"]'
+      ) as HTMLDivElement;
       // 重置绘制区宽高
-      this.editorBox.style.height = `calc(100% - ${footerHeight})`;
+      this.editorBox.style.height = `calc(100% - ${footerBox.clientHeight})`;
+    }
 
     // 关键是重置 canvas 宽高与重绘 grid origin watermark
     this.canvasDraw.resetCanvas();

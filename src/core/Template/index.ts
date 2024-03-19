@@ -122,3 +122,37 @@ export const footerTemp = `
 	<i class="iconfont icon-bangzhu" title="帮助" command="help"></i>
 </div>
 `;
+
+export const operationTemp = `
+<div class="sf-editor-operation-top">
+	<img src="" alt="" />
+</div>
+<div class="sf-editor-operation-bottom">
+	<!-- 撤销 -->
+	<i class="iconfont icon-chexiao"></i>
+	<!-- 重做 -->
+	<i class="iconfont icon-zhongzuo"></i>
+	<!-- 美化 -->
+	<i class="iconfont icon-huabumeihua"></i>
+	<!-- 背景颜色 -->
+	<i class="iconfont icon-ibg"></i>
+	<!-- 插入图片 -->
+	<i class="iconfont icon-tupian"></i>
+	<!-- 加粗 -->
+	<i class="iconfont icon-jiacu"></i>
+	<!-- 斜体 -->
+	<i class="iconfont icon-xieti"></i>
+	<!-- 下划线 -->
+	<i class="iconfont icon-xiahuaxian"></i>
+	<!-- 字体颜色 -->
+	<i class="iconfont icon-zitiyanse"></i>
+	<!-- 填充 -->
+	<i class="iconfont icon-beijingyanse"></i>
+	<!-- 连线宽度 -->
+	<i class="iconfont icon-xiantiaokuandu"></i>
+	<!-- 连线样式 -->
+	<i class="iconfont icon-xiantiaoyangshi"></i>
+	<!-- 图层 -->
+	<i class="iconfont icon-zhiyudingceng"></i>
+</div>
+	  `;

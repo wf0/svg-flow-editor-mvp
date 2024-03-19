@@ -248,9 +248,8 @@ export class EditorEvent {
     const editorBox = this.draw.getEditorBox() as HTMLDivElement;
 
     // 当前的缩放比例
-    const currentScale = Number(
-      editorBox.style.transform.split("scale")[1].replace(/\(|\)/g, "")
-    );
+    const transform = editorBox.style.transform.split(" ");
+    const currentScale = Number(transform[0].replace(/\(|\)|scale/g, ""));
 
     // 到底取加还是减，取决于参数
 
@@ -264,7 +263,7 @@ export class EditorEvent {
     if (result > 2) result = 2;
 
     // 实现缩放 - 这里要考虑其他的 transform 不然会冲突
-    editorBox.style.transform = `scale(${result})`;
+    editorBox.style.transform = `scale(${result}) ${transform[1]}${transform[2]}`;
 
     // 同时还需要考虑 footer 的缩放比例同步显示
     const footerBox = this.draw

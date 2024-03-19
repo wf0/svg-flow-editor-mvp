@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 加载插件
   editor.plugin("footer");
+  editor.plugin("operation");
   // editor.register.contextMenuList = [
   //   {
   //     title: "测试",

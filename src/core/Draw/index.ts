@@ -8,8 +8,9 @@ import { CanvasDraw } from "./Canvas.ts";
 import { GraphEvent } from "../Event/Graph/index.ts";
 import { GraphDraw } from "./Graph.ts";
 import { EditorEvent } from "../Event/Editor/index.ts";
-import { footerTemp } from "../Template/index.ts";
+import { footerTemp, operationTemp } from "../Template/index.ts";
 import { FooterEvent } from "../Event/Footer/index.ts";
+import { OperationEvent } from "../Event/Operation/index.ts";
 
 // 重构 draw
 export class Draw {
@@ -22,7 +23,8 @@ export class Draw {
   private graphDraw: GraphDraw;
   private graphEvent: GraphEvent;
   private editorEvent: EditorEvent;
-  private footerEvent!: FooterEvent; // 定义是否加载了 footer 插件
+  private footerEvent!: FooterEvent; // footer 插件事件
+  private operationEvent!: OperationEvent; // operation 插件事件
 
   private root!: HTMLDivElement; // 根节点 sf-editor 子节点有 box footer catalog operation
   private editorBox!: HTMLDivElement; // svg、canvas 操作区 sf-editor-box
@@ -139,16 +141,39 @@ export class Draw {
   }
 
   /**
+   * 初始化 operation 插件
+   */
+  public initOperation() {
+    const operation = this.createHTMLElement("div") as HTMLDivElement;
+    operation.classList.add("sf-editor-operation");
+    this.root.appendChild(operation);
+    operation.innerHTML = operationTemp;
+    // 添加事件
+    this.operationEvent = new OperationEvent(this);
+    this.resize();
+  }
+
+  /**
    * 重置宽高信息
    */
   public resize() {
     // 有 footer
-    if (this.footerEvent) {
-      const footerBox = this.root.querySelector(
-        '[class="sf-editor-footer"]'
-      ) as HTMLDivElement;
-      // 重置绘制区宽高
-      this.editorBox.style.height = `calc(100% - ${footerBox.clientHeight})`;
+    const footerBox = this.root.querySelector(
+      '[class="sf-editor-footer"]'
+    ) as HTMLDivElement;
+
+    const operationBox = this.root.querySelector(
+      '[class="sf-editor-operation"]'
+    ) as HTMLDivElement;
+
+    // 重置绘制区宽高
+    this.editorBox.style.height = `calc(100% - 
+      ${footerBox ? footerBox.clientHeight + "px" : ""} -
+      ${operationBox ? operationBox.clientHeight + "px" : ""}
+      )`;
+
+    if (operationBox) {
+      this.editorBox.style.top = "60px";
     }
 
     // 关键是重置 canvas 宽高与重绘 grid origin watermark

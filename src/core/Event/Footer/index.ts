@@ -28,14 +28,8 @@ export class FooterEvent {
         reduce: this.command.executePageScaleMinus,
         resize: this.command.executePageScaleRecovery,
         amplify: this.command.executePageScaleAdd,
-        fullscreen: () => {
-          this.command.executeFullScreen();
-          this.changeFullScreenIcon(true);
-        },
-        exitfullscreen: () => {
-          this.command.executeExitFullScreen();
-          this.changeFullScreenIcon(false);
-        },
+        fullscreen: () => this.changeFullScreenIcon(true),
+        exitfullscreen: () => this.changeFullScreenIcon(false),
       };
 
       footerBox.querySelectorAll("[command]").forEach((item) => {
@@ -64,6 +58,10 @@ export class FooterEvent {
     const exit = footerBox.querySelector(
       '[command="exitfullscreen"]'
     ) as HTMLDivElement;
+
+    full
+      ? this.command.executeFullScreen()
+      : this.command.executeExitFullScreen();
 
     fullScreen.style.display = full ? "none" : "block";
     exit.style.display = full ? "block" : "none";

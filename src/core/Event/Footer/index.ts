@@ -23,9 +23,21 @@ export class FooterEvent {
     list?.addEventListener("click", () => this.command);
     // 切换的列表
     // 新建页  newpages
-    // 放大 reduce
+    // 缩小 reduce
+    const reduce = footerBox.querySelector(
+      '[command="reduce"]'
+    ) as HTMLDivElement;
+    reduce.addEventListener("click", this.command.executePageScaleMinus);
     // 重置 resize
-    // 缩小 amplify
+    const resize = footerBox.querySelector(
+      '[command="resize"]'
+    ) as HTMLDivElement;
+    resize.addEventListener("click", this.command.executePageScaleRecovery);
+    // 放大 amplify
+    const amplify = footerBox.querySelector(
+      '[command="amplify"]'
+    ) as HTMLDivElement;
+    amplify.addEventListener("click", this.command.executePageScaleAdd);
     // 模板 template
     // 全屏 fullscreen
     // 帮助 help

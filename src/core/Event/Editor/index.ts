@@ -229,40 +229,54 @@ export class EditorEvent {
   private setScale(evt: WheelEvent) {
     if (!evt.ctrlKey) return;
     evt.preventDefault();
-    const step = 0.2;
-    // 当前的比例
-    const editorBox = this.draw.getEditorBox() as HTMLDivElement;
-    const currentScale = editorBox.style.transform
-      .split("scale")[1]
-      .replace(/\(|\)/g, "");
-    var result =
-      evt.deltaY < 0
-        ? Number(currentScale) + step
-        : Number(currentScale) - step;
-
-    if (result < 0.4) result = 0.4;
-    if (result > 2) result = 2;
-
-    this.scalePage(result);
+    const type = evt.deltaY < 0 ? "Add" : "Minus";
+    // 在这判断是缩小还是放大即可
+    this.scalePage(type);
   }
 
   /**
    * 实现缩放的关键方法 单独出来是为了供 command 实现调用
    * @param scale
    */
-  public scalePage(scale: number) {
+  public scalePage(
+    type: "Appoint" | "Recovery" | "Minus" | "Add",
+    scale?: number
+  ) {
+    var result = 0; // 定义最终的缩放比例
+    const step = 0.2; // 自由增加步长
+    // 当前的比例
     const editorBox = this.draw.getEditorBox() as HTMLDivElement;
-    // 考虑临界值  实现缩放
-    editorBox.style.transform = `scale(${scale})`;
+
+    // 当前的缩放比例
+    const currentScale = Number(
+      editorBox.style.transform.split("scale")[1].replace(/\(|\)/g, "")
+    );
+
+    // 到底取加还是减，取决于参数
+
+    if (type === "Add") result = currentScale + step;
+    if (type === "Minus") result = currentScale - step;
+    if (type === "Recovery") result = 1;
+    if (type === "Appoint") result = scale as number;
+
+    // 进行边界处理 考虑临界值
+    if (result < 0.4) result = 0.4;
+    if (result > 2) result = 2;
+
+    // 实现缩放 - 这里要考虑其他的 transform 不然会冲突
+    editorBox.style.transform = `scale(${result})`;
+
     // 同时还需要考虑 footer 的缩放比例同步显示
-    const root = this.draw.getRoot();
-    const footerBox = root.querySelector('[class="sf-editor-footer"]');
+    const footerBox = this.draw
+      .getRoot()
+      .querySelector('[class="sf-editor-footer"]');
+
     if (footerBox) {
       // 修改缩放比例 command=resize
       const resize = footerBox.querySelector(
         '[command="resize"]'
       ) as HTMLSpanElement;
-      resize.innerHTML = Math.ceil(scale * 100).toString() + "%";
+      resize.innerHTML = Math.floor(result * 100).toString() + "%";
     }
     // 执行 pageScale 回调
     nextTick(() => {

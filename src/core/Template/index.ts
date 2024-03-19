@@ -104,7 +104,7 @@ export const footerTemp = `
 
 	<!-- 加减视口大小 -->
 	<i class="iconfont icon-jianhao" title="缩小" command="reduce"></i>
-	<span title="重置视口" style="cursor:pointer" command="resize">100%</span>
+	<span class="pageScale" title="重置视口" command="resize">100%</span>
 	<i class="iconfont icon-jiahao" title="放大" command="amplify"></i>
 
 	<div class="line"></div>

@@ -26,11 +26,10 @@ export class Draw {
   private graphDraw: GraphDraw;
   private graphEvent: GraphEvent;
   private editorEvent: EditorEvent;
+  private footerEvent!: FooterEvent; // 定义是否加载了 footer 插件
 
   private root!: HTMLDivElement; // 根节点 sf-editor 子节点有 box footer catalog operation
   private editorBox!: HTMLDivElement; // svg、canvas 操作区 sf-editor-box
-
-  private footer = false;
 
   constructor(
     selector: string,
@@ -59,8 +58,6 @@ export class Draw {
 
     // 5. 初始化框选
     this.initSelectMask();
-
-    this.initFooter();
 
     // 6. 发布事件
     nextTick(() => {
@@ -102,7 +99,7 @@ export class Draw {
     // 3.2 div.sf-editor-box -- 编辑器盒子 svg、canvas 绘制区
     this.editorBox = this.createHTMLElement("div") as HTMLDivElement;
     this.editorBox.classList.add("sf-editor-box");
-    this.editorBox.style.transform = "scale(1)"; // 实现缩放
+    this.editorBox.style.transform = "scale(1) translate(0, 0)"; // 实现缩放,平移
 
     const graphsBox = this.createHTMLElement("div") as HTMLDivElement;
     graphsBox.classList.add("sf-editor-box-graphs");
@@ -113,7 +110,7 @@ export class Draw {
     dom.appendChild(this.root);
 
     // 5. 初始化 canvas （确保editor Box被添加到dom上，不然宽高获取失败）
-    const { clientWidth, clientHeight } = this.root;
+    const { clientWidth, clientHeight } = this.editorBox;
     const canvas = this.canvasDraw.initCanvas(clientWidth, clientHeight);
     this.editorBox.appendChild(canvas);
 
@@ -141,18 +138,20 @@ export class Draw {
     this.root.appendChild(footer);
     footer.innerHTML = footerTemp;
     // 添加事件
-    new FooterEvent(this);
-    this.footer = true;
+    this.footerEvent = new FooterEvent(this);
     this.resize();
   }
 
-  private resize() {
+  /**
+   * 重置宽高信息
+   */
+  public resize() {
     // 有 footer
-    if (this.footer)
+    if (this.footerEvent)
       // 重置绘制区宽高
       this.editorBox.style.height = `calc(100% - ${footerHeight})`;
 
-    // 关键是重置 canvas
+    // 关键是重置 canvas 宽高与重绘 grid origin watermark
     this.canvasDraw.resetCanvas();
   }
 
@@ -190,6 +189,7 @@ export class Draw {
   }
 
   /** getter */
+  public getRoot = () => this.root;
   public getListener = () => this.listener;
   public getEventBus = () => this.eventBus;
   public getRegister = () => this.register;
@@ -198,5 +198,5 @@ export class Draw {
   public getGraphEvent = () => this.graphEvent;
   public getEditorEvent = () => this.editorEvent;
   public getCanvasDraw = () => this.canvasDraw;
-  public getRoot = () => this.root;
+  public getFooterEvent = () => this.footerEvent;
 }

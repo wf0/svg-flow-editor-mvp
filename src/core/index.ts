@@ -66,6 +66,7 @@ class SFEditor {
   // 加载插件函数
   public plugin(name: pluginName) {
     // name 是插件名称
+    if (name === "footer") this.draw.initFooter();
   }
 }
 

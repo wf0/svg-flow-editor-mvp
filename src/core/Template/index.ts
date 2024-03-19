@@ -115,6 +115,9 @@ export const footerTemp = `
 	<!-- 全屏 -->
 	<i class="iconfont icon-quanping" title="全屏" command="fullscreen"></i>
 
+	<!-- 退出全屏 -->
+	<i class="iconfont icon-suoxiao" style="display:none" title="退出全屏" command="exitfullscreen"></i>
+
 	<!-- 帮助 -->
 	<i class="iconfont icon-bangzhu" title="帮助" command="help"></i>
 </div>

@@ -2,15 +2,29 @@ import { waterMarkText as defaultWaterMarkText } from "../Config/index.ts";
 import { hex, keyword } from "color-convert";
 import { Draw } from "./index.ts";
 import pako from "pako"; // imageData 的解压缩
+import { IBackground } from "../../interface/Draw/index.ts";
 
 // canvas 相关绘制类
 export class CanvasDraw {
   private canvas!: HTMLCanvasElement;
   private draw: Draw;
   private imageData!: Uint8Array | null; // canvas 像素数据，用于实现重置及绘制辅助线
+  // 需要在这里实现用户background的信息记录，才可以实现重绘后完整复原用户配置
+  private background: IBackground;
 
   constructor(draw: Draw) {
     this.draw = draw;
+
+    // 记录参数
+    this.background = {
+      origin: false,
+      originColor: "",
+      watermark: false,
+      watermarkColor: "",
+      watermarkText: "",
+      gridline: false,
+      gridlineColor: "",
+    };
   }
 
   /**
@@ -24,10 +38,19 @@ export class CanvasDraw {
     const canvas = this.draw.createHTMLElement("canvas") as HTMLCanvasElement;
     // 3. 标记唯一属性id
     canvas.classList.add("sf-editor-box-canvas");
-    canvas.width = width;
-    canvas.height = height;
     this.canvas = canvas;
+    this.setCanvasInfo(width, height);
     return canvas;
+  }
+
+  /**
+   * 设置 canvas 宽高
+   * @param width
+   * @param height
+   */
+  private setCanvasInfo(width: number, height: number) {
+    this.canvas.width = width;
+    this.canvas.height = height;
   }
 
   /**
@@ -37,6 +60,9 @@ export class CanvasDraw {
    */
   public gridLine(color?: string) {
     if (!this.canvas) return;
+
+    this.background.gridline = true;
+    this.background.gridlineColor = color;
 
     var ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
@@ -82,6 +108,9 @@ export class CanvasDraw {
   public origin(color?: string) {
     if (!this.canvas) return;
 
+    this.background.origin = true;
+    this.background.originColor = color;
+
     var ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
     // 进行颜色转换
@@ -111,6 +140,11 @@ export class CanvasDraw {
    */
   public waterMark(waterMarkText?: string, color?: string) {
     if (!this.canvas) return;
+
+    this.background.watermark = true;
+    this.background.watermarkColor = color;
+    this.background.watermarkText = waterMarkText;
+
     var ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
     const text = waterMarkText || defaultWaterMarkText;
@@ -224,32 +258,22 @@ export class CanvasDraw {
    * 重置数据
    */
   public resetCanvas() {
-    // 1. 获取当前的数据
-    var ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-    const { width, height } = this.canvas;
-    const imageData = ctx.getImageData(0, 0, width, height);
-    this.imageData = pako.deflate(new Uint8Array(imageData.data)); // 压缩，减小存储开销
-
-    // 2. 清空 canvas 内容
+    // // 1. 清空画布
     this.clearCanvas();
 
-    // 3. 重置 canvas 宽高
+    // 2. 重置 canvas 宽高
     const editorBox = this.draw.getEditorBox();
     const { clientWidth, clientHeight } = editorBox;
-    const canvas = editorBox.querySelector("canvas") as HTMLCanvasElement;
-    canvas.setAttribute("width", clientWidth.toString());
-    canvas.setAttribute("height", clientHeight.toString());
+    this.setCanvasInfo(clientWidth, clientHeight);
 
-    // 4. 重置 canvas 信息
-    canvas.width = clientWidth;
-    canvas.height = clientHeight;
-
-    // 5. 重新绘制之前的数据
-    const decompressed = pako.inflate(this.imageData);
-    const uint8ClampedArray = new Uint8ClampedArray(decompressed);
-    const old = new ImageData(uint8ClampedArray, width, height);
-    ctx.putImageData(old, 0, 0);
-    this.imageData = null;
+    // 3. 重绘
+    this.background.gridline && this.gridLine(this.background.gridlineColor);
+    this.background.watermark &&
+      this.waterMark(
+        this.background.watermarkText,
+        this.background.watermarkColor
+      );
+    this.background.origin && this.origin(this.background.originColor);
   }
 
   /**

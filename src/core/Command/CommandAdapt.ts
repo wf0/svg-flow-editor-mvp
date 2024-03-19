@@ -34,4 +34,26 @@ export class CommandAdapt {
     const editorEvent = this.draw.getEditorEvent();
     editorEvent.scalePage("Appoint", scale);
   }
+
+  // 全屏
+  public fullScreen() {
+    try {
+      const root = this.draw.getRoot();
+      root.requestFullscreen();
+      // 回调中处理宽高问题
+      const t = setTimeout(() => {
+        this.draw.getCanvasDraw().resetCanvas(), clearTimeout(t);
+      }, 100);
+    } catch (error) {}
+  }
+
+  public exitFullScreen() {
+    try {
+      document.exitFullscreen();
+      // 回调中处理宽高问题
+      const t = setTimeout(() => {
+        this.draw.getCanvasDraw().resetCanvas(), clearTimeout(t);
+      }, 100);
+    } catch (error) {}
+  }
 }

@@ -1,3 +1,4 @@
+import { nextTick } from "../../../utils/index.ts";
 import { Command } from "../../Command/Command.ts";
 import { Draw } from "../../Draw/index.ts";
 
@@ -13,33 +14,58 @@ export class FooterEvent {
     this.initEvent();
   }
 
+  /**
+   * 给 footer 添加事件
+   */
   private initEvent() {
+    nextTick(() => {
+      const footerBox = this.draw
+        .getRoot()
+        .querySelector('[class="sf-editor-footer"]') as HTMLDivElement;
+
+      // 定义事件映射
+      const eventMap: { [key: string]: () => void } = {
+        reduce: this.command.executePageScaleMinus,
+        resize: this.command.executePageScaleRecovery,
+        amplify: this.command.executePageScaleAdd,
+        fullscreen: () => {
+          this.command.executeFullScreen();
+          this.changeFullScreenIcon(true);
+        },
+        exitfullscreen: () => {
+          this.command.executeExitFullScreen();
+          this.changeFullScreenIcon(false);
+        },
+      };
+
+      footerBox.querySelectorAll("[command]").forEach((item) => {
+        const command = item.getAttribute("command") as string;
+        item.addEventListener("click", (e) => {
+          eventMap[command] && eventMap[command]();
+          e.stopPropagation();
+          e.preventDefault();
+        });
+      });
+    });
+  }
+
+  /**
+   * 修改全屏的icon
+   * @param full 是否进入全屏
+   */
+  public changeFullScreenIcon(full: boolean) {
+    // 修改元件icon
     const footerBox = this.draw
       .getRoot()
       .querySelector('[class="sf-editor-footer"]') as HTMLDivElement;
+    const fullScreen = footerBox.querySelector(
+      '[command="fullscreen"]'
+    ) as HTMLDivElement;
+    const exit = footerBox.querySelector(
+      '[command="exitfullscreen"]'
+    ) as HTMLDivElement;
 
-    // 查看列表 list
-    const list = footerBox.querySelector('[command="list"]');
-    list?.addEventListener("click", () => this.command);
-    // 切换的列表
-    // 新建页  newpages
-    // 缩小 reduce
-    const reduce = footerBox.querySelector(
-      '[command="reduce"]'
-    ) as HTMLDivElement;
-    reduce.addEventListener("click", this.command.executePageScaleMinus);
-    // 重置 resize
-    const resize = footerBox.querySelector(
-      '[command="resize"]'
-    ) as HTMLDivElement;
-    resize.addEventListener("click", this.command.executePageScaleRecovery);
-    // 放大 amplify
-    const amplify = footerBox.querySelector(
-      '[command="amplify"]'
-    ) as HTMLDivElement;
-    amplify.addEventListener("click", this.command.executePageScaleAdd);
-    // 模板 template
-    // 全屏 fullscreen
-    // 帮助 help
+    fullScreen.style.display = full ? "none" : "block";
+    exit.style.display = full ? "block" : "none";
   }
 }

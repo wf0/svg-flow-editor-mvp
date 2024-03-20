@@ -14,7 +14,7 @@ export class EditorEvent {
   private draw: Draw;
   private editorBox!: HTMLDivElement;
 
-  private st!: number; // 记录时间 ~~(dayjs().format("mmssSSS")); 毫秒
+  private st!: number; // 记录时间 Number(dayjs().format("mmssSSS")); 毫秒
   private mode!: "inside";
 
   // 定义框选的相关参数
@@ -33,7 +33,6 @@ export class EditorEvent {
     this.draw = draw;
     // 注册快捷键
     this.registerEvent = new RegisterEvent(draw);
-
     this.command = new Command(draw);
   }
 
@@ -41,17 +40,16 @@ export class EditorEvent {
    * editorBox 添加事件
    */
   public addEvent() {
-    const editorBox = this.draw.getEditorBox();
-    this.editorBox = editorBox;
+    const register = this.registerEvent;
+    this.editorBox = this.draw.getEditorBox();
+    const editorBox = this.editorBox;
     // 这里使用mousedown与mousemove、mouseup 事件实现 框选 同时click也在该事件过程中，需要记录事件时长
     editorBox.addEventListener("contextmenu", this.contextmenu.bind(this));
     editorBox.addEventListener("mousedown", this.mousedownHandle.bind(this));
     editorBox.addEventListener("mousemove", this.mousemoveHandle.bind(this));
     editorBox.addEventListener("mouseup", this.mouseupHandle.bind(this));
-    document.addEventListener(
-      "keydown",
-      this.registerEvent.keydownHandle.bind(this.registerEvent)
-    );
+    document.addEventListener("keydown", register.keydownHandle.bind(register));
+    document.addEventListener("keyup", register.keyupHandle.bind(register));
     // 缩放事件
     document.addEventListener("wheel", this.setScale.bind(this), {
       passive: false,
@@ -62,12 +60,14 @@ export class EditorEvent {
    * 移除事件监听
    */
   public removeEvent() {
-    const editorBox = this.draw.getEditorBox();
+    console.log("removeEvent");
+    const editorBox = this.editorBox;
     editorBox.removeEventListener("contextmenu", this.contextmenu);
     editorBox.removeEventListener("mousedown", this.mousedownHandle);
     editorBox.removeEventListener("mousemove", this.mousemoveHandle);
     editorBox.removeEventListener("mouseup", this.mouseupHandle);
     document.removeEventListener("keydown", this.registerEvent.keydownHandle);
+    document.removeEventListener("keyup", this.registerEvent.keyupHandle);
     document.removeEventListener("wheel", this.setScale);
   }
 
@@ -83,7 +83,7 @@ export class EditorEvent {
       return (this.st = 0);
 
     // 记录点击的时间
-    this.st = ~~dayjs().format("mmssSSS");
+    this.st = Number(dayjs().format("mmssSSS"));
     this.move = true;
 
     // 如果右键菜单存在，则取消右键菜单
@@ -146,7 +146,7 @@ export class EditorEvent {
       .querySelectorAll("div[class='sf-editor-box-graphs-main']")
       .forEach((i) => ((i as HTMLDivElement).style.pointerEvents = ""));
     // 正常情况下，单击左键的时间不会超过 120 毫秒，如果超过，则认为用户在框选
-    const et = ~~dayjs().format("mmssSSS");
+    const et = Number(dayjs().format("mmssSSS"));
     if (et - this.st <= 120) return this.clickHandle(e);
     const { offsetX, offsetY } = e;
     this.ex = offsetX;
@@ -231,10 +231,10 @@ export class EditorEvent {
    */
   private setScale(evt: WheelEvent) {
     if (!evt.ctrlKey) return;
-    evt.preventDefault();
     const type = evt.deltaY < 0 ? "Add" : "Minus";
     // 在这判断是缩小还是放大即可
     this.scalePage(type);
+    evt.preventDefault();
   }
 
   /**
@@ -252,10 +252,9 @@ export class EditorEvent {
 
     // 当前的缩放比例
     const transform = editorBox.style.transform.split(" ");
-    const currentScale = ~~transform[0].replace(/\(|\)|scale/g, "");
+    const currentScale = Number(transform[0].replace(/\(|\)|scale/g, ""));
 
     // 到底取加还是减，取决于参数
-
     if (type === "Add") result = currentScale + step;
     if (type === "Minus") result = currentScale - step;
     if (type === "Recovery") result = 1;
@@ -267,7 +266,6 @@ export class EditorEvent {
 
     // 实现缩放 - 这里要考虑其他的 transform 不然会冲突
     editorBox.style.transform = `scale(${result}) ${transform[1]}${transform[2]}`;
-
     // 同时还需要考虑 footer 的缩放比例同步显示
     const footerBox = this.draw
       .getRoot()
@@ -465,8 +463,8 @@ export class EditorEvent {
     if (mainBox) {
       var x = mainBox.style.left.replace("px", "");
       var y = mainBox.style.top.replace("px", "");
-      left = ~~x + offsetX;
-      top = ~~y + offsetY;
+      left = Number(x + offsetX);
+      top = Number(y + offsetY);
     }
 
     // 如果 offsetX + width 超过父元素的宽度，则令left = offsetX-width

@@ -192,11 +192,19 @@ export const catalogTemp = `
 <div class="line"></div>
 
 <!-- 泳池/泳道 -->
-<h3 class="sf-editor-catalog-title" command="more">
+<h3 class="sf-editor-catalog-title" command="pool">
 	<div class="icon close"></div>
 	泳池/泳道
 </h3>
-<div class="sf-editor-catalog-item" adapt="more">more</div>
+<div class="sf-editor-catalog-item" adapt="pool">pool</div>
+<div class="line"></div>
+
+<!-- 统计图 -->
+<h3 class="sf-editor-catalog-title" command="chart">
+	<div class="icon close"></div>
+	统计图
+</h3>
+<div class="sf-editor-catalog-item" adapt="chart">chart</div>
 <div class="line"></div>
 
 <!-- 提示 -->

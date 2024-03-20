@@ -14,6 +14,7 @@ export interface EventBusMap {
 }
 
 export enum KeyMap {
+  Space = " ",
   Delete = "Delete",
   Backspace = "Backspace",
   Enter = "Enter",
@@ -110,6 +111,7 @@ export interface IContextmenu {
 
 // 注册快捷键回传的参数
 export type cbParams = {
+  e?: Event;
   tips: string;
   ctrl?: boolean;
   shift?: boolean;

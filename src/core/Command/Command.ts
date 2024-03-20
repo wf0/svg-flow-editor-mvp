@@ -7,23 +7,19 @@ export class Command {
   public executeBackground: CommandAdapt["background"];
 
   // 添加元件
+  // 删除元件
 
-  // 切换的列表 - 未实现
-  // 新建页  newpages - 未实现
-
-  // 模板 template
-  // 全屏 fullscreen
+  // 全屏 退出 API
   public executeFullScreen: CommandAdapt["fullScreen"];
   public executeExitFullScreen: CommandAdapt["exitFullScreen"];
 
-  // 帮助 help
-
-  // 页面缩放
+  // 页面缩放 API
   public executePageScaleRecovery: CommandAdapt["pageScaleRecovery"]; // 重置 resize
   public executePageScaleMinus: CommandAdapt["pageScaleMinus"]; // 缩小 amplify
   public executePageScaleAdd: CommandAdapt["pageScaleAdd"]; // 放大 reduce
   public setPageScale: CommandAdapt["setPageScale"]; // 缩放至指定比例
 
+  // 右键菜单相关API
   public executePaste: CommandAdapt["paste"];
   public executeCopy: CommandAdapt["copy"];
   public executeCut: CommandAdapt["cut"];

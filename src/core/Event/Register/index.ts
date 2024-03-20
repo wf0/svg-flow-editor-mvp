@@ -1,8 +1,9 @@
 // 快捷键相关操作
 
-import { IShortCut, KeyMap } from "../../../interface/Event/index.ts";
+import { cbParams, IShortCut, KeyMap } from "../../../interface/Event/index.ts";
 import { isMod, nextTick } from "../../../utils/index.ts";
 import { Draw } from "../../Draw/index.ts";
+import { Graph } from "../../Graph/index.ts";
 
 export class RegisterEvent {
   private draw: Draw;
@@ -86,21 +87,53 @@ export class RegisterEvent {
         key: KeyMap["Y"], // Ctrl Y
         ctrl: true,
       },
+      {
+        key: KeyMap["Space"], // 空格键
+        callback: this.move.bind(this),
+      },
     ];
   }
 
   /**
    * graph move 使用 上下左右实现元件的移动
    */
-  private graphMoveHandle() {}
+  private graphMoveHandle(payload?: cbParams) {
+    const selected = this.draw.getGraphEvent().getAllSelected();
+    if (!selected.length) return;
+
+    const step = 10,
+      minstep = 2,
+      rd = payload?.ctrl ? minstep : step; // 移动的距离 ctrl 实现精细移动
+
+    // 实现上下左右移动
+    selected.forEach((item) => {
+      //  1. 构建 graph
+      const nodeID = item.getAttribute("graphid") as string;
+      const graph = new Graph(this.draw, nodeID);
+
+      // 2. 获取初始位置
+      const x = graph.getX();
+      const y = graph.getY();
+
+      // 3. 实现移动
+      if (payload?.key == "ArrowLeft") graph.setX(x - rd);
+      if (payload?.key == "ArrowUp") graph.setY(y - rd);
+      if (payload?.key == "ArrowRight") graph.setX(x + rd);
+      if (payload?.key == "ArrowDown") graph.setY(y + rd);
+
+      // 4. 需要显示辅助线-暂未实现
+    });
+  }
 
   /**
    * 实现删除元件
    */
   private deleteGraph() {
+    const selected = this.draw.getGraphEvent().getAllSelected();
+    if (!selected.length) return;
+    selected.forEach((i) => i.remove());
     // 执行回调
     nextTick(() => {
-      console.log("## 删除元件");
       const eventBus = this.draw.getEventBus();
       const listener = this.draw.getListener();
       const nums = this.draw.getGraphDraw().getNodesNumber();
@@ -119,6 +152,16 @@ export class RegisterEvent {
       graphLoadedSubscribe && eventBus.emit("graphNumberChanged", nums);
       listener.graphNumberChanged && listener.graphNumberChanged(nums);
     });
+  }
+
+  /**
+   * 空格键实现画布位移
+   */
+  private move() {
+    // 1. 给根节点添加 cursor
+    this.draw.getRoot().style.cursor = "grab";
+    // 2. 移除相关事件
+    this.draw.getEditorEvent().removeEvent();
   }
 
   /**
@@ -167,6 +210,7 @@ export class RegisterEvent {
         comEvent.forEach((i) =>
           i?.callback?.({
             tips: "参数仅供默认事件处理函数使用,无实际含义!",
+            e: evt,
             ctrl: evt.ctrlKey,
             shift: evt.shiftKey,
             key: evt.key,
@@ -175,6 +219,17 @@ export class RegisterEvent {
     });
 
     // 阻止默认事件
+    evt.stopPropagation();
+    evt.preventDefault();
+  }
+
+  /**
+   * 需要实现空格键抬起
+   * @param evt
+   */
+  public keyupHandle(evt: KeyboardEvent) {
+    if (evt.key !== " ") return;
+    this.draw.getRoot().style.cursor = "";
     evt.stopPropagation();
     evt.preventDefault();
   }

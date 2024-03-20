@@ -13,8 +13,8 @@ svg flow editor 是一款自研流程图编辑器，提供了一系列流程图�
 - 流程图基本元件
   - 矩形 rect 、 圆形 circle 、 椭圆 ellipse
 - 元件基本操作
-  - 创建、删除、移动、定位、属性修改、框选、多选（ctrl）等
-- 文本
+  - 创建、删除、移动、旋转[目前还有BUG]、定位、属性修改、框选、多选（ctrl）、层级处理等
+- 文本-元件文本显示
 - global API
 - Command API
 - 右键菜单（内部、自定义）
@@ -22,6 +22,7 @@ svg flow editor 是一款自研流程图编辑器，提供了一系列流程图�
 - event Bus 、 listener 事件监听机制
 - 背景网格、圆点、水印
 - 辅助线
+- catalog、operation、footer 插件化
 
 ## 待开发 TODO
 
@@ -31,9 +32,8 @@ svg flow editor 是一款自研流程图编辑器，提供了一系列流程图�
   - 菱形 diamond
   - 线段 line
   - HTML html
-- 元件旋转
 - redo undo 操作记录
-- tool 一键美化、图片导出、层级处理（置于顶层、置于底层）、组合/取消组合、锁定/取消锁定
+- tool 一键美化、图片导出、组合/取消组合、锁定/取消锁定
 - 协同编辑
 
 ## 使用方式
@@ -112,13 +112,14 @@ svg flow editor 是一款自研流程图编辑器，提供了一系列流程图�
 3. setHeight - 返回的是当前实例，支持链式调用
 4. setStroke - 返回的是当前实例，支持链式调用
 5. setFill - 返回的是当前实例，支持链式调用
-6. getID
-7. getX
-8. getY
-9. getWidth
-10. getHeight
-11. getStroke
-12. getFill
+6. setRotate - 返回的是当前实例，支持链式调用
+7. getID
+8. getX
+9. getY
+10. getWidth
+11. getHeight
+12. getStroke
+13. getFill
 
 ## Command APIS
 

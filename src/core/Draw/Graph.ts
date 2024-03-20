@@ -212,7 +212,7 @@ export class GraphDraw {
       const rotate = this.draw.createHTMLElement("div") as HTMLDivElement;
       rotate.classList.add("rotate");
       rotate.addEventListener("mousedown", (e) =>
-        this.rotatehandle(e, rotate, graph)
+        this.rotateHandle(e, rotate, graph)
       );
       format.appendChild(rotate);
     });
@@ -404,7 +404,8 @@ export class GraphDraw {
    * @param div
    * @param graph
    */
-  private rotatehandle(e: MouseEvent, div: HTMLDivElement, graph: IGraph) {
+  private rotateHandle(e: MouseEvent, div: HTMLDivElement, graph: IGraph) {
+    return;
     const x = graph.getX();
     const y = graph.getY();
     var width = graph.getWidth(); // 初始宽度

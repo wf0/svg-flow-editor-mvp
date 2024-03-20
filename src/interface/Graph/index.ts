@@ -10,6 +10,9 @@ export interface node {
   height: number;
   x: number;
   y: number;
+  rotate?: number; // 旋转角度
+  zIndex?: number; // 层级
   stroke?: string;
   fill?: string;
+  text?: string;
 }

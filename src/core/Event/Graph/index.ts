@@ -27,6 +27,7 @@ export class GraphEvent {
     ele.addEventListener("mousedown", this.mouseDownHandle.bind(this));
     ele.addEventListener("mousemove", (e) => this.mouseMoveHandle(e, graph));
     ele.addEventListener("mouseup", this.mouseUpHandle.bind(this));
+    ele.addEventListener("mouseout", this.mouseUpHandle.bind(this));
     ele.addEventListener("dblclick", (e) => this.graphDblclickHandle(e, graph));
     ele.addEventListener("contextmenu", (e) => this.contextmenu(e, graph));
   }
@@ -146,7 +147,7 @@ export class GraphEvent {
   }
 
   /**
-   * graph mousedown 移动事件
+   * graph mousedown 移动事件-偏移量会受旋转角度的影响【需要重新修订】
    * @param e
    * @param graph
    */
@@ -170,7 +171,6 @@ export class GraphEvent {
    */
   private mouseMoveHandle(e: MouseEvent, graph: IGraph) {
     if (!this.move) return;
-    console.log("graph mouseMoveHandle");
     // 这个是新的 offset，直接与旧的 offset 进行运算即可得到差值，与当前位置做计算即可
     const { offsetX, offsetY } = e;
 
@@ -229,20 +229,22 @@ export class GraphEvent {
   }
 
   /**
-   * 获取当前选中的元素节点
+   * 获取所有的 main 用于处理顶层、底层比较
    * @returns
    */
-  // private getAllSelected() {
-  //   const selector = "sf-editor-box-graphs-main selected";
-  //   return this.draw.getEditorBox().querySelectorAll(selector);
-  // }
+  public getAllGraphMain() {
+    const selector = "[class='sf-editor-box-graphs-main']";
+    return this.draw
+      .getEditorBox()
+      .querySelectorAll(selector) as NodeListOf<HTMLDivElement>;
+  }
 
   /**
    * 获取单个
    * @returns
    */
-  private getSelected() {
-    const selector = "sf-editor-box-graphs-main selected";
-    return this.draw.getEditorBox().querySelector(selector);
+  public getSelected() {
+    const selector = "[class='sf-editor-box-graphs-main selected']";
+    return this.draw.getEditorBox().querySelector(selector) as HTMLDivElement;
   }
 }

@@ -54,14 +54,14 @@ export const contextmenuTemp = `
 		</span>
 		<span>Ctrl+A</span>
 	</div>
-	<div class="sf-editor-box-contextmenu-main-item graph-item" command="moveup">
+	<div class="sf-editor-box-contextmenu-main-item graph-item" command="holdup">
 		<span>
 			<i class="iconfont icon-shangyiyiceng"></i>
 			上移一层
 		</span>
 		<span>Ctrl+A</span>
 	</div>
-	<div class="sf-editor-box-contextmenu-main-item graph-item" command="movedown">
+	<div class="sf-editor-box-contextmenu-main-item graph-item" command="putdown">
 		<span>
 			<i class="iconfont icon-xiayiyiceng"></i>
 			下移一层
@@ -69,14 +69,14 @@ export const contextmenuTemp = `
 		<span>Ctrl+A</span>
 	</div>
 	<div class="sf-editor-box-contextmenu-main-line graph-item"></div>
-	<div class="sf-editor-box-contextmenu-main-item graph-item" command="movedown">
+	<div class="sf-editor-box-contextmenu-main-item graph-item" command="group">
 		<span>
 			<i class="iconfont icon-zuhe"></i>
 			组合
 		</span>
 		<span>Ctrl+A</span>
 	</div>
-	<div class="sf-editor-box-contextmenu-main-item graph-item" command="movedown">
+	<div class="sf-editor-box-contextmenu-main-item graph-item" command="ungroup">
 		<span>
 			<i class="iconfont icon-quxiaozuhe"></i>
 			取消组合
@@ -174,8 +174,7 @@ export const operationTemp = `
 </div>
 `;
 
-
-export const catalogTemp=`
+export const catalogTemp = `
 <!-- 基础图形 -->
 <h3 class="sf-editor-catalog-title" command="base">
 	<div class="icon close"></div>
@@ -202,4 +201,4 @@ export const catalogTemp=`
 
 <!-- 提示 -->
 <div class="more">更多图形</div>
-`
+`;

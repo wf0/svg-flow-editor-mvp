@@ -8,12 +8,13 @@ import { contextmenuTemp } from "../../Template/index.ts";
 import { Draw } from "../../Draw/index.ts";
 import dayjs from "dayjs";
 import { RegisterEvent } from "../Register/index.ts";
+import { Command } from "../../Command/Command.ts";
 
 export class EditorEvent {
   private draw: Draw;
   private editorBox!: HTMLDivElement;
 
-  private st!: number; // 记录时间 Number(dayjs().format("mmssSSS")); 毫秒
+  private st!: number; // 记录时间 ~~(dayjs().format("mmssSSS")); 毫秒
   private mode!: "inside";
 
   // 定义框选的相关参数
@@ -23,7 +24,7 @@ export class EditorEvent {
   private ex!: number; // 终点坐标x
   private ey!: number; // 终点坐标x
   private registerEvent: RegisterEvent;
-
+  private command: Command;
   /**
    * constructor EditorEvent 构造函数
    * @param draw
@@ -31,7 +32,9 @@ export class EditorEvent {
   constructor(draw: Draw) {
     this.draw = draw;
     // 注册快捷键
-    this.registerEvent = new RegisterEvent(this.draw);
+    this.registerEvent = new RegisterEvent(draw);
+
+    this.command = new Command(draw);
   }
 
   /**
@@ -80,7 +83,7 @@ export class EditorEvent {
       return (this.st = 0);
 
     // 记录点击的时间
-    this.st = Number(dayjs().format("mmssSSS"));
+    this.st = ~~dayjs().format("mmssSSS");
     this.move = true;
 
     // 如果右键菜单存在，则取消右键菜单
@@ -143,13 +146,13 @@ export class EditorEvent {
       .querySelectorAll("div[class='sf-editor-box-graphs-main']")
       .forEach((i) => ((i as HTMLDivElement).style.pointerEvents = ""));
     // 正常情况下，单击左键的时间不会超过 120 毫秒，如果超过，则认为用户在框选
-    const et = Number(dayjs().format("mmssSSS"));
+    const et = ~~dayjs().format("mmssSSS");
     if (et - this.st <= 120) return this.clickHandle(e);
     const { offsetX, offsetY } = e;
     this.ex = offsetX;
     this.ey = offsetY;
     // 实现相关的框选逻辑
-    await this.selected();
+    await this.computedSelected();
     // 重置参数
     this.st = 0;
     this.sx = 0;
@@ -162,7 +165,7 @@ export class EditorEvent {
    * 根据框选开始结束，计算那些元素在选区内被选中
    * @returns string[] 返回 nodeID 构成的数组
    */
-  private selected() {
+  private computedSelected() {
     return new Promise<void>((resolve) => {
       let xrange = [Math.min(this.sx, this.ex), Math.max(this.sx, this.ex)];
       let yrange = [Math.min(this.sy, this.ey), Math.max(this.sy, this.ey)];
@@ -249,7 +252,7 @@ export class EditorEvent {
 
     // 当前的缩放比例
     const transform = editorBox.style.transform.split(" ");
-    const currentScale = Number(transform[0].replace(/\(|\)|scale/g, ""));
+    const currentScale = ~~transform[0].replace(/\(|\)|scale/g, "");
 
     // 到底取加还是减，取决于参数
 
@@ -309,6 +312,13 @@ export class EditorEvent {
     // 1. 先看有没有菜单，有的话更新位置，没有再创建
     const menuselector = 'div[class="sf-editor-box-contextmenu"]';
     const menu = this.editorBox.querySelector(menuselector);
+    // 添加selected 样式
+    if (graph) {
+      // 清空所有
+      this.draw.getGraphDraw().cancelAllFormatPoint();
+      const mainBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
+      mainBox.classList.add("selected");
+    }
     menu ? this.updateContentmenu(e, graph) : this.createContextmenu(e, graph);
     e.stopPropagation();
     e.preventDefault();
@@ -412,7 +422,16 @@ export class EditorEvent {
    * 绑定右键菜单项的点击事件
    */
   private contextmenuClickHandle(e: Event, command: string | null) {
-    // 菜单项单击事件
+    // 定义事件映射
+    const eventMap: { [key: string]: () => void } = {
+      paste: this.command.executePaste,
+      top: this.command.executeTop,
+      bottom: this.command.executeBottom,
+      holdup: this.command.executeHoldUp,
+      putdown: this.command.executePutDown,
+    };
+
+    command && eventMap[command] && eventMap[command]();
     console.log(command);
     this.clickHandle(e);
   }
@@ -446,8 +465,8 @@ export class EditorEvent {
     if (mainBox) {
       var x = mainBox.style.left.replace("px", "");
       var y = mainBox.style.top.replace("px", "");
-      left = Number(x) + offsetX;
-      top = Number(y) + offsetY;
+      left = ~~x + offsetX;
+      top = ~~y + offsetY;
     }
 
     // 如果 offsetX + width 超过父元素的宽度，则令left = offsetX-width

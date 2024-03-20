@@ -24,6 +24,18 @@ export class Command {
   public executePageScaleAdd: CommandAdapt["pageScaleAdd"]; // 放大 reduce
   public setPageScale: CommandAdapt["setPageScale"]; // 缩放至指定比例
 
+  public executePaste: CommandAdapt["paste"];
+  public executeCopy: CommandAdapt["copy"];
+  public executeCut: CommandAdapt["cut"];
+  public executeUndo: CommandAdapt["undo"];
+  public executeRedo: CommandAdapt["redo"];
+  public executeTop: CommandAdapt["top"];
+  public executeBottom: CommandAdapt["bottom"];
+  public executeHoldUp: CommandAdapt["holdup"];
+  public executePutDown: CommandAdapt["putdown"];
+  public executeGroup: CommandAdapt["group"];
+  public executeUnGroup: CommandAdapt["ungroup"];
+
   constructor(draw: Draw) {
     const adapt = new CommandAdapt(draw);
     // 背景相关
@@ -36,5 +48,18 @@ export class Command {
     // 全屏相关
     this.executeFullScreen = adapt.fullScreen.bind(adapt);
     this.executeExitFullScreen = adapt.exitFullScreen.bind(adapt);
+
+    // 右键菜单相关事件
+    this.executePaste = adapt.paste.bind(adapt);
+    this.executeCopy = adapt.copy.bind(adapt);
+    this.executeCut = adapt.cut.bind(adapt);
+    this.executeUndo = adapt.undo.bind(adapt);
+    this.executeRedo = adapt.redo.bind(adapt);
+    this.executeTop = adapt.top.bind(adapt);
+    this.executeBottom = adapt.bottom.bind(adapt);
+    this.executeHoldUp = adapt.holdup.bind(adapt);
+    this.executePutDown = adapt.putdown.bind(adapt);
+    this.executeGroup = adapt.group.bind(adapt);
+    this.executeUnGroup = adapt.ungroup.bind(adapt);
   }
 }

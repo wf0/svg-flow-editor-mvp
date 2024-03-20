@@ -32,6 +32,7 @@ export class GraphDraw {
     const mainBox = this.draw.createHTMLElement("div") as HTMLDivElement;
     mainBox.classList.add("sf-editor-box-graphs-main");
     mainBox.style.padding = OFFSET + "px"; // 设置偏移量
+    mainBox.style.zIndex = "20"; // 设置zIndex 用于处理层级问题
     mainBox.setAttribute("graphid", nodeID); // 设置ID属性
     mainBox.setAttribute("type", "mainBox"); // 设置ID属性
 
@@ -397,6 +398,12 @@ export class GraphDraw {
     }
   }
 
+  /**
+   * 旋转的核心事件
+   * @param e
+   * @param div
+   * @param graph
+   */
   private rotatehandle(e: MouseEvent, div: HTMLDivElement, graph: IGraph) {
     const x = graph.getX();
     const y = graph.getY();

@@ -27,7 +27,7 @@ export class GraphCommon {
   public getX() {
     const graph = this as unknown as IGraph;
     const graphBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
-    return Number(graphBox.style.left.replace("px", ""));
+    return ~~graphBox.style.left.replace("px", "");
   }
 
   /**
@@ -37,7 +37,7 @@ export class GraphCommon {
   public getY() {
     const graph = this as unknown as IGraph;
     const graphBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
-    return Number(graphBox.style.top.replace("px", ""));
+    return ~~graphBox.style.top.replace("px", "");
   }
 
   /**
@@ -47,7 +47,7 @@ export class GraphCommon {
   public getWidth() {
     const graph = this as unknown as IGraph;
     const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
-    return Number(graphBox.style.width.replace("px", ""));
+    return ~~graphBox.style.width.replace("px", "");
   }
 
   /**
@@ -57,7 +57,7 @@ export class GraphCommon {
   public getHeight() {
     const graph = this as unknown as IGraph;
     const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
-    return Number(graphBox.style.height.replace("px", ""));
+    return ~~graphBox.style.height.replace("px", ""); // 使用 ~~ 转 即使错误也是0 ，更符合实际
   }
 
   /**

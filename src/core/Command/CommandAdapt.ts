@@ -54,4 +54,65 @@ export class CommandAdapt {
       }, 100);
     } catch (error) {}
   }
+
+  /** 右键菜单事件响应 */
+  public paste() {}
+  public copy() {}
+  public cut() {}
+  public undo() {}
+  public redo() {}
+  // 置于顶层
+  public top() {
+    const isSelected = this.draw.getGraphEvent().getSelected();
+    if (!isSelected) return;
+    const allSelected = this.draw.getGraphEvent().getAllGraphMain();
+
+    var zIndexArr: number[] = [];
+    allSelected.forEach((div) => zIndexArr.push(~~div.style.zIndex));
+    const max = Math.max.apply(Math, zIndexArr);
+    const index = ~~isSelected.style.zIndex;
+    // 如果自己大于等于最小值，则再减1
+    if (index <= max)
+      isSelected.style.zIndex =
+        index === 1 ? index.toString() : (index + 2).toString();
+  }
+
+  // 置于底层
+  public bottom() {
+    const isSelected = this.draw.getGraphEvent().getSelected();
+    if (!isSelected) return;
+    const allSelected = this.draw.getGraphEvent().getAllGraphMain();
+    var zIndexArr: number[] = [];
+    allSelected.forEach((div) => zIndexArr.push(~~div.style.zIndex));
+    // 找到数组中最小的
+    const min = Math.min.apply(Math, zIndexArr);
+    const index = ~~isSelected.style.zIndex;
+    // 如果自己大于等于最小值，则再减1
+    if (index >= min)
+      isSelected.style.zIndex =
+        index === 1 ? index.toString() : (index - 2).toString();
+  }
+
+  // 上移一层
+  public holdup() {
+    const isSelected = this.draw.getGraphEvent().getSelected();
+    if (!isSelected) return;
+    // 获取当前的层级 进行++
+    const index = ~~isSelected.style.zIndex;
+    isSelected.style.zIndex = (index + 1).toString();
+  }
+
+  // 下移一层
+  public putdown() {
+    const isSelected = this.draw.getGraphEvent().getSelected();
+    if (!isSelected) return;
+    // 获取当前的层级 进行--
+    const index = ~~isSelected.style.zIndex;
+    // 不能是 -1 不然就选不到了
+    isSelected.style.zIndex =
+      index === 1 ? index.toString() : (index - 1).toString();
+  }
+
+  public group() {}
+  public ungroup() {}
 }

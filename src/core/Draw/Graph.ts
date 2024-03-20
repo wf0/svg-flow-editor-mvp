@@ -166,7 +166,7 @@ export class GraphDraw {
 
     /**
      * 根据位置信息，计算形变锚点位置 顺序如下
-     *   1   2   3
+     *   1   2   3 9 - 9是旋转锚点
      *   8       4
      *   7   6   5
      */
@@ -205,6 +205,15 @@ export class GraphDraw {
           e.preventDefault();
         });
       });
+
+      // 处理旋转锚点
+      // points.push({ cursor: "rotate", x: width + 10, y: 0 });
+      const rotate = this.draw.createHTMLElement("div") as HTMLDivElement;
+      rotate.classList.add("rotate");
+      rotate.addEventListener("mousedown", (e) =>
+        this.rotatehandle(e, rotate, graph)
+      );
+      format.appendChild(rotate);
     });
   }
 
@@ -270,9 +279,7 @@ export class GraphDraw {
     this.cancelLinkPoint(graph);
     this.cancelFormatPoint(graph);
 
-    // 通过父节点实现 move 从而流畅拖动
-    this.draw.getEditorBox().addEventListener("mousemove", boxmove);
-    this.draw.getEditorBox().addEventListener("mouseup", () => {
+    const mouseupHandle = () => {
       if (!this.move) {
         this.draw.getEditorBox().removeEventListener("mousemove", boxmove);
         e.stopPropagation();
@@ -307,9 +314,14 @@ export class GraphDraw {
         graphLoadedSubscribe && eventBus.emit("resized", params);
         listener.resized && listener.resized(params);
       });
+      this.draw.getEditorBox().removeEventListener("mouseup", mouseupHandle);
       e.stopPropagation();
       e.preventDefault();
-    });
+    };
+
+    // 通过父节点实现 move 从而流畅拖动
+    this.draw.getEditorBox().addEventListener("mousemove", boxmove);
+    this.draw.getEditorBox().addEventListener("mouseup", mouseupHandle);
 
     /**
      * 移动核心函数
@@ -382,6 +394,52 @@ export class GraphDraw {
       // 设置宽高
       graph.setWidth(width);
       graph.setHeight(height);
+    }
+  }
+
+  private rotatehandle(e: MouseEvent, div: HTMLDivElement, graph: IGraph) {
+    const x = graph.getX();
+    const y = graph.getY();
+    var width = graph.getWidth(); // 初始宽度
+    var height = graph.getHeight(); // 初始高度
+
+    // 1. 自身不响应实现
+    div.style.pointerEvents = "none";
+
+    // 2. 自身的根元素 sf-editor-box-graphs-main-formats
+    const formatBox = div.parentNode as HTMLDivElement;
+    formatBox.style.pointerEvents = "none";
+
+    // 3. graph box 也不响应
+    const mainBox = formatBox.parentNode as HTMLDivElement;
+    mainBox.style.pointerEvents = "none";
+
+    // 4. 鼠标抬起，移除 move mouseup 事件！！切记，不然造成内存泄露
+    const mouseupHandle = () => {
+      div.style.pointerEvents = "";
+      formatBox.style.pointerEvents = "";
+      mainBox.style.pointerEvents = "";
+      this.draw.getEditorBox().removeEventListener("mousemove", rotateHandle);
+      this.draw.getEditorBox().removeEventListener("mouseup", mouseupHandle);
+      e.stopPropagation();
+      e.preventDefault();
+      return false;
+    };
+
+    this.draw.getEditorBox().addEventListener("mousemove", rotateHandle);
+    this.draw.getEditorBox().addEventListener("mouseup", mouseupHandle);
+
+    // 执行旋转的关键函数
+    function rotateHandle(e: MouseEvent) {
+      // 需要通过计算得出旋转的角度
+      const centerX = x + width / 2;
+      const centerY = y + height / 2;
+      const mouseX = e.offsetX;
+      const mouseY = e.offsetY;
+      const deltaX = mouseX - centerX;
+      const deltaY = mouseY - centerY;
+      let angle = (Math.atan2(deltaY, deltaX) * 180) / Math.PI;
+      graph.setRotate(angle - 136 + 180);
     }
   }
 

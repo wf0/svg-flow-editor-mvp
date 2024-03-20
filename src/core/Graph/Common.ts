@@ -168,6 +168,16 @@ export class GraphCommon {
     return graph;
   }
 
+  /**
+   * setRotate 设置旋转
+   */
+  public setRotate(rotate: number) {
+    const graph = this as unknown as IGraph;
+    const mainBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
+    mainBox.style.transform = `rotate(${rotate}deg)`;
+    return graph;
+  }
+
   protected addToEditor(graph: IGraph) {
     // 初始化默认样式
     this.setFill("var(--fill)");

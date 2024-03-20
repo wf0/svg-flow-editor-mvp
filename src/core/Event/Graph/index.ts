@@ -162,16 +162,15 @@ export class GraphEvent {
     this.nodes = this.draw.getGraphDraw().getNodeInfo() as node[];
   }
 
-
   /**
    * mouse move 移动中
-   * @param e 
-   * @param graph 
-   * @returns 
+   * @param e
+   * @param graph
+   * @returns
    */
   private mouseMoveHandle(e: MouseEvent, graph: IGraph) {
     if (!this.move) return;
-
+    console.log("graph mouseMoveHandle");
     // 这个是新的 offset，直接与旧的 offset 进行运算即可得到差值，与当前位置做计算即可
     const { offsetX, offsetY } = e;
 

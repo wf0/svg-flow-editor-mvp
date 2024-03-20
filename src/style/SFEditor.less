@@ -67,6 +67,18 @@
                         cursor: crosshair;
                         border: solid transparent 1px;
                     }
+
+                    // 旋转锚点
+                    .rotate {
+                        // background-color: red;
+                        background: url('/public/rotate.svg') 100% 100% no-repeat;
+                        position: absolute;
+                        right: -10px;
+                        top: -10px;
+                        height: 16px;
+                        width: 16px;
+                        cursor: url('/public/rotate.svg'), auto;
+                    }
                 }
 
                 // 可编辑 div
@@ -249,7 +261,7 @@
             margin: auto;
             border-radius: 4px;
             overflow: hidden;
-            padding:2px 4px;
+            padding: 2px 4px;
             color: #fff;
             background-color: #3080E9;
             border: 1px solid #3080E9

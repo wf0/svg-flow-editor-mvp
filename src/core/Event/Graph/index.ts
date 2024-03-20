@@ -239,10 +239,9 @@ export class GraphEvent {
       .querySelectorAll(selector) as NodeListOf<HTMLDivElement>;
   }
 
-
   /**
    * 获取所有选中的元件
-   * @returns 
+   * @returns
    */
   public getAllSelected() {
     const selector = "[class='sf-editor-box-graphs-main selected']";

@@ -11,7 +11,6 @@ export class RegisterEvent {
 
   constructor(draw: Draw) {
     this.draw = draw;
-
     // 初始化默认事件
     this.defaultEvent = [
       // 左上右下 键盘的可见顺序
@@ -87,10 +86,6 @@ export class RegisterEvent {
         key: KeyMap["Y"], // Ctrl Y
         ctrl: true,
       },
-      {
-        key: KeyMap["Space"], // 空格键
-        callback: this.move.bind(this),
-      },
     ];
   }
 
@@ -155,16 +150,6 @@ export class RegisterEvent {
   }
 
   /**
-   * 空格键实现画布位移
-   */
-  private move() {
-    // 1. 给根节点添加 cursor
-    this.draw.getRoot().style.cursor = "grab";
-    // 2. 移除相关事件
-    this.draw.getEditorEvent().removeEvent();
-  }
-
-  /**
    * 复制粘贴元件 - 实现思路
    *  1. 复制的时候，将元件信息放置到粘贴板上
    *  2. 粘贴的时候，从粘贴板获取数据，并进行创建
@@ -219,17 +204,6 @@ export class RegisterEvent {
     });
 
     // 阻止默认事件
-    evt.stopPropagation();
-    evt.preventDefault();
-  }
-
-  /**
-   * 需要实现空格键抬起
-   * @param evt
-   */
-  public keyupHandle(evt: KeyboardEvent) {
-    if (evt.key !== " ") return;
-    this.draw.getRoot().style.cursor = "";
     evt.stopPropagation();
     evt.preventDefault();
   }

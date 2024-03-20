@@ -297,7 +297,6 @@ export class GraphDraw {
       this.createLinkPoint(graph);
       this.createFormatPoint(graph);
 
-      this.draw.getEditorBox().removeEventListener("mousemove", boxmove);
       // 执行事件回调
       nextTick(() => {
         console.log("## Graph Resized.");
@@ -315,6 +314,7 @@ export class GraphDraw {
         graphLoadedSubscribe && eventBus.emit("resized", params);
         listener.resized && listener.resized(params);
       });
+      this.draw.getEditorBox().removeEventListener("mousemove", boxmove);
       this.draw.getEditorBox().removeEventListener("mouseup", mouseupHandle);
       e.stopPropagation();
       e.preventDefault();
@@ -405,7 +405,6 @@ export class GraphDraw {
    * @param graph
    */
   private rotateHandle(e: MouseEvent, div: HTMLDivElement, graph: IGraph) {
-    return;
     const x = graph.getX();
     const y = graph.getY();
     var width = graph.getWidth(); // 初始宽度

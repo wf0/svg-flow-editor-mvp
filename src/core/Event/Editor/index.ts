@@ -25,6 +25,12 @@ export class EditorEvent {
   private ey!: number; // 终点坐标x
   private registerEvent: RegisterEvent;
   private command: Command;
+  private _contextmenu: (e: Event, graph?: IGraph) => void;
+  private _mousedownHandle: (e: MouseEvent) => 0 | undefined;
+  private _mousemoveHandle: (e: MouseEvent) => void;
+  private _mouseupHandle: (e: MouseEvent) => Promise<void>;
+  private _keydownHandle: (evt: KeyboardEvent) => void;
+  private _scaleHandle: (evt: WheelEvent) => void;
   /**
    * constructor EditorEvent 构造函数
    * @param draw
@@ -34,41 +40,50 @@ export class EditorEvent {
     // 注册快捷键
     this.registerEvent = new RegisterEvent(draw);
     this.command = new Command(draw);
+    const register = this.registerEvent;
+
+    /**
+     * 初始化事件映射，不然绑定了 this 不能 removeEventListener
+     */
+    this._contextmenu = this.contextmenu.bind(this);
+    this._mousedownHandle = this.mousedownHandle.bind(this);
+    this._mousemoveHandle = this.mousemoveHandle.bind(this);
+    this._mouseupHandle = this.mouseupHandle.bind(this);
+    this._keydownHandle = register.keydownHandle.bind(register);
+    this._scaleHandle = this.setScale.bind(this);
   }
 
   /**
    * editorBox 添加事件
    */
   public addEvent() {
-    const register = this.registerEvent;
     this.editorBox = this.draw.getEditorBox();
-    const editorBox = this.editorBox;
     // 这里使用mousedown与mousemove、mouseup 事件实现 框选 同时click也在该事件过程中，需要记录事件时长
-    editorBox.addEventListener("contextmenu", this.contextmenu.bind(this));
-    editorBox.addEventListener("mousedown", this.mousedownHandle.bind(this));
-    editorBox.addEventListener("mousemove", this.mousemoveHandle.bind(this));
-    editorBox.addEventListener("mouseup", this.mouseupHandle.bind(this));
-    document.addEventListener("keydown", register.keydownHandle.bind(register));
-    document.addEventListener("keyup", register.keyupHandle.bind(register));
+    this.editorBox.addEventListener("contextmenu", this._contextmenu);
+    this.editorBox.addEventListener("mousedown", this._mousedownHandle);
+    this.editorBox.addEventListener("mousemove", this._mousemoveHandle);
+    this.editorBox.addEventListener("mouseup", this._mouseupHandle);
+    document.addEventListener("keydown", this._keydownHandle);
     // 缩放事件
-    document.addEventListener("wheel", this.setScale.bind(this), {
+    document.addEventListener("wheel", this._scaleHandle, {
       passive: false,
     });
+
+    // 移除事件测试用
+    // setTimeout(this.removeEvent.bind(this), 2000);
   }
 
   /**
    * 移除事件监听
    */
   public removeEvent() {
-    console.log("removeEvent");
-    const editorBox = this.editorBox;
-    editorBox.removeEventListener("contextmenu", this.contextmenu);
-    editorBox.removeEventListener("mousedown", this.mousedownHandle);
-    editorBox.removeEventListener("mousemove", this.mousemoveHandle);
-    editorBox.removeEventListener("mouseup", this.mouseupHandle);
-    document.removeEventListener("keydown", this.registerEvent.keydownHandle);
-    document.removeEventListener("keyup", this.registerEvent.keyupHandle);
-    document.removeEventListener("wheel", this.setScale);
+    const editorBox = this.draw.getEditorBox();
+    editorBox.removeEventListener("contextmenu", this._contextmenu);
+    editorBox.removeEventListener("mousedown", this._mousedownHandle);
+    editorBox.removeEventListener("mousemove", this._mousemoveHandle);
+    editorBox.removeEventListener("mouseup", this._mouseupHandle);
+    document.removeEventListener("keydown", this._keydownHandle);
+    document.removeEventListener("wheel", this._scaleHandle);
   }
 
   /**
@@ -77,9 +92,10 @@ export class EditorEvent {
    * @returns
    */
   private mousedownHandle(e: MouseEvent) {
+    const move = !!this.draw.getRoot().getAttribute("move");
     // editirBox 事件响应机制： 如果点击的不是 根节点，则不响应
     // @ts-ignore
-    if (e.target.className !== "sf-editor-box-graphs" || e.button === 2)
+    if (move || e.target.className !== "sf-editor-box-graphs" || e.button === 2)
       return (this.st = 0);
 
     // 记录点击的时间

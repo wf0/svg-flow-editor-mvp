@@ -12,5 +12,7 @@ export class CatalogEvent {
     this.initEvent();
   }
 
-  private initEvent() {}
+  private initEvent() {
+    console.log(this.draw, this.command);
+  }
 }

@@ -249,4 +249,6 @@ export class Draw {
   public getEditorEvent = () => this.editorEvent;
   public getCanvasDraw = () => this.canvasDraw;
   public getFooterEvent = () => this.footerEvent;
+  public getOperationEvent = () => this.operationEvent;
+  public getCatalogEvent = () => this.catalogEvent;
 }

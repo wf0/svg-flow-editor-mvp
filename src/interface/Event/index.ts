@@ -6,9 +6,8 @@ export type EventType = (payload?: unknown) => void;
 // 实现SFEditor eventBus 事件监听，该类型参数与 listener 保持一致！
 export interface EventBusMap {
   loaded: EventType;
-  resized: EventType;
+  graphResized: EventType;
   destroyed: EventType;
-  moved: EventType;
   graphNumberChanged: EventType;
   pageScale: EventType;
 }

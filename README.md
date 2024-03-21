@@ -269,7 +269,7 @@ if (watermark || watermarkColor || watermarkText) canvas.waterMark(watermarkText
 - 方法说明：设置Canvas相关属性-网格、圆点、水印；
 - 返回值：添加的元件实例 IGraph；
 - 参数说明：
-  - **type ** "rect" | "circle" | "ellipse" **[必传]** 添加元件类型
+  - **type** "rect" | "circle" | "ellipse" **[必传]** 添加元件类型
   - **width** number **[必传]** 元件的宽度
   - **height** number **[必传]** 元件的高度
   - **nodeID** string [可选] 元件的ID
@@ -331,29 +331,158 @@ editor.command.executeAddGraph({type:"rect",width:100,height:100,text:"demo"})
 
 ## 事件监听(listener)
 
-### setPageScale(scale: number)
+### loaded
 
-- 方法说明：缩放页面至指定倍率；
-- 参数说明： **scale 支持 0.4 至 2 之间**（40% - 200%缩放比）
-- 返回值：void；
+- 方法说明：编辑器加载完成；
+- 用法示例
+
+~~~javascript
+editor.listener.loaded = () => {
+    // your code...
+};
+~~~
+
+### graphResized
+
+- 方法说明：元件重置大小；
+- 回调参数说明：
+  - nodeID string
+  - width number
+  - height number
+  - x number
+  - y number
+- 用法示例
+
+~~~javascript
+editor.listener.graphResized = (payload) => {
+    // your code...
+};
+~~~
+
+### destroyed
+
+- 方法说明：编辑器销毁完成；
+- 用法示例
+
+~~~javascript
+editor.listener.destroyed = () => {
+    // your code...
+};
+~~~
+
+### graphNumberChanged
+
+- 方法说明：元件数量变化回调；
+- 回调参数说明：
+  - number 目前编辑器上的元件数量
+- 用法示例
+
+~~~javascript
+editor.listener.graphNumberChanged = (number) => {
+    // your code...
+};
+~~~
+
+### pageScale
+
+- 方法说明：页面缩放；
+- 回调参数说明：
+  - scale 缩放比 0.4 - 2之间
+- 用法示例
+
+~~~javascript
+editor.listener.pageScale = (scale) => {
+    // your code...
+};
+~~~
+
+
 
 
 
 ## 事件监听(eventBus)
 
+### loaded
+
+- 方法说明：编辑器加载完成；
+- 用法示例
+
+~~~javascript
+editor.eventBus.on('loaded',()=>{
+    // your code
+})
+~~~
+
+### graphResized
+
+- 方法说明：元件重置大小；
+- 回调参数说明：
+  - nodeID string
+  - width number
+  - height number
+  - x number
+  - y number
+- 用法示例
+
+~~~javascript
+editor.eventBus.on('graphResized',(payload)=>{
+    // your code...
+});
+~~~
+
+### destroyed
+
+- 方法说明：编辑器销毁完成；
+- 用法示例
+
+~~~javascript
+editor.eventBus.on('destroyed',()=>{
+    // your code...
+});
+~~~
+
+### graphNumberChanged
+
+- 方法说明：元件数量变化回调；
+- 回调参数说明：
+  - number 目前编辑器上的元件数量
+- 用法示例
+
+~~~javascript
+editor.eventBus.on('graphNumberChanged',(number)=>{
+    // your code...
+});
+~~~
+
+### pageScale
+
+- 方法说明：页面缩放；
+- 回调参数说明：
+  - scale 缩放比 0.4 - 2之间
+- 用法示例
+
+~~~javascript
+editor.eventBus.on('pageScale',(scale)=>{
+    // your code...
+});
+~~~
+
+
+
 ## 内部快捷键
 
-Ctrl + 左键 进行多选
+- Ctrl + 左键 多选
 
-- ctrl + C 复制
+- Ctrl + C 复制
 - Ctrl + V 粘贴
-- ctrl + F 进行文本搜索
+- Ctrl + X 剪切
 - Ctrl + A 全选
 - backspace、delete 进行删除
-- 上下左右 进行移动
-- Ctrl + Z 进行撤销 undo
-- Ctrl + Y 进行重做 redo
-- Ctrl + P 进行打印
+- 上下左右 移动
+- Ctrl + Z 撤销 undo
+- Ctrl + Y 重做 redo
+- Ctrl + P 打印
+- Ctrl +  S 保存
 - Ctrl + Shift + S 进行另存为
 - Alt + Shift + F 快捷美化
 - ...

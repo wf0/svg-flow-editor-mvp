@@ -310,9 +310,9 @@ export class GraphDraw {
         };
         const eventBus = this.draw.getEventBus();
         const listener = this.draw.getListener();
-        const graphLoadedSubscribe = eventBus.isSubscribe("resized");
-        graphLoadedSubscribe && eventBus.emit("resized", params);
-        listener.resized && listener.resized(params);
+        const graphLoadedSubscribe = eventBus.isSubscribe("graphResized");
+        graphLoadedSubscribe && eventBus.emit("graphResized", params);
+        listener.graphResized && listener.graphResized(params);
       });
       this.draw.getEditorBox().removeEventListener("mousemove", boxmove);
       this.draw.getEditorBox().removeEventListener("mouseup", mouseupHandle);

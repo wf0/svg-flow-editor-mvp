@@ -79,6 +79,27 @@ export class GraphCommon {
     const element = graph.getElement();
     return element.getAttribute("fill");
   }
+
+  /**
+   * 获取元素的旋转角度
+   */
+  public getRotate() {
+    const graph = this as unknown as IGraph;
+    const mainBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
+    const { transform } = mainBox.style; // . = `rotate(${rotate}deg)`;
+    return Number(transform.replace(/rotate(|deg)/g, ""));
+  }
+
+  /**
+   * 获取元件的文本
+   */
+  public getText() {
+    const graph = this as unknown as IGraph;
+    const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
+    const text = graphBox.querySelector("text");
+    return text?.innerHTML;
+  }
+
   /** setter */
   /** setter */
   /** setter */
@@ -109,6 +130,7 @@ export class GraphCommon {
     const graph = this as unknown as IGraph;
     const graphBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
     graphBox.style.left = x + "px";
+    return graph;
   }
 
   /**
@@ -129,10 +151,6 @@ export class GraphCommon {
     const graph = this as unknown as IGraph;
     const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
     graphBox.style.width = w + "px";
-    // 重新渲染 连接节点位置
-    // this.draw.getGraphDraw().updateLinkPoint(graph);
-    // 重新渲染形变节点
-    // this.draw.getGraphDraw().updateFormatPoint(graph);
     return graph;
   }
 
@@ -144,10 +162,6 @@ export class GraphCommon {
     const graph = this as unknown as IGraph;
     const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
     graphBox.style.height = h + "px";
-    // 重新渲染 连接节点位置
-    // this.draw.getGraphDraw().updateLinkPoint(graph);
-    // 重新渲染形变节点
-    // this.draw.getGraphDraw().updateFormatPoint(graph);
     return graph;
   }
 
@@ -174,6 +188,26 @@ export class GraphCommon {
   }
 
   /**
+   * setRotate 设置旋转
+   */
+  public setRotate(rotate: number) {
+    const graph = this as unknown as IGraph;
+    const mainBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
+    mainBox.style.transform = `rotate(${rotate}deg)`;
+    return graph;
+  }
+
+  /**
+   * 设置文本
+   * @param text
+   */
+  public setText(text: string) {
+    const graph = this as unknown as IGraph;
+    this.draw.getGraphEvent().setGraphText(graph, text);
+    return graph;
+  }
+
+  /**
    * 设置位置
    * @param x
    * @param y
@@ -187,15 +221,9 @@ export class GraphCommon {
   }
 
   /**
-   * setRotate 设置旋转
+   * 将元件添加到 editor 编辑器上
+   * @param graph
    */
-  public setRotate(rotate: number) {
-    const graph = this as unknown as IGraph;
-    const mainBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
-    mainBox.style.transform = `rotate(${rotate}deg)`;
-    return graph;
-  }
-
   protected addToEditor(graph: IGraph) {
     // 初始化默认样式
     this.setFill("var(--fill)");

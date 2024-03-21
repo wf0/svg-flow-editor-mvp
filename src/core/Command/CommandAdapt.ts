@@ -45,7 +45,8 @@ export class CommandAdapt {
    */
   public addGraph(payload: node): IGraph {
     // 解析参数
-    const { type, nodeID, width, height, x, y, stroke, fill } = payload;
+    const { type, nodeID, width, height } = payload;
+    const { x, y, stroke, fill, text, rotate } = payload;
     // 1. 根据 type 先构建出元件
     const graph =
       type === "rect"
@@ -56,8 +57,10 @@ export class CommandAdapt {
     nodeID && graph.setID(nodeID);
     x && graph.setX(x);
     y && graph.setY(y);
+    rotate && graph.setRotate(rotate);
     stroke && graph.setStroke(stroke);
     fill && graph.setFill(fill);
+    text && graph.setText(text);
 
     // 返回元件 供链式调用
     return graph;

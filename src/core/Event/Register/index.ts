@@ -289,8 +289,8 @@ export class RegisterEvent {
     });
 
     // 阻止默认事件
-    evt.stopPropagation();
-    evt.preventDefault();
+    // evt.stopPropagation();
+    // evt.preventDefault();
   }
 
   public keyupHandle(e: KeyboardEvent) {

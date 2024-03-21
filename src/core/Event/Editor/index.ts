@@ -194,6 +194,7 @@ export class EditorEvent {
       if (!nodes) return [];
 
       nodes.forEach(({ nodeID, width, height, x, y }) => {
+        if (!x || !y) return;
         const lt = { x, y };
         const rt = { x: x + width, y };
         const lb = { x, y: y + height };
@@ -206,11 +207,11 @@ export class EditorEvent {
         const isrb = this.computedIsSelected(rb, xrange, yrange);
 
         function inside() {
-          if (islt || isrt || isrb || islb) selected.push(nodeID);
+          if (islt || isrt || isrb || islb) selected.push(nodeID as string);
         }
 
         function all() {
-          if (islt && isrt && isrb && islb) selected.push(nodeID);
+          if (islt && isrt && isrb && islb) selected.push(nodeID as string);
         }
 
         this.mode === "inside" ? inside() : all();

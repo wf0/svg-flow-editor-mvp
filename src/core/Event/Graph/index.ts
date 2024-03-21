@@ -114,21 +114,35 @@ export class GraphEvent {
       editor.remove();
 
       // 获取用户输入
-      const text = input.innerHTML;
-
-      // 将该内容添加到 svg 上
-      const st = this.draw.createSVGElement("text") as SVGTextElement;
-      st.style.pointerEvents = "none"; // 不响应用户操作
-      st.style.userSelect = "none"; // 无法实现选择复制
-      st.setAttribute("x", "50%");
-      st.setAttribute("y", "50%");
-      st.setAttribute("text-anchor", "middle");
-      st.innerHTML = text;
-      svg.appendChild(st);
+      this.setGraphText(graph, input.innerHTML);
     });
 
     e.stopPropagation();
     e.preventDefault();
+  }
+
+  /**
+   * 执行实际的 添加文本事件
+   * @param text
+   */
+  public setGraphText(graph: IGraph, text: string) {
+    const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
+    // 4. 通过 editor 找parent 找 svg
+    const svg = graphBox.querySelector("svg") as SVGSVGElement;
+
+    const SVGtext = graphBox.querySelector("text");
+
+    if (SVGtext) return (SVGtext.innerHTML = text);
+
+    // 不然执行创建
+    const st = this.draw.createSVGElement("text") as SVGTextElement;
+    st.style.pointerEvents = "none"; // 不响应用户操作
+    st.style.userSelect = "none"; // 无法实现选择复制
+    st.setAttribute("x", "50%");
+    st.setAttribute("y", "50%");
+    st.setAttribute("text-anchor", "middle");
+    st.innerHTML = text;
+    svg.appendChild(st);
   }
 
   /**

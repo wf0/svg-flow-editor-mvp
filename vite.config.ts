@@ -10,7 +10,6 @@ export default defineConfig({
   worker: {
     format: "es",
   },
-
   build: {
     // 打包成第三方库-不使用 index.html 为入口文件
     lib: {

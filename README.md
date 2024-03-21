@@ -328,4 +328,4 @@ SFEditor.global.reset();
 
 升级主版本号(较大改版)：npm version major  // x.0.0
 
-再执行npm publish
+再执行 npm publish

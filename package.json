@@ -12,7 +12,7 @@
     "dev": "vite",
     "tsc": "tsc",
     "preview": "vite preview",
-    "build": "npm run tsc && npm run build:js",
+    "build": "npm run tsc && vite build",
     "build:assets": "cp -r src/assets/ dist/",
     "build:js": "babel src/ -d dist/",
     "prepublishOnly": "npm run build"

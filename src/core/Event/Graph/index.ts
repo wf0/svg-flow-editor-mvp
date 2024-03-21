@@ -1,8 +1,11 @@
 import { IGraph, node } from "../../../interface/Graph/index.ts";
 import { Draw } from "../../Draw/index.ts";
-const worker = new Worker("/src/core/Worker/AuxiliaryLine.worker.ts", {
-  type: "module",
-});
+const worker = new Worker(
+  new URL("/src/core/Worker/AuxiliaryLine.worker.ts", import.meta.url),
+  {
+    type: "module",
+  }
+);
 
 /**
  * graph 元件事件响应

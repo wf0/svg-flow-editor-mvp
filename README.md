@@ -40,7 +40,7 @@
   - 线段 line
   - HTML html
 - history 历史记录管理器（redo、undo、history）
-- tool工具类 一键美化、图片导出、组合/取消组合、锁定/取消锁定、自定义icon
+- tool工具类 一键美化、图片导出、组合/取消组合、锁定/取消锁定、自定义icon(使用 svg-image 实现)
 - network 协同 支持光标、用户操作、聊天通信，因此，需要在api 中进行预留触发接口
 
 
@@ -491,6 +491,24 @@ editor.eventBus.on('pageScale',(scale)=>{
 
 ## 自定义快捷键
 
+~~~javascript
+editor.register.shortcutList([
+    {
+      key: KeyMap;
+      ctrl?: boolean;
+      meta?: boolean;
+      mod?: boolean; // windows:ctrl || mac:command
+      shift?: boolean;
+      alt?: boolean;
+      isGlobal?: boolean;
+      callback?: (command: Command) => any;
+      disable?: boolean;
+    }
+  ])
+~~~
+
+
+
 ## 内部右键菜单
 
 ## 自定义右键菜单
@@ -499,7 +517,9 @@ editor.eventBus.on('pageScale',(scale)=>{
 
 ## 插件的使用
 
-## 项目 HTML 结构说明
+  项目提供 元件库、顶部菜单、元件配置抽屉等插件，
+
+
 
 ## 坐标系说明
 
@@ -509,11 +529,9 @@ editor.eventBus.on('pageScale',(scale)=>{
 
 ## 折线
 
-正交连线 采用 最短路径算法 A*算法+中点转折实现
+正交连线 采用 最短路径算法 A*算法
 
-## 插件化
 
-  项目提供 元件库、顶部菜单、元件配置抽屉等插件，
 
 ## npm 包
 

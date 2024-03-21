@@ -472,25 +472,21 @@ export class EditorEvent {
     var left = offsetX;
     var top = offsetY;
 
-    // @ts-ignore
-    const { tagName } = e.target;
     // @ts-ignore 获取 nodeID 获取
     const nodeID = e.target.getAttribute("graphid");
 
     // 获取父元素的left top
     const mainBox = this.draw.getGraphDraw().getGraphMain(nodeID);
-
     if (mainBox) {
-      var x = mainBox.style.left.replace("px", "");
-      var y = mainBox.style.top.replace("px", "");
-      left = Number(x + offsetX);
-      top = Number(y + offsetY);
+      var x = Number(mainBox.style.left.replace("px", ""));
+      var y = Number(mainBox.style.top.replace("px", ""));
+      left = x + offsetX;
+      top = y + offsetY;
     }
 
     // 如果 offsetX + width 超过父元素的宽度，则令left = offsetX-width
     if (left + width > clientWidth) left -= width;
     if (top + height > clientHeight) top -= height;
-
     div.style.left = left + "px";
     div.style.top = top + "px";
   }

@@ -24,45 +24,50 @@ export class RegisterEvent {
     this._spaceDown = this.spaceDown.bind(this);
     this._spaceMove = this.spaceMove.bind(this);
     this._spaceUp = this.spaceUp.bind(this);
+
+    // 左上右下 键盘的可见顺序
+    const moveMap = [
+      {
+        key: KeyMap["Left"],
+        callback: this.graphMoveHandle.bind(this),
+      },
+      {
+        key: KeyMap["Up"],
+        callback: this.graphMoveHandle.bind(this),
+      },
+      {
+        key: KeyMap["Right"],
+        callback: this.graphMoveHandle.bind(this),
+      },
+      {
+        key: KeyMap["Down"],
+        callback: this.graphMoveHandle.bind(this),
+      },
+      {
+        key: KeyMap["Left"],
+        ctrl: true,
+        callback: this.graphMoveHandle.bind(this),
+      },
+      {
+        key: KeyMap["Up"],
+        ctrl: true,
+        callback: this.graphMoveHandle.bind(this),
+      },
+      {
+        key: KeyMap["Right"],
+        ctrl: true,
+        callback: this.graphMoveHandle.bind(this),
+      },
+      {
+        key: KeyMap["Down"],
+        ctrl: true,
+        callback: this.graphMoveHandle.bind(this),
+      },
+    ];
+
     // 初始化默认事件
     this.defaultEvent = [
-      // 左上右下 键盘的可见顺序
-      {
-        key: KeyMap["Left"],
-        callback: this.graphMoveHandle.bind(this),
-      },
-      {
-        key: KeyMap["Up"],
-        callback: this.graphMoveHandle.bind(this),
-      },
-      {
-        key: KeyMap["Right"],
-        callback: this.graphMoveHandle.bind(this),
-      },
-      {
-        key: KeyMap["Down"],
-        callback: this.graphMoveHandle.bind(this),
-      },
-      {
-        key: KeyMap["Left"],
-        ctrl: true,
-        callback: this.graphMoveHandle.bind(this),
-      },
-      {
-        key: KeyMap["Up"],
-        ctrl: true,
-        callback: this.graphMoveHandle.bind(this),
-      },
-      {
-        key: KeyMap["Right"],
-        ctrl: true,
-        callback: this.graphMoveHandle.bind(this),
-      },
-      {
-        key: KeyMap["Down"],
-        ctrl: true,
-        callback: this.graphMoveHandle.bind(this),
-      },
+      ...moveMap,
       {
         key: KeyMap["Backspace"], // backspace 删除键
         callback: this.deleteGraph.bind(this),
@@ -72,36 +77,60 @@ export class RegisterEvent {
         callback: this.deleteGraph.bind(this),
       },
       {
-        key: KeyMap["C"], // Ctrl C
+        key: KeyMap["C"], // Ctrl + C 复制
         ctrl: true,
         callback: this.copy.bind(this),
       },
       {
-        key: KeyMap["V"], // Ctrl V
+        key: KeyMap["V"], // Ctrl + V 粘贴
         ctrl: true,
         callback: this.paste.bind(this),
       },
       {
-        key: KeyMap["X"], // Ctrl X
+        key: KeyMap["X"], // Ctrl + X 剪切
         ctrl: true,
         callback: this.cut.bind(this),
       },
       {
-        key: KeyMap["P"], // Ctrl P
+        key: KeyMap["A"], // Ctrl + A 全选
+        ctrl: true,
+        callback: this.selected.bind(this),
+      },
+      {
+        key: KeyMap["P"], // Ctrl + P 打印
         ctrl: true,
         callback: this.print.bind(this),
       },
       {
-        key: KeyMap["Z"], // Ctrl Z
+        key: KeyMap["S"], // Ctrl +  S 保存
         ctrl: true,
+        callback: this.save.bind(this),
       },
       {
-        key: KeyMap["Y"], // Ctrl Y
+        key: KeyMap["Z"], // Ctrl + Z 撤销 undo
         ctrl: true,
+        callback: this.undo.bind(this),
+      },
+      {
+        key: KeyMap["Y"], // Ctrl + Y 重做 redo
+        ctrl: true,
+        callback: this.redo.bind(this),
       },
       {
         key: KeyMap["Space"], // 空格事件
         callback: this.space.bind(this),
+      },
+      {
+        key: KeyMap["S"], // Ctrl + Shift + S 进行另存为
+        callback: this.saveAs.bind(this),
+        ctrl: true,
+        shift: true,
+      },
+      {
+        key: KeyMap["F"], // Alt + Shift + F 快捷美化
+        callback: this.beautify.bind(this),
+        ctrl: true,
+        shift: true,
       },
     ];
   }
@@ -182,6 +211,19 @@ export class RegisterEvent {
   private cut() {
     console.log("cut");
   }
+
+  private undo() {}
+  private redo() {}
+
+  // 全选
+  private selected() {}
+
+  // 保存
+  private save() {}
+  // 另存为
+  private saveAs() {}
+  // 一键美化
+  private beautify() {}
 
   /**
    * 打印

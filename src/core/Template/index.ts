@@ -25,14 +25,14 @@ export const contextmenuTemp = `
 	<div class="sf-editor-box-contextmenu-main-line editor-item"></div>
 	<div class="sf-editor-box-contextmenu-main-item editor-item" command="undo">
 		<span>
-			<i class="iconfont icon-chexiao"></i>
+			<i class="iconfont icon-shangyibu"></i>
 			撤销
 		</span>
 		<span>Ctrl+Z</span>
 	</div>
 	<div class="sf-editor-box-contextmenu-main-item editor-item" command="redo">
 		<span>
-			<i class="iconfont icon-zhongzuo"></i>
+			<i class="iconfont icon-xiayibu"></i>
 			重做
 		</span>
 		<span>Ctrl+Y</span>
@@ -113,10 +113,10 @@ export const footerTemp = `
 	<i class="iconfont icon-moban" title="模板" command="template"></i>
 
 	<!-- 全屏 -->
-	<i class="iconfont icon-quanping" title="全屏" command="fullscreen"></i>
+	<i class="iconfont icon-quanping1" title="全屏" command="fullscreen"></i>
 
 	<!-- 退出全屏 -->
-	<i class="iconfont icon-suoxiao" style="display:none" title="退出全屏" command="exitfullscreen"></i>
+	<i class="iconfont icon-huanyuanhuabu" style="display:none" title="退出全屏" command="exitfullscreen"></i>
 
 	<!-- 帮助 -->
 	<i class="iconfont icon-bangzhu" title="帮助" command="help"></i>
@@ -143,14 +143,14 @@ export const operationTemp = `
 </div>
 <div class="sf-editor-operation-bottom">
 	<!-- 撤销 -->
-	<i class="iconfont icon-chexiao"></i>
+	<i class="iconfont icon-shangyibu"></i>
 	<!-- 重做 -->
-	<i class="iconfont icon-zhongzuo"></i>
+	<i class="iconfont icon-xiayibu"></i>
 	<!-- 美化 -->
 	<i class="iconfont icon-huabumeihua"></i>
 	<div class="line"></div>
 	<!-- 背景颜色 -->
-	<i class="iconfont icon-ibg"></i>
+	<i class="iconfont icon-ibg" style="color:var(--background);border:solid #ccc 1px;border-radius:4px"></i>
 	<!-- 插入图片 -->
 	<i class="iconfont icon-tupian"></i>
 	<div class="line"></div>
@@ -176,11 +176,54 @@ export const operationTemp = `
 
 export const catalogTemp = `
 <!-- 基础图形 -->
-<h3 class="sf-editor-catalog-title" command="base">
+<h3
+	class="sf-editor-catalog-title"
+	command="base"
+	style="margin-top: 10px">
 	<div class="icon close"></div>
 	基础图形
 </h3>
-<div class="sf-editor-catalog-item" adapt="base">base</div>
+<div class="sf-editor-catalog-item" adapt="base">
+	<div draggable="true" class="graph" type="logo">
+		<i class="iconfont icon-icon__liuchengtu logo"></i>
+	</div>
+	<div draggable="true" class="graph" type="image">
+		<i class="iconfont icon-tupian1"></i>
+	</div>
+	<div draggable="true" class="graph" type="text">
+		<i class="iconfont icon-xingzhuang-wenzi"></i>
+	</div>
+	<div draggable="true" class="graph" type="rect">
+		<i class="iconfont icon-xingzhuang-juxing"></i>
+	</div>
+	<div draggable="true" class="graph" type="circle">
+		<i class="iconfont icon-xingzhuang-tuoyuanxing"></i>
+	</div>
+	<div draggable="true" class="graph" type="ellipse">
+		<i class="iconfont icon-tuoyuanxing"></i>
+	</div>
+	<div draggable="true" class="graph" type="xxx">
+		<i class="iconfont icon-xingzhuang-sanjiaoxing"></i>
+	</div>
+	<div draggable="true" class="graph" type="xxx">
+		<i class="iconfont icon-xingzhuang-xingxing"></i>
+	</div>
+	<div draggable="true" class="graph" type="xxx">
+		<i class="iconfont icon-xingzhuang-jianxing"></i>
+	</div>
+	<div draggable="true" class="graph" type="xxx">
+		<i class="iconfont icon-xian"> </i>
+	</div>
+	<div draggable="true" class="graph" type="xxx">
+		<i class="iconfont icon-ditu-dibiao"> </i>
+	</div>
+	<div draggable="true" class="graph" type="xxx">
+		<i class="iconfont icon-biaodanzujian-biaoge"></i>
+	</div>
+	<div draggable="true" class="graph" type="xxx">
+		<i class="iconfont icon-bianqian"> </i>
+	</div>
+</div>
 <div class="line"></div>
 
 <!-- Flowchart 流程图 -->
@@ -188,7 +231,11 @@ export const catalogTemp = `
 	<div class="icon close"></div>
 	Flowchart 流程图
 </h3>
-<div class="sf-editor-catalog-item" adapt="Flowchart">Flowchart</div>
+<div class="sf-editor-catalog-item" adapt="Flowchart">
+	<div draggable="true" class="graph" type="xxx" title="开发中">
+		<i class="iconfont icon-kaifazhong"> </i>
+	</div>
+</div>
 <div class="line"></div>
 
 <!-- 泳池/泳道 -->
@@ -196,7 +243,11 @@ export const catalogTemp = `
 	<div class="icon close"></div>
 	泳池/泳道
 </h3>
-<div class="sf-editor-catalog-item" adapt="pool">pool</div>
+<div class="sf-editor-catalog-item" adapt="pool">
+	<div draggable="true" class="graph" type="xxx" title="开发中">
+		<i class="iconfont icon-kaifazhong"> </i>
+	</div>
+</div>
 <div class="line"></div>
 
 <!-- 统计图 -->
@@ -204,7 +255,20 @@ export const catalogTemp = `
 	<div class="icon close"></div>
 	统计图
 </h3>
-<div class="sf-editor-catalog-item" adapt="chart">chart</div>
+<div class="sf-editor-catalog-item" adapt="chart">
+	<div draggable="true" class="graph" type="logo">
+		<i class="iconfont icon-tubiao-zhexiantu"></i>
+	</div>
+	<div draggable="true" class="graph" type="logo">
+		<i class="iconfont icon-tubiao-zhuzhuangtu"></i>
+	</div>
+	<div draggable="true" class="graph" type="logo">
+		<i class="iconfont icon-gongyezujian-yibiaopan"></i>
+	</div>
+	<div draggable="true" class="graph" type="logo">
+		<i class="iconfont icon-tubiao-bingtu"></i>
+	</div>
+</div>
 <div class="line"></div>
 
 <!-- 提示 -->

@@ -6,6 +6,12 @@
     overflow: hidden;
     background-color: #EAECEE;
 
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
     // svg canvas 绘制元件核心区
     &-box {
         width: 100%;
@@ -54,7 +60,8 @@
                         pointer-events: all;
                         cursor: crosshair;
                         border: solid transparent 1px;
-                        &:hover{
+
+                        &:hover {
                             background-color: rgb(6, 123, 239) !important;
                         }
                     }
@@ -248,6 +255,32 @@
         &-item {
             padding: 5px 10px;
             display: none;
+            flex-wrap: wrap;
+
+            .graph {
+                cursor: move;
+                height: 40px;
+                width: 40px;
+                margin: 8px 0 0 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .logo {
+                    color: #3080E9;
+                }
+
+                i {
+                    font-size: 28px;
+                }
+
+                div {
+                    width: 80%;
+                    height: 80%;
+                    border: solid 1px;
+
+                }
+            }
         }
 
         .more {

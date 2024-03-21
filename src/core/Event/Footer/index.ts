@@ -1,4 +1,3 @@
-import { nextTick } from "../../../utils/index.ts";
 import { Command } from "../../Command/Command.ts";
 import { Draw } from "../../Draw/index.ts";
 
@@ -18,27 +17,25 @@ export class FooterEvent {
    * 给 footer 添加事件
    */
   private initEvent() {
-    nextTick(() => {
-      const footerBox = this.draw
-        .getRoot()
-        .querySelector('[class="sf-editor-footer"]') as HTMLDivElement;
+    const footerBox = this.draw
+      .getRoot()
+      .querySelector('[class="sf-editor-footer"]') as HTMLDivElement;
 
-      // 定义事件映射
-      const eventMap: { [key: string]: () => void } = {
-        reduce: this.command.executePageScaleMinus,
-        resize: this.command.executePageScaleRecovery,
-        amplify: this.command.executePageScaleAdd,
-        fullscreen: () => this.changeFullScreenIcon(true),
-        exitfullscreen: () => this.changeFullScreenIcon(false),
-      };
+    // 定义事件映射
+    const eventMap: { [key: string]: () => void } = {
+      reduce: this.command.executePageScaleMinus,
+      resize: this.command.executePageScaleRecovery,
+      amplify: this.command.executePageScaleAdd,
+      fullscreen: () => this.changeFullScreenIcon(true),
+      exitfullscreen: () => this.changeFullScreenIcon(false),
+    };
 
-      footerBox.querySelectorAll("[command]").forEach((item) => {
-        const command = item.getAttribute("command") as string;
-        item.addEventListener("click", (e) => {
-          eventMap[command] && eventMap[command]();
-          e.stopPropagation();
-          e.preventDefault();
-        });
+    footerBox.querySelectorAll("[command]").forEach((item) => {
+      const command = item.getAttribute("command") as string;
+      item.addEventListener("click", (e) => {
+        eventMap[command] && eventMap[command]();
+        e.stopPropagation();
+        e.preventDefault();
       });
     });
   }

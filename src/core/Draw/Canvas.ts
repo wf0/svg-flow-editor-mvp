@@ -39,6 +39,8 @@ export class CanvasDraw {
     // 3. 标记唯一属性id
     canvas.classList.add("sf-editor-box-canvas");
     this.canvas = canvas;
+    this.canvas.style.backgroundColor = 'var(--background)';
+
     this.setCanvasInfo(width, height);
     return canvas;
   }

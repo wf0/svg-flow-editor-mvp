@@ -1,6 +1,6 @@
-import { allTheme } from "../core/Config/index.ts";
+import { allTheme, messageInfo } from "../core/Config/index.ts";
 
-type IThemeOpt = {
+export type IThemeOpt = {
   [key: string]: string;
   background: string; // 背景颜色
   stroke: string; // 元件边框颜色
@@ -30,20 +30,21 @@ function isMod(evt: KeyboardEvent | MouseEvent) {
 
 // 封装主题变换
 function setTheme(theme: string, option?: IThemeOpt) {
-  // 方案二：应该使用 style标签实现更好，不然代码看起来冗余
-  // 删除原有的 style 标签
+  // 1. 先校验 theme 是否合法
+  if (!allTheme[theme]) throw new Error(messageInfo.invalidParams);
+
+  // 2. 删除原有的 style 标签
   const head = document.querySelector("head") as HTMLHeadElement;
 
   const oldTag = head.querySelector("#colorful_theme");
 
-  // 存在则删除该标签
   oldTag && oldTag.remove();
 
+  // 3. 根据入参解析样式
   var themeHTML = "";
 
   // 将用户的配置覆盖默认 theme1
   const opt = Object.assign(allTheme[theme], option);
-
   // 动态获取颜色
   for (const key in opt) {
     if (Object.prototype.hasOwnProperty.call(opt, key)) {
@@ -51,6 +52,8 @@ function setTheme(theme: string, option?: IThemeOpt) {
       themeHTML += `--${key}:${value};`;
     }
   }
+
+  // 4. 创建新的 style
 
   const styleTag = document.createElement("style");
 

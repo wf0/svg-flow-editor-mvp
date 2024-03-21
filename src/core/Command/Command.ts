@@ -7,6 +7,8 @@ export class Command {
   public executeBackground: CommandAdapt["background"];
 
   // 添加元件
+  public executeAddGraph: CommandAdapt["addGraph"];
+
   // 删除元件
 
   // 全屏 退出 API
@@ -19,23 +21,32 @@ export class Command {
   public executePageScaleAdd: CommandAdapt["pageScaleAdd"]; // 放大 reduce
   public setPageScale: CommandAdapt["setPageScale"]; // 缩放至指定比例
 
-  // 右键菜单相关API
+  /** 右键菜单相关API */
   public executePaste: CommandAdapt["paste"];
   public executeCopy: CommandAdapt["copy"];
   public executeCut: CommandAdapt["cut"];
+  // 撤销与重做
   public executeUndo: CommandAdapt["undo"];
   public executeRedo: CommandAdapt["redo"];
+  // 层级处理
   public executeTop: CommandAdapt["top"];
   public executeBottom: CommandAdapt["bottom"];
   public executeHoldUp: CommandAdapt["holdup"];
   public executePutDown: CommandAdapt["putdown"];
+  // 分组
   public executeGroup: CommandAdapt["group"];
   public executeUnGroup: CommandAdapt["ungroup"];
+
+  // 切换主题风格
+  public executeSetTheme: CommandAdapt["setTheme"];
 
   constructor(draw: Draw) {
     const adapt = new CommandAdapt(draw);
     // 背景相关
     this.executeBackground = adapt.background.bind(adapt);
+    // 添加/删除元件
+    this.executeAddGraph = adapt.addGraph.bind(adapt);
+
     // 页面缩放相关
     this.executePageScaleRecovery = adapt.pageScaleRecovery.bind(adapt); // 重置
     this.executePageScaleMinus = adapt.pageScaleMinus.bind(adapt); // 缩小
@@ -57,5 +68,8 @@ export class Command {
     this.executePutDown = adapt.putdown.bind(adapt);
     this.executeGroup = adapt.group.bind(adapt);
     this.executeUnGroup = adapt.ungroup.bind(adapt);
+
+    // 切换主题风格
+    this.executeSetTheme = adapt.setTheme.bind(this);
   }
 }

@@ -5,11 +5,12 @@ export type IGraph = Rect | Ellipse;
 
 // 单个节点的信息
 export interface node {
-  nodeID: string;
+  type?: "rect" | "circle" | "ellipse";
+  nodeID?: string;
   width: number;
   height: number;
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
   rotate?: number; // 旋转角度
   zIndex?: number; // 层级
   stroke?: string;

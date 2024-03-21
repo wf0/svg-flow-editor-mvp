@@ -13,6 +13,5 @@ export class OperationEvent {
   }
 
   private initEvent() {
-    console.log(this.draw, this.command);
   }
 }

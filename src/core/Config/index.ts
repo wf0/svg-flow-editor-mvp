@@ -4,6 +4,7 @@ const messageInfo = {
   // 选择器不可用，你可能需要等待DOM渲染完成。
   selectorError:
     "The selector is not Available.Maybe you need to wait for Dom rendering to completed.",
+  invalidParams: "Invalid input parameter.",
 };
 
 // 默认的水印

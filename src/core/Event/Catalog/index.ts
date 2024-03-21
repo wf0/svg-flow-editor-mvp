@@ -13,6 +13,5 @@ export class CatalogEvent {
   }
 
   private initEvent() {
-    console.log(this.draw, this.command);
   }
 }

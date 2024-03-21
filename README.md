@@ -128,6 +128,7 @@ svg flow editor 是一款自研流程图编辑器，提供了一系列流程图�
 3. getAllNodeInfo 获取所有的Node信息
 4. executeDeleteGraph 删除元件
 5. executeSetTheme 设置主题
+6. executeAddGraph
 
 ## 事件监听(listener)
 

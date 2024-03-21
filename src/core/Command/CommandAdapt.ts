@@ -1,4 +1,9 @@
+import { IBackground } from "../../interface/Draw/index.ts";
+import { IGraph, node } from "../../interface/Graph/index.ts";
+import { IThemeOpt, setTheme } from "../../utils/index.ts";
 import { Draw } from "../Draw/index.ts";
+import { Ellipse } from "../Graph/Ellipse.ts";
+import { Rect } from "../Graph/Rect.ts";
 
 // Command Adapt API 操作核心库
 export class CommandAdapt {
@@ -8,8 +13,54 @@ export class CommandAdapt {
     this.draw = draw;
   }
 
-  public background() {
-    console.log(this.draw);
+  /**
+   * 设置canvas 属性 【水印、圆点、网格线】- 背景颜色不在这设置，background 属性属于 theme 主题类
+   * @param payload
+   * @returns
+   */
+  public background(payload?: IBackground) {
+    // 1. 如果没有传任何参数，则表示关闭网格 关闭水印
+    const canvas = this.draw.getCanvasDraw();
+    canvas.clearCanvas();
+    if (!payload) return;
+
+    // 解析参数
+    const { origin, originColor } = payload;
+    const { gridline, gridlineColor } = payload;
+    const { watermark, watermarkColor, watermarkText } = payload;
+
+    // 2. 不然根据参数决定渲染
+    // 网格背景与小圆点背景互斥
+    if (gridline || gridlineColor) canvas.gridLine(gridlineColor);
+    else if (origin || originColor) canvas.origin(originColor);
+
+    // 水印则是独立存在
+    if (watermark || watermarkColor || watermarkText)
+      canvas.waterMark(watermarkText, watermarkColor);
+  }
+
+  /**
+   * 添加元件 入参是元件的基本信息
+   * @param payload
+   */
+  public addGraph(payload: node): IGraph {
+    // 解析参数
+    const { type, nodeID, width, height, x, y, stroke, fill } = payload;
+    // 1. 根据 type 先构建出元件
+    const graph =
+      type === "rect"
+        ? new Rect(this.draw, width, height)
+        : new Ellipse(this.draw, width, height);
+
+    // 如果属性存在，则手动设置属性
+    nodeID && graph.setID(nodeID);
+    x && graph.setX(x);
+    y && graph.setY(y);
+    stroke && graph.setStroke(stroke);
+    fill && graph.setFill(fill);
+
+    // 返回元件 供链式调用
+    return graph;
   }
 
   // 页面缩放
@@ -61,6 +112,7 @@ export class CommandAdapt {
   public cut() {}
   public undo() {}
   public redo() {}
+
   // 置于顶层
   public top() {
     const isSelected = this.draw.getGraphEvent().getSelected();
@@ -115,4 +167,13 @@ export class CommandAdapt {
 
   public group() {}
   public ungroup() {}
+
+  public setTheme(theme: string | IThemeOpt) {
+    if (typeof theme === "string") setTheme(theme);
+    // 如果用户传入的是自定义的配置项，则需要动态设置 :root 的颜色值
+    else setTheme("colorful_theme1", theme);
+    console.warn(
+      "【注意】样式有权重之分，如果手动设置了样式，则默认样式可能不生效！"
+    );
+  }
 }

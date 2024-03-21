@@ -83,6 +83,24 @@ export class GraphCommon {
   /** setter */
   /** setter */
   /** setter */
+
+  /**
+   * 设置ID属性
+   * @param nodeID
+   */
+  public setID(nodeID: string) {
+    const graph = this as unknown as IGraph;
+    const oldID = graph.getID();
+    graph.nodeID = nodeID;
+    // 通过oldID 修改页面属性
+    this.draw
+      .getEditorBox()
+      .querySelectorAll(`[graphid="${oldID}"]`)
+      .forEach((i) => i.setAttribute("graphid", nodeID));
+
+    return graph;
+  }
+
   /**
    * 设置X
    * @param x

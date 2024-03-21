@@ -8,9 +8,22 @@ import { Graph } from "../../Graph/index.ts";
 export class RegisterEvent {
   private draw: Draw;
   private defaultEvent!: IShortCut[];
+  private move!: boolean;
+  private sx!: number;
+  private sy!: number;
+  private tx!: number; // 初始 transform
+  private ty!: number; // 初始 transform
+
+  private _spaceDown: (e: MouseEvent) => void;
+  private _spaceMove: (e: MouseEvent) => void;
+  private _spaceUp: (e: MouseEvent) => void;
 
   constructor(draw: Draw) {
     this.draw = draw;
+
+    this._spaceDown = this.spaceDown.bind(this);
+    this._spaceMove = this.spaceMove.bind(this);
+    this._spaceUp = this.spaceUp.bind(this);
     // 初始化默认事件
     this.defaultEvent = [
       // 左上右下 键盘的可见顺序
@@ -85,6 +98,10 @@ export class RegisterEvent {
       {
         key: KeyMap["Y"], // Ctrl Y
         ctrl: true,
+      },
+      {
+        key: KeyMap["Space"], // 空格事件
+        callback: this.space.bind(this),
       },
     ];
   }
@@ -172,6 +189,74 @@ export class RegisterEvent {
   private print() {}
 
   /**
+   * 空格实现平移
+   */
+  private space() {
+    // 1. 给根元素添加标志
+    const root = this.draw.getRoot();
+    if (root.getAttribute("move") === "true") return;
+    root.setAttribute("move", "true");
+    root.style.cursor = "grab";
+
+    // 2. 所有div 不响应事件
+    root
+      .querySelectorAll("div")
+      .forEach((i) => (i.style.pointerEvents = "none"));
+
+    // 添加 down 与 move 事件
+    root.addEventListener("mousedown", this._spaceDown);
+    root.addEventListener("mousemove", this._spaceMove);
+    root.addEventListener("mouseup", this._spaceUp);
+  }
+
+  /**
+   * 空格左键单击记录初始位置
+   */
+  private spaceDown(e: MouseEvent) {
+    if (e.buttons === 2) return;
+    this.move = true;
+    this.sx = e.offsetX;
+    this.sy = e.offsetY;
+    // 解析当前 transform
+    const editorBox = this.draw.getEditorBox();
+    const transform = editorBox.style.transform.split(" "); // ['scale(1)', 'translate(0px,', '0px)']
+
+    // 解析当前的偏移量
+    this.tx = Number(transform[1].replace(/translate\(|px|,/g, ""));
+    this.ty = Number(transform[2].replace(/\)|px/g, ""));
+  }
+
+  /**
+   * 空格移动位置
+   */
+  private spaceMove(e: MouseEvent) {
+    if (!this.move) return;
+    const { offsetX, offsetY } = e;
+    const dx = offsetX - this.sx;
+    const dy = offsetY - this.sy;
+
+    // 解析当前 transform
+    const editorBox = this.draw.getEditorBox();
+    const transform = editorBox.style.transform.split(" "); // ['scale(1)', 'translate(0px,', '0px)']
+
+    // 计算最终结果
+    const result = `translate(${this.tx + dx}px, ${this.ty + dy}px)`;
+    editorBox.style.transform = transform[0] + result;
+  }
+
+  /**
+   * 抬起
+   * @param e
+   */
+  private spaceUp(e: MouseEvent) {
+    if (!this.move) return;
+    // 4. 初始化参数
+    this.move = false;
+    this.sx = 0;
+    this.sy = 0;
+  }
+
+  /**
    * keydown handle 用于实现系统级快捷键 用户快捷键
    * @param e
    */
@@ -206,5 +291,25 @@ export class RegisterEvent {
     // 阻止默认事件
     evt.stopPropagation();
     evt.preventDefault();
+  }
+
+  public keyupHandle(e: KeyboardEvent) {
+    if (e.key !== " ") return;
+    // 1. 清空root move 标志
+    const root = this.draw.getRoot();
+    root.setAttribute("move", "");
+    root.style.cursor = "default";
+
+    // 2. 恢复事件
+    root.querySelectorAll("div").forEach((i) => (i.style.pointerEvents = ""));
+
+    // 3. 移除事件监听
+    root.removeEventListener("mousedown", this._spaceDown);
+    root.removeEventListener("mousemove", this._spaceMove);
+    root.removeEventListener("mouseup", this._spaceUp);
+
+    // 阻止默认事件
+    e.stopPropagation();
+    e.preventDefault();
   }
 }

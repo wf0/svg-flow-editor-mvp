@@ -31,6 +31,7 @@ export class EditorEvent {
   private _mouseupHandle: (e: MouseEvent) => Promise<void>;
   private _keydownHandle: (evt: KeyboardEvent) => void;
   private _scaleHandle: (evt: WheelEvent) => void;
+  private _keyupHandle: (evt: KeyboardEvent) => void;
   /**
    * constructor EditorEvent 构造函数
    * @param draw
@@ -50,6 +51,7 @@ export class EditorEvent {
     this._mousemoveHandle = this.mousemoveHandle.bind(this);
     this._mouseupHandle = this.mouseupHandle.bind(this);
     this._keydownHandle = register.keydownHandle.bind(register);
+    this._keyupHandle = register.keyupHandle.bind(register);
     this._scaleHandle = this.setScale.bind(this);
   }
 
@@ -64,6 +66,7 @@ export class EditorEvent {
     this.editorBox.addEventListener("mousemove", this._mousemoveHandle);
     this.editorBox.addEventListener("mouseup", this._mouseupHandle);
     document.addEventListener("keydown", this._keydownHandle);
+    document.addEventListener("keyup", this._keyupHandle);
     // 缩放事件
     document.addEventListener("wheel", this._scaleHandle, {
       passive: false,

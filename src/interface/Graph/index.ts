@@ -1,9 +1,9 @@
-import { SEchart } from "../../core/Graph/GEchart.ts";
+import { GEchart } from "../../core/Graph/GEchart.ts";
 import { Ellipse } from "../../core/Graph/Ellipse.ts";
 import { SVGImage } from "../../core/Graph/Image.ts";
 import { Rect } from "../../core/Graph/Rect.ts";
 
-export type IGraph = Rect | Ellipse | SVGImage | SEchart;
+export type IGraph = Rect | Ellipse | SVGImage | GEchart;
 
 // 单个节点的信息
 export interface node {

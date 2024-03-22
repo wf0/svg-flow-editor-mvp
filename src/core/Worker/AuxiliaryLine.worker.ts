@@ -49,11 +49,12 @@ function computedLine(node: node) {
   var h3 = 0; // 水平方向三条线
   // 1. 解析宽度高度 x y
   const { x, y, width, height } = node;
-  v1 = x; // 这里不再区分 rect 是因为在传数据的时候已经处理过了
-  v2 = x + width / 2;
-  v3 = x + width;
-  h1 = y;
-  h2 = y + height / 2;
-  h3 = y + height;
+
+  v1 = x as number; // 这里不再区分 rect 是因为在传数据的时候已经处理过了
+  v2 = (x as number) + width / 2;
+  v3 = (x as number) + width;
+  h1 = y as number;
+  h2 = (y as number) + height / 2;
+  h3 = (y as number) + height;
   return { v1, v2, v3, h1, h2, h3 };
 }

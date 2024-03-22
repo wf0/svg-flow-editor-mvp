@@ -1,7 +1,7 @@
 // 快捷键相关操作 - 也需要映射到 command API 操作
 
 import { cbParams, IShortCut, KeyMap } from "../../../interface/Event/index.ts";
-import { isMod, nextTick } from "../../../utils/index.ts";
+import { isMod } from "../../../utils/index.ts";
 import { Command } from "../../Command/Command.ts";
 import { Draw } from "../../Draw/index.ts";
 import { Graph } from "../../Graph/index.ts";
@@ -266,7 +266,7 @@ export class RegisterEvent {
    * 抬起
    * @param e
    */
-  private spaceUp(e: MouseEvent) {
+  private spaceUp(_e: MouseEvent) {
     if (!this.move) return;
     // 4. 初始化参数
     this.move = false;

@@ -8,10 +8,6 @@ import { CanvasDraw } from "./Canvas.ts";
 import { GraphEvent } from "../Event/Graph/index.ts";
 import { GraphDraw } from "./Graph.ts";
 import { EditorEvent } from "../Event/Editor/index.ts";
-import { catalogTemp, footerTemp, operationTemp } from "../Template/index.ts";
-import { FooterEvent } from "../Event/Footer/index.ts";
-import { OperationEvent } from "../Event/Operation/index.ts";
-import { CatalogEvent } from "../Event/Catalog/index.ts";
 
 // 重构 draw
 export class Draw {
@@ -24,9 +20,6 @@ export class Draw {
   private graphDraw: GraphDraw;
   private graphEvent: GraphEvent;
   private editorEvent: EditorEvent;
-  private footerEvent!: FooterEvent; // footer 插件事件
-  private operationEvent!: OperationEvent; // operation 插件事件
-  private catalogEvent!: CatalogEvent; // catalog 插件事件
 
   private root!: HTMLDivElement; // 根节点 sf-editor 子节点有 box footer catalog operation
   private editorBox!: HTMLDivElement; // svg、canvas 操作区 sf-editor-box
@@ -128,49 +121,7 @@ export class Draw {
     this.editorBox.appendChild(div);
   }
 
-  /**
-   * 初始化 footer
-   */
-  public initFooter() {
-    // 需要重置画布的宽高信息
-    const footer = this.createHTMLElement("div") as HTMLDivElement;
-    footer.classList.add("sf-editor-footer");
-    this.root.appendChild(footer);
-    footer.innerHTML = footerTemp;
-    // 添加事件
-    this.footerEvent = new FooterEvent(this);
-    this.resize();
-  }
-
-  /**
-   * 初始化 operation 插件
-   */
-  public initOperation() {
-    const operation = this.createHTMLElement("div") as HTMLDivElement;
-    operation.classList.add("sf-editor-operation");
-    this.root.appendChild(operation);
-    operation.innerHTML = operationTemp;
-    // 添加事件
-    this.operationEvent = new OperationEvent(this);
-    this.resize();
-  }
-
-  /**
-   * 元件库 catalog 插件
-   */
-  public initCatalog() {
-    const catalog = this.createHTMLElement("div") as HTMLDivElement;
-    catalog.classList.add("sf-editor-catalog");
-    this.root.appendChild(catalog);
-    catalog.innerHTML = catalogTemp;
-    // 添加事件
-    this.catalogEvent = new CatalogEvent(this);
-    this.resize();
-  }
-
-  /**
-   * 重置宽高信息
-   */
+  /** 重置宽高信息 */
   public resize() {
     // 有 footer
     const footerBox = this.root.querySelector(
@@ -205,11 +156,7 @@ export class Draw {
     this.canvasDraw.resetCanvas();
   }
 
-  /**
-   * 创建 html 元素
-   * @param tagName
-   * @returns
-   */
+  /** 创建 html 元素 */
   public createHTMLElement(tagName: string) {
     return document.createElement(tagName);
   }
@@ -219,15 +166,12 @@ export class Draw {
     return document.createElementNS(xmlns, tagName);
   }
 
-  /**
-   * SFEditor 销毁事件
-   */
+  /** SFEditor 销毁事件 */
   public destroy() {
-    // 销毁只需要将 this.rootDIV 下的svg 销毁即可
-    this.editorBox.remove();
+    this.root.remove();
     // canvas 也需要销毁
     this.canvasDraw.removeCanvas();
-    // 销毁事件
+    // 移除事件监听
     this.editorEvent.removeEvent();
     // 执行回调
     nextTick(() => {
@@ -248,7 +192,4 @@ export class Draw {
   public getGraphEvent = () => this.graphEvent;
   public getEditorEvent = () => this.editorEvent;
   public getCanvasDraw = () => this.canvasDraw;
-  public getFooterEvent = () => this.footerEvent;
-  public getOperationEvent = () => this.operationEvent;
-  public getCatalogEvent = () => this.catalogEvent;
 }

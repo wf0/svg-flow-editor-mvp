@@ -8,10 +8,13 @@ import { Register } from "./Register/index.ts";
 import { Rect } from "./Graph/Rect.ts";
 import { Ellipse } from "./Graph/Ellipse.ts";
 import { KeyMap } from "../interface/Event/index.ts";
-import "../style/SFEditor.less";
-import "../assets/font_4458457_qk4yl715zu/iconfont.css";
 import { SVGImage } from "./Graph/Image.ts";
+import { Footer } from "./Plugin/Footer.ts";
+import { Catalog } from "./Plugin/Catalog.ts";
+import { Operation } from "./Plugin/Operation.ts";
+import "../style/SFEditor.less";
 
+// 定义插件类型
 type pluginName = "catalog" | "footer" | "operation";
 
 class SFEditor {
@@ -66,8 +69,8 @@ class SFEditor {
 
   /**
    * svg 图片
-   * @param url 
-   * @returns 
+   * @param url
+   * @returns
    */
   public SVGImage(url: string) {
     return new SVGImage(this.draw, url);
@@ -76,9 +79,9 @@ class SFEditor {
   // 加载插件函数
   public plugin(name: pluginName) {
     // name 是插件名称
-    if (name === "footer") this.draw.initFooter();
-    if (name === "operation") this.draw.initOperation();
-    if (name === "catalog") this.draw.initCatalog();
+    if (name === "footer") new Footer(this.draw);
+    if (name === "operation") new Catalog(this.draw);
+    if (name === "catalog") new Operation(this.draw);
   }
 }
 

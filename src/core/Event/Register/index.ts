@@ -279,7 +279,6 @@ export class RegisterEvent {
    * @param e
    */
   public keydownHandle(evt: KeyboardEvent) {
-    console.log(evt.key);
     // 共同实现 用户与默认事件
     const userList = this.draw.getRegister().shortcutList;
     const eventList = [...this.defaultEvent, ...userList];

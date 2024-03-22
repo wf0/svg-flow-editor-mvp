@@ -98,7 +98,7 @@ export const footerTemp = `
 	<i class="iconfont icon-jiahao" title="新建画布" command="newpages"></i>
 </div>
 <div class="sf-editor-footer-right">
-	<span>图形: <span  command="nums"></span></span>
+	<span>图形: <span  command="nums">0</span></span>
 
 	<div class="line"></div>
 
@@ -317,14 +317,12 @@ export const operationTemp = `
 				</div>
 				<div class="line"></div>
 				<div class="sf-left-box-item">
-					<span>
-						<i class="iconfont icon-dagoucheck"></i>显示网格
-					</span>
+					<span style="padding-left:25px"> 网格设置 </span>
+					<span><i class="iconfont icon-you"></i></span>
 				</div>
 				<div class="sf-left-box-item">
-					<span>
-						<i class="iconfont icon-dagoucheck"></i>显示圆点
-					</span>
+				<span style="padding-left:25px"> 圆点设置 </span>
+					<span><i class="iconfont icon-you"></i></span>
 				</div>
 				<div class="sf-left-box-item">
 					<span style="padding-left:25px"> 水印设置 </span>
@@ -332,9 +330,7 @@ export const operationTemp = `
 				</div>
 				<div class="line"></div>
 				<div class="sf-left-box-item">
-					<span>
-						<i class="iconfont icon-zhutise"></i>主题切换
-					</span>
+					<span style="padding-left:25px"> 主题切换 </span>
 					<span><i class="iconfont icon-you"></i></span>
 				</div>
 			</div>

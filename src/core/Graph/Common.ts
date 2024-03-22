@@ -225,9 +225,6 @@ export class GraphCommon {
    * @param graph
    */
   protected addToEditor(graph: IGraph) {
-    // 初始化默认样式
-    this.setFill("var(--fill)");
-    this.setStroke("var(--stroke)");
     // 获取 graphDraw
     const graphDraw = this.draw.getGraphDraw();
     // 添加到 editor

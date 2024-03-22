@@ -12,10 +12,11 @@ import { SVGImage } from "./Graph/Image.ts";
 import { Footer } from "./Plugin/Footer.ts";
 import { Catalog } from "./Plugin/Catalog.ts";
 import { Operation } from "./Plugin/Operation.ts";
+import { SEchart } from "./Plugin/Echart.ts";
 import "../style/SFEditor.less";
 
 // 定义插件类型
-type pluginName = "catalog" | "footer" | "operation";
+type pluginName = "catalog" | "footer" | "operation" | "echart";
 
 class SFEditor {
   public listener: Listener;
@@ -82,6 +83,8 @@ class SFEditor {
     if (name === "footer") new Footer(this.draw);
     if (name === "operation") new Catalog(this.draw);
     if (name === "catalog") new Operation(this.draw);
+    // echart 的插件需要向外提供操作对象，方法都在 Echart 对象中
+    if (name === "echart") return new SEchart(this.draw);
   }
 }
 

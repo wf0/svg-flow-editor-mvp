@@ -5,6 +5,7 @@ const messageInfo = {
   selectorError:
     "The selector is not Available.Maybe you need to wait for Dom rendering to completed.",
   invalidParams: "Invalid input parameter.",
+  optionError: "The initialization Echarts parameter cannot be empty.",
 };
 
 // 默认的水印

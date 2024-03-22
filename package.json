@@ -28,6 +28,7 @@
     "cp": "^0.2.0",
     "dayjs": "^1.11.10",
     "echarts": "^5.5.0",
+    "element-resize-detector": "^1.2.4",
     "less": "^4.2.0",
     "less-loader": "^4.1.0",
     "nanoid": "^5.0.6",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@types/color-convert": "^2.0.3",
+    "@types/element-resize-detector": "^1.1.6",
     "@types/node": "^20.11.30",
     "@types/pako": "^2.0.3",
     "babel-cli": "^6.26.0"

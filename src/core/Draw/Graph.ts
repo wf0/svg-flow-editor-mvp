@@ -54,8 +54,21 @@ export class GraphDraw {
     const graphsSelector = '[class="sf-editor-box-graphs"]';
     const graphs = editorBox.querySelector(graphsSelector) as HTMLDivElement;
 
-    svg.appendChild(element);
-    graphBox.appendChild(svg);
+    // 特殊处理 ==> 针对 echart 不需要 svg 包一层
+    if (element.tagName === "DIV") {
+      graphBox.appendChild(element);
+      element.style.height = "100%";
+      element.style.width = "100%";
+      element.style.backgroundColor = "var(--fill)";
+      element.style.border = "solid 1px var(--stroke)";
+    } else {
+      // 初始化默认样式
+      element.setAttribute("fill", "var(--fill)");
+      element.setAttribute("stroke", "var(--stroke)");
+      svg.appendChild(element);
+      graphBox.appendChild(svg);
+    }
+
     mainBox.appendChild(graphBox);
     graphs.appendChild(mainBox);
 

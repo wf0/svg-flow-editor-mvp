@@ -4,7 +4,7 @@ import { GraphCommon } from "./Common.ts";
 export class SVGImage extends GraphCommon {
   private image: SVGImageElement;
 
-  constructor(draw: Draw, url: string) {
+  constructor(draw: Draw, url: string, width?: number, height?: number) {
     super(draw);
     this.image = draw.createSVGElement("image") as SVGImageElement;
     this.image.setAttribute("width", "100%");
@@ -13,7 +13,10 @@ export class SVGImage extends GraphCommon {
 
     // 将当前创建的元件添加到 svg 下
     super.addToEditor(this);
-    this.analysis(url);
+    if (width && height) {
+      super.setWidth.call(this, width);
+      super.setHeight.call(this, height);
+    } else this.analysis(url);
   }
 
   // 特有属性 - 设置 href 属性

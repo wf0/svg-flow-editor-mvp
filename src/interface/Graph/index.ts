@@ -8,8 +8,8 @@ export type IGraph = Rect | Ellipse | SVGImage;
 export interface node {
   type?: "rect" | "circle" | "ellipse" | "image" | "text";
   nodeID?: string;
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
   x?: number;
   y?: number;
   rotate?: number; // 旋转角度

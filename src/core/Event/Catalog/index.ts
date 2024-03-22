@@ -89,9 +89,23 @@ export class CatalogEvent {
     const y = offsetY + 100;
 
     const typeMap: { [key: string]: node } = {
-      logo: { type: "image" },
-      position: { type: "image" },
-      text: { type: "text" },
+      logo: {
+        type: "image",
+        width: 40,
+        height: 50,
+        url: "/public/favor.svg",
+        x,
+        y,
+      },
+      position: {
+        type: "image",
+        url: "/public/position.svg",
+        width: 40,
+        height: 50,
+        x,
+        y,
+      },
+      // text: { type: "text" },
       rect: { type: "rect", width: 100, height: 50, x, y },
       circle: { type: "ellipse", width: 50, height: 50, x, y },
       ellipse: { type: "ellipse", width: 50, height: 30, x, y },

@@ -1,6 +1,7 @@
 import { IBackground } from "../../interface/Draw/index.ts";
 import { IGraph, node } from "../../interface/Graph/index.ts";
 import { IThemeOpt, setTheme } from "../../utils/index.ts";
+import { messageInfo } from "../Config/index.ts";
 import { Draw } from "../Draw/index.ts";
 import { Ellipse } from "../Graph/Ellipse.ts";
 import { SVGImage } from "../Graph/Image.ts";
@@ -45,6 +46,7 @@ export class CommandAdapt {
    * @param payload
    */
   public addGraph(payload: node): IGraph {
+    if (!payload) throw new Error(messageInfo.invalidParams);
     // 解析参数
     const { type, nodeID, width, height } = payload;
     const { x, y, stroke, fill, text, rotate, url } = payload;
@@ -53,7 +55,7 @@ export class CommandAdapt {
     const graphMap: { [key: string]: () => IGraph } = {
       rect: () => new Rect(this.draw, width, height),
       ellipse: () => new Ellipse(this.draw, width, height),
-      image: () => new SVGImage(this.draw, url as string),
+      image: () => new SVGImage(this.draw, url as string, width, height),
     };
 
     const graph = graphMap[type as string]();

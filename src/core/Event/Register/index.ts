@@ -1,7 +1,8 @@
-// 快捷键相关操作
+// 快捷键相关操作 - 也需要映射到 command API 操作
 
 import { cbParams, IShortCut, KeyMap } from "../../../interface/Event/index.ts";
 import { isMod, nextTick } from "../../../utils/index.ts";
+import { Command } from "../../Command/Command.ts";
 import { Draw } from "../../Draw/index.ts";
 import { Graph } from "../../Graph/index.ts";
 
@@ -13,6 +14,7 @@ export class RegisterEvent {
   private sy!: number;
   private tx!: number; // 初始 transform
   private ty!: number; // 初始 transform
+  private command: Command;
 
   private _spaceDown: (e: MouseEvent) => void;
   private _spaceMove: (e: MouseEvent) => void;
@@ -20,6 +22,7 @@ export class RegisterEvent {
 
   constructor(draw: Draw) {
     this.draw = draw;
+    this.command = new Command(draw);
 
     this._spaceDown = this.spaceDown.bind(this);
     this._spaceMove = this.spaceMove.bind(this);
@@ -65,32 +68,44 @@ export class RegisterEvent {
       },
     ];
 
-    // 初始化默认事件
-    this.defaultEvent = [
-      ...moveMap,
-      {
-        key: KeyMap["Backspace"], // backspace 删除键
-        callback: this.deleteGraph.bind(this),
-      },
-      {
-        key: KeyMap["Delete"], // Delete 删除键
-        callback: this.deleteGraph.bind(this),
-      },
+    // 复制粘贴剪切相关事件
+    const copyMap = [
       {
         key: KeyMap["C"], // Ctrl + C 复制
         ctrl: true,
-        callback: this.copy.bind(this),
+        callback: this.command.executeCopy,
       },
       {
         key: KeyMap["V"], // Ctrl + V 粘贴
         ctrl: true,
-        callback: this.paste.bind(this),
+        callback: this.command.executePaste,
       },
       {
         key: KeyMap["X"], // Ctrl + X 剪切
         ctrl: true,
-        callback: this.cut.bind(this),
+        callback: this.command.executeCut,
       },
+    ];
+
+    // 删除相关事件
+    const deleteMap = [
+      {
+        key: KeyMap["Backspace"], // backspace 删除键
+        callback: this.command.executeDeleteGraph,
+      },
+      {
+        key: KeyMap["Delete"], // Delete 删除键
+        callback: this.command.executeDeleteGraph,
+      },
+    ];
+
+    // 层级处理
+
+    // 初始化默认事件
+    this.defaultEvent = [
+      ...moveMap,
+      ...copyMap,
+      ...deleteMap,
       {
         key: KeyMap["A"], // Ctrl + A 全选
         ctrl: true,
@@ -109,12 +124,12 @@ export class RegisterEvent {
       {
         key: KeyMap["Z"], // Ctrl + Z 撤销 undo
         ctrl: true,
-        callback: this.undo.bind(this),
+        callback: this.command.executeUndo,
       },
       {
         key: KeyMap["Y"], // Ctrl + Y 重做 redo
         ctrl: true,
-        callback: this.redo.bind(this),
+        callback: this.command.executeRedo,
       },
       {
         key: KeyMap["Space"], // 空格事件
@@ -131,6 +146,16 @@ export class RegisterEvent {
         callback: this.beautify.bind(this),
         ctrl: true,
         shift: true,
+      },
+      {
+        key: KeyMap["EQUAL"],
+        callback: this.command.executePageScaleAdd,
+        ctrl: true,
+      },
+      {
+        key: KeyMap["MINUS"],
+        callback: this.command.executePageScaleMinus,
+        ctrl: true,
       },
     ];
   }
@@ -165,55 +190,6 @@ export class RegisterEvent {
       // 4. 需要显示辅助线-暂未实现
     });
   }
-
-  /**
-   * 实现删除元件
-   */
-  private deleteGraph() {
-    const selected = this.draw.getGraphEvent().getAllSelected();
-    if (!selected.length) return;
-    selected.forEach((i) => i.remove());
-    // 执行回调
-    nextTick(() => {
-      const eventBus = this.draw.getEventBus();
-      const listener = this.draw.getListener();
-      const nums = this.draw.getGraphDraw().getNodesNumber();
-      // 同步 footer number 元件数量
-      const footerBox = this.draw
-        .getRoot()
-        .querySelector('[class="sf-editor-footer"]');
-      // 如果用户加载了 footer 插件，则同步更新数据
-      if (footerBox) {
-        const number = footerBox.querySelector(
-          '[command="nums"]'
-        ) as HTMLSpanElement;
-        number.innerHTML = nums.toString();
-      }
-      const graphLoadedSubscribe = eventBus.isSubscribe("graphNumberChanged");
-      graphLoadedSubscribe && eventBus.emit("graphNumberChanged", nums);
-      listener.graphNumberChanged && listener.graphNumberChanged(nums);
-    });
-  }
-
-  /**
-   * 复制粘贴元件 - 实现思路
-   *  1. 复制的时候，将元件信息放置到粘贴板上
-   *  2. 粘贴的时候，从粘贴板获取数据，并进行创建
-   */
-  private copy() {
-    console.log("copy");
-  }
-
-  private paste() {
-    console.log("paste");
-  }
-
-  private cut() {
-    console.log("cut");
-  }
-
-  private undo() {}
-  private redo() {}
 
   // 全选
   private selected() {}
@@ -303,7 +279,7 @@ export class RegisterEvent {
    * @param e
    */
   public keydownHandle(evt: KeyboardEvent) {
-    // 处理事件
+    console.log(evt.key);
     // 共同实现 用户与默认事件
     const userList = this.draw.getRegister().shortcutList;
     const eventList = [...this.defaultEvent, ...userList];

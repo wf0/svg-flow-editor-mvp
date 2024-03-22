@@ -1,6 +1,6 @@
 import { IBackground } from "../../interface/Draw/index.ts";
 import { IGraph, node } from "../../interface/Graph/index.ts";
-import { IThemeOpt, setTheme } from "../../utils/index.ts";
+import { IThemeOpt, nextTick, setTheme } from "../../utils/index.ts";
 import { messageInfo } from "../Config/index.ts";
 import { Draw } from "../Draw/index.ts";
 import { Ellipse } from "../Graph/Ellipse.ts";
@@ -71,6 +71,37 @@ export class CommandAdapt {
 
     // 返回元件 供链式调用
     return graph;
+  }
+
+
+  /**
+   * 删除元件
+   * @returns 
+   */
+  public deleteGraph() {
+    const selected = this.draw.getGraphEvent().getAllSelected();
+    if (!selected.length) return;
+    selected.forEach((i) => i.remove());
+    // 执行回调
+    nextTick(() => {
+      const eventBus = this.draw.getEventBus();
+      const listener = this.draw.getListener();
+      const nums = this.draw.getGraphDraw().getNodesNumber();
+      // 同步 footer number 元件数量
+      const footerBox = this.draw
+        .getRoot()
+        .querySelector('[class="sf-editor-footer"]');
+      // 如果用户加载了 footer 插件，则同步更新数据
+      if (footerBox) {
+        const number = footerBox.querySelector(
+          '[command="nums"]'
+        ) as HTMLSpanElement;
+        number.innerHTML = nums.toString();
+      }
+      const graphLoadedSubscribe = eventBus.isSubscribe("graphNumberChanged");
+      graphLoadedSubscribe && eventBus.emit("graphNumberChanged", nums);
+      listener.graphNumberChanged && listener.graphNumberChanged(nums);
+    });
   }
 
   // 页面缩放

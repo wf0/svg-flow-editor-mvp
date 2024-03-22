@@ -126,14 +126,266 @@ export const footerTemp = `
 export const operationTemp = `
 <div class="sf-editor-operation-top">
 	<div class="left">
-		<img src="/public/favor.svg" alt="" />
-		<span>文件</span>
-		<span>编辑</span>
-		<span>选择</span>
-		<span>视图</span>
-		<span>插入</span>
-		<span>画布</span>
-		<span>排列</span>
+		<svg
+			 t="1710474190025"
+			 class="icon"
+			 viewBox="0 0 1024 1024"
+			 version="1.1"
+			 xmlns="http://www.w3.org/2000/svg"
+			 p-id="1436"
+			 xmlns:xlink="http://www.w3.org/1999/xlink"
+			 width="200"
+			 height="200">
+			<path
+				  d="M824.4224 399.872A158.208 158.208 0 1 1 983.04 241.7664a158.3104 158.3104 0 0 1-158.6176 158.1056z m0-234.3936A76.288 76.288 0 1 0 901.12 241.7664a76.288 76.288 0 0 0-76.6976-76.288z"
+				  fill="#3080E9"
+				  p-id="1437"></path>
+			<path
+				  d="M629.248 823.1936h-306.176v-81.92h306.176a94.208 94.208 0 1 0 0-188.3136H372.1216a176.128 176.128 0 0 1 0-352.1536h316.5184v81.92H372.1216a94.208 94.208 0 0 0 0 188.3136h257.1264a176.128 176.128 0 1 1 0 352.1536z"
+				  fill="#3080E9"
+				  p-id="1438"></path>
+			<path
+				  d="M199.0656 940.3392a158.1056 158.1056 0 1 1 158.208-158.1056 158.3104 158.3104 0 0 1-158.208 158.1056z m0-234.2912a76.1856 76.1856 0 1 0 76.288 76.1856A76.288 76.288 0 0 0 199.0656 706.56z"
+				  fill="#3080E9"
+				  p-id="1439"></path>
+		</svg>
+		<span index="0">
+			文件
+			<div class="sf-left-box">
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-jiahao"></i>新建
+					</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-bianji"></i>重命名
+					</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-preview"></i>预览
+					</span>
+				</div>
+				<div class="line"></div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-baocun2"></i>保存
+					</span>
+					<span class="shortcut">Ctrl + S</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-lingcun"></i>另存为
+					</span>
+					<span class="shortcut">Ctrl + Shift + S</span>
+				</div>
+				<div class="line"></div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-fenxiang"></i>分享协作
+					</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-fabu1"></i>发布
+					</span>
+				</div>
+				<div class="line"></div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-lishijilu"></i>历史记录
+					</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-dayinji_o"></i>打印
+					</span>
+					<span>Ctrl + P</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span style="padding-left:25px"> 关闭 </span>
+				</div>
+			</div>
+		</span>
+		<span index="1">
+			编辑
+			<div class="sf-left-box">
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-shangyibu"></i>撤销
+					</span>
+					<span>Ctrl + Z</span>
+				</div>	
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-xiayibu"></i>恢复
+					</span>
+					<span>Ctrl + Y</span>
+				</div>
+				<div class="line"></div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-fuzhi1"></i>复制
+					</span>
+					<span>Ctrl + C</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-niantie1"></i>粘贴
+					</span>
+					<span>Ctrl + V</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-jianqie"></i>剪切
+					</span>
+					<span>Ctrl + X</span>
+				</div>
+				<div class="line"></div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-huabumeihua"></i>一键美化
+					</span>
+					<span>Ctrl + Shift + F</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-shanchu"></i>删除
+					</span>
+					<span>Delete/BackSpace</span>
+				</div>
+			</div>
+		</span>
+		<span index="3">
+			视图
+			<div class="sf-left-box">
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-jiahao"></i>放大
+					</span>
+					<span>Alt + (+)</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-jianhao"></i>缩小
+					</span>
+					<span>Alt + ( - )</span>
+				</div>
+				<div class='line'></div>
+				<div class="sf-left-box-item">
+					<span style="padding-left:25px"> 50% </span>
+				</div>
+				<div class="sf-left-box-item">
+					<span style="padding-left:25px"> 75% </span>
+				</div>
+				<div class="sf-left-box-item">
+					<span style="padding-left:25px"> 100% </span>
+				</div>
+				<div class="sf-left-box-item">
+					<span style="padding-left:25px"> 150% </span>
+				</div>
+				<div class="sf-left-box-item">
+					<span style="padding-left:25px"> 200% </span>
+				</div>
+				<div class='line'></div>
+				<div class="sf-left-box-item">
+					<span style="padding-left:25px"> 重置缩放 </span>
+				</div>
+			</div>
+		</span>
+		<span index="4">
+			插入
+			<div class="sf-left-box">
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-kaifazhong"></i>开发中
+					</span>
+				</div>	
+			</div>
+		</span>
+		<span index="5">
+			画布
+			<div class="sf-left-box">
+				<div class="sf-left-box-item">
+					<span style="padding-left:25px"> 画布大小 </span>
+					<span><i class="iconfont icon-you"></i></span>
+				</div>
+				<div class="sf-left-box-item">
+					<span style="padding-left:25px"> 背景颜色 </span>
+					<span><i class="iconfont icon-you"></i></span>
+				</div>
+				<div class="line"></div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-dagoucheck"></i>显示网格
+					</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-dagoucheck"></i>显示圆点
+					</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span style="padding-left:25px"> 水印设置 </span>
+					<span><i class="iconfont icon-you"></i></span>
+				</div>
+				<div class="line"></div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-zhutise"></i>主题切换
+					</span>
+					<span><i class="iconfont icon-you"></i></span>
+				</div>
+			</div>
+		</span>
+		<span index="6">
+			排列
+			<div class="sf-left-box">
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-zhiyudingceng"></i>置于顶层
+					</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-zhiyudiceng"></i>置于底层
+					</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-shangyiyiceng"></i>上移一层
+					</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-xiayiyiceng"></i>下移一层
+					</span>
+				</div>
+				<div class="line"></div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-zuhe"></i>组合
+					</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-quxiaozuhe"></i>取消组合
+					</span>
+				</div>
+				<div class="line"></div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-suo"></i>锁定
+					</span>
+				</div>
+				<div class="sf-left-box-item">
+					<span>
+						<i class="iconfont icon-jiesuo"></i>解锁
+					</span>
+				</div>
+			</div>
+		</span>
 	</div>
 	<div class="right">
 		<div class="right-shear">分享协作</div>
@@ -150,7 +402,13 @@ export const operationTemp = `
 	<i class="iconfont icon-huabumeihua"></i>
 	<div class="line"></div>
 	<!-- 背景颜色 -->
-	<i class="iconfont icon-ibg" style="color:var(--background);border:solid #ccc 1px;border-radius:4px"></i>
+	<i
+	   class="iconfont icon-ibg"
+	   style="
+            color: var(--background);
+            border: solid #ccc 1px;
+            border-radius: 4px;
+          "></i>
 	<!-- 插入图片 -->
 	<i class="iconfont icon-tupian"></i>
 	<div class="line"></div>
@@ -194,10 +452,10 @@ export const catalogTemp = `
 	class="sf-editor-catalog-title"
 	command="base"
 	style="margin-top: 10px">
-	<div class="icon close"></div>
+	<div class="icon"></div>
 	基础图形
 </h3>
-<div class="sf-editor-catalog-item" adapt="base">
+<div class="sf-editor-catalog-item" style="display:flex" adapt="base">
 	<div draggable="true" class="graph" type="logo" title="logo">
 		<i class="iconfont icon-icon__liuchengtu logo"></i>
 	</div>

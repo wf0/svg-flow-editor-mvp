@@ -3,8 +3,9 @@ import { Draw } from "../Draw/index.ts";
 import { CommandAdapt } from "./CommandAdapt.ts";
 
 export class Command {
-  public executeBackground: CommandAdapt["background"];   // 背景相关API
+  public executeBackground: CommandAdapt["background"]; // 背景相关API
   public executeAddGraph: CommandAdapt["addGraph"]; // 添加元件
+  public executeDeleteGraph: CommandAdapt["deleteGraph"]; // 删除元件
   public executeFullScreen: CommandAdapt["fullScreen"]; // 全屏  API
   public executeExitFullScreen: CommandAdapt["exitFullScreen"]; // 退出 API
   public executePageScaleRecovery: CommandAdapt["pageScaleRecovery"]; // 重置 resize
@@ -38,7 +39,8 @@ export class Command {
     const adapt = new CommandAdapt(draw);
 
     this.executeBackground = adapt.background.bind(adapt); // 背景相关
-    this.executeAddGraph = adapt.addGraph.bind(adapt); // 添加/删除元件
+    this.executeAddGraph = adapt.addGraph.bind(adapt); // 添加元件
+    this.executeDeleteGraph = adapt.deleteGraph.bind(adapt); // 删除元件
     this.executePageScaleRecovery = adapt.pageScaleRecovery.bind(adapt); // 重置
     this.executePageScaleMinus = adapt.pageScaleMinus.bind(adapt); // 缩小
     this.executePageScaleAdd = adapt.pageScaleAdd.bind(adapt); // 放大

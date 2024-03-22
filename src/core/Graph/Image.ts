@@ -30,15 +30,15 @@ export class SVGImage extends GraphCommon {
   private analysis(url: string) {
     var img = new Image();
     img.onload = () => {
-      // 这里可以拿到图片的原始尺寸， width height 在创建图片的时候有用
-      // url this.toBlob(file, file.type)
-      super.setWidth.call(this, img.width / 10);
-      super.setHeight.call(this, img.height / 10);
-      // width height 在创建图片的时候有用
+      var flag = false;
+      if (img.width > 200 || img.height > 200) flag = true;
+      super.setWidth.call(this, flag ? img.width / 10 : img.width);
+      super.setHeight.call(this, flag ? img.height / 10 : img.height);
+
+      // 需要重置锚点，不然图片加载是异步的，会导致宽高为0 的情况
+      super.updatePoint(this);
     };
-    // @ts-ignore
     img.src = url;
-    // 设置宽高
   }
 
   public getElement() {

@@ -6,10 +6,10 @@ export type IGraph = Rect | Ellipse | SVGImage;
 
 // 单个节点的信息
 export interface node {
-  type?: "rect" | "circle" | "ellipse" | "image";
+  type?: "rect" | "circle" | "ellipse" | "image" | "text";
   nodeID?: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   x?: number;
   y?: number;
   rotate?: number; // 旋转角度
@@ -17,4 +17,5 @@ export interface node {
   stroke?: string;
   fill?: string;
   text?: string;
+  url?: string;
 }

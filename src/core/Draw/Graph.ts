@@ -63,6 +63,12 @@ export class GraphDraw {
     const graphEvent = this.draw.getGraphEvent();
     graphEvent.addEvent(graphBox, graph);
 
+    // 创建链接锚点【连接锚点的显示隐藏是以是否 hover 及 selected 决定，因此不需要单独提供取消事件】
+    this.createLinkPoint(graph);
+
+    // 创建形变锚点
+    this.createFormatPoint(graph);
+
     // 执行回调
     nextTick(() => {
       console.log("## 添加元件");

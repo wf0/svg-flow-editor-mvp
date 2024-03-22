@@ -233,4 +233,17 @@ export class GraphCommon {
     // 添加到 editor
     graphDraw.addGraph(graph);
   }
+
+  /**
+   * 更新锚点
+   * @param graph
+   */
+  protected updatePoint(graph: IGraph) {
+    // 获取 graphDraw
+    const graphDraw = this.draw.getGraphDraw();
+    graphDraw.cancelLinkPoint(graph);
+    graphDraw.createLinkPoint(graph);
+    graphDraw.cancelFormatPoint(graph);
+    graphDraw.createFormatPoint(graph);
+  }
 }

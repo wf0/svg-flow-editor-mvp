@@ -3,6 +3,7 @@ import { IGraph, node } from "../../interface/Graph/index.ts";
 import { IThemeOpt, setTheme } from "../../utils/index.ts";
 import { Draw } from "../Draw/index.ts";
 import { Ellipse } from "../Graph/Ellipse.ts";
+import { SVGImage } from "../Graph/Image.ts";
 import { Rect } from "../Graph/Rect.ts";
 
 // Command Adapt API 操作核心库
@@ -46,12 +47,16 @@ export class CommandAdapt {
   public addGraph(payload: node): IGraph {
     // 解析参数
     const { type, nodeID, width, height } = payload;
-    const { x, y, stroke, fill, text, rotate } = payload;
+    const { x, y, stroke, fill, text, rotate, url } = payload;
+
     // 1. 根据 type 先构建出元件
-    const graph =
-      type === "rect"
-        ? new Rect(this.draw, width, height)
-        : new Ellipse(this.draw, width, height);
+    const graphMap: { [key: string]: () => IGraph } = {
+      rect: () => new Rect(this.draw, width, height),
+      ellipse: () => new Ellipse(this.draw, width, height),
+      image: () => new SVGImage(this.draw, url as string),
+    };
+
+    const graph = graphMap[type as string]();
 
     // 如果属性存在，则手动设置属性
     nodeID && graph.setID(nodeID);

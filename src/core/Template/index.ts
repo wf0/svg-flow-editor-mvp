@@ -198,44 +198,44 @@ export const catalogTemp = `
 	基础图形
 </h3>
 <div class="sf-editor-catalog-item" adapt="base">
-	<div draggable="true" class="graph" type="logo">
+	<div draggable="true" class="graph" type="logo" title="logo">
 		<i class="iconfont icon-icon__liuchengtu logo"></i>
 	</div>
-	<div draggable="true" class="graph" type="image">
-		<i class="iconfont icon-tupian1"></i>
+	<div draggable="true" class="graph" type="position" title="标记">
+		<i class="iconfont icon-ditu-dibiao logo"></i>
 	</div>
-	<div draggable="true" class="graph" type="text">
+	<div draggable="true" class="graph" type="text" title="文本">
 		<i class="iconfont icon-xingzhuang-wenzi"></i>
 	</div>
-	<div draggable="true" class="graph" type="rect">
+	<div draggable="true" class="graph" type="rect" title="矩形">
 		<i class="iconfont icon-xingzhuang-juxing"></i>
+	</div>	
+	<div draggable="true" class="graph" type="curve" title="曲线">
+		<i class="iconfont icon-quxian"></i>
 	</div>
-	<div draggable="true" class="graph" type="circle">
+	<div draggable="true" class="graph" type="circle" title="圆形">
 		<i class="iconfont icon-xingzhuang-tuoyuanxing"></i>
 	</div>
-	<div draggable="true" class="graph" type="ellipse">
+	<div draggable="true" class="graph" type="ellipse" title="椭圆">
 		<i class="iconfont icon-tuoyuanxing"></i>
 	</div>
-	<div draggable="true" class="graph" type="xxx">
+	<div draggable="true" class="graph" type="triangle" title="三角形">
 		<i class="iconfont icon-xingzhuang-sanjiaoxing"></i>
 	</div>
-	<div draggable="true" class="graph" type="xxx">
+	<div draggable="true" class="graph" type="star" title="五角星">
 		<i class="iconfont icon-xingzhuang-xingxing"></i>
 	</div>
-	<div draggable="true" class="graph" type="xxx">
+	<div draggable="true" class="graph" type="arrow" title='箭头'>
 		<i class="iconfont icon-xingzhuang-jianxing"></i>
 	</div>
-	<div draggable="true" class="graph" type="xxx">
-		<i class="iconfont icon-xian"> </i>
+	<div draggable="true" class="graph" type="line" title="直线">
+		<i class="iconfont icon-xian"></i>
 	</div>
-	<div draggable="true" class="graph" type="xxx">
-		<i class="iconfont icon-ditu-dibiao"> </i>
-	</div>
-	<div draggable="true" class="graph" type="xxx">
+	<div draggable="true" class="graph" type="table" title="表格">
 		<i class="iconfont icon-biaodanzujian-biaoge"></i>
 	</div>
-	<div draggable="true" class="graph" type="xxx">
-		<i class="iconfont icon-bianqian"> </i>
+	<div draggable="true" class="graph" type="tab" title="便签">
+		<i class="iconfont icon-bianqian"></i>
 	</div>
 </div>
 <div class="line"></div>

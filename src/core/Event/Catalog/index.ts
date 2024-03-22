@@ -1,6 +1,7 @@
-import { nextTick } from "../../../utils/index.ts";
+import { node } from "../../../interface/Graph/index.ts";
 import { Command } from "../../Command/Command.ts";
 import { Draw } from "../../Draw/index.ts";
+import { SVGImage } from "../../Graph/Image.ts";
 
 export class CatalogEvent {
   private draw: Draw;
@@ -83,13 +84,26 @@ export class CatalogEvent {
 
     // 获取offset
     const { offsetX, offsetY } = e as DragEvent;
-    this.command.executeAddGraph({
-      type: "rect",
-      width: 100,
-      height: 100,
-      x: offsetX - catalogBox.clientWidth,
-      y: offsetY,
-    });
+
+    const x = offsetX - catalogBox.clientWidth + 50;
+    const y = offsetY + 100;
+
+    const typeMap: { [key: string]: node } = {
+      logo: { type: "image" },
+      position: { type: "image" },
+      text: { type: "text" },
+      rect: { type: "rect", width: 100, height: 50, x, y },
+      circle: { type: "ellipse", width: 50, height: 50, x, y },
+      ellipse: { type: "ellipse", width: 50, height: 30, x, y },
+      // curve: "",
+      // triangle: "",
+      // star: "",
+      // arrow: "",
+      // line: "",
+      // table: "",
+      // tab: "",
+    };
+    this.command.executeAddGraph(typeMap[type as string]);
   }
 
   /**
@@ -105,20 +119,9 @@ export class CatalogEvent {
       var { files } = e.target as HTMLInputElement;
       const file = files && files[0];
       if (file && file.type.match("image.*")) {
-        var reader = new FileReader();
-        reader.onload = (e) => {
-          var img = new Image();
-          img.onload = () => {
-            // 这里可以拿到图片的原始尺寸， width height 在创建图片的时候有用
-            // url this.toBlob(file, file.type)
-            // width height 在创建图片的时候有用
-            input.remove();
-          };
-          // @ts-ignore
-          img.src = e.target.result;
-        };
-
-        reader.readAsDataURL(file);
+        const url = this.toBlob(file, file.type);
+        new SVGImage(this.draw, url as string);
+        input.remove();
       }
     });
   }

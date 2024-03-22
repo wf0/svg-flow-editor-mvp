@@ -175,6 +175,20 @@ export const operationTemp = `
 `;
 
 export const catalogTemp = `
+<!-- 我的图形 -->
+<h3
+	class="sf-editor-catalog-title"
+	command="upload"
+	style="margin-top: 10px">
+	<div class="icon close"></div>
+	我的图形
+</h3>
+<div class="sf-editor-catalog-item" adapt="upload">
+	<div class="upload" type="upload">
+		<i class="iconfont icon-jiahao"></i>
+	</div>
+</div>
+<div class="line"></div>
 <!-- 基础图形 -->
 <h3
 	class="sf-editor-catalog-title"

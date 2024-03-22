@@ -1,11 +1,12 @@
 import { Ellipse } from "../../core/Graph/Ellipse.ts";
+import { SVGImage } from "../../core/Graph/Image.ts";
 import { Rect } from "../../core/Graph/Rect.ts";
 
-export type IGraph = Rect | Ellipse;
+export type IGraph = Rect | Ellipse | SVGImage;
 
 // 单个节点的信息
 export interface node {
-  type?: "rect" | "circle" | "ellipse";
+  type?: "rect" | "circle" | "ellipse" | "image";
   nodeID?: string;
   width: number;
   height: number;

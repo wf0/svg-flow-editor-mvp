@@ -27,6 +27,7 @@ export class GraphEvent {
    */
   public addEvent(ele: HTMLDivElement, graph: IGraph) {
     ele.addEventListener("click", (e) => this.graphClickHandle(e, graph));
+    ele.addEventListener("mouseenter", (e) => this.mouseenterHandle(e, graph));
     ele.addEventListener("mousedown", this.mouseDownHandle.bind(this));
     ele.addEventListener("mousemove", (e) => this.mouseMoveHandle(e, graph));
     ele.addEventListener("mouseup", this.mouseUpHandle.bind(this));
@@ -60,6 +61,12 @@ export class GraphEvent {
 
     // 3. 取消右键菜单
     this.draw.getEditorEvent().cancelContextmenu();
+    const format = mainBox.querySelector(
+      '[class="sf-editor-box-graphs-main-formats"]'
+    );
+
+    // 4. 看有没有创建形变锚点
+    !format && this.draw.getGraphDraw().createFormatPoint(graph);
 
     e.stopPropagation();
     e.preventDefault();
@@ -117,6 +124,21 @@ export class GraphEvent {
       this.setGraphText(graph, input.innerHTML);
     });
 
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  /**
+   * 鼠标移入，创建连接锚点
+   * @param e
+   * @param graph
+   */
+  private mouseenterHandle(e: MouseEvent, graph: IGraph) {
+    const mainBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
+    const link = mainBox.querySelector(
+      '[class="sf-editor-box-graphs-main-links"]'
+    );
+    !link && this.draw.getGraphDraw().createLinkPoint(graph);
     e.stopPropagation();
     e.preventDefault();
   }

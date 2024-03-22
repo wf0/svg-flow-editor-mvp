@@ -10,6 +10,7 @@ import { Ellipse } from "./Graph/Ellipse.ts";
 import { KeyMap } from "../interface/Event/index.ts";
 import "../style/SFEditor.less";
 import "../assets/font_4458457_qk4yl715zu/iconfont.css";
+import { SVGImage } from "./Graph/Image.ts";
 
 type pluginName = "catalog" | "footer" | "operation";
 
@@ -61,6 +62,15 @@ class SFEditor {
    */
   public Ellipse(width: number, height: number) {
     return new Ellipse(this.draw, width, height);
+  }
+
+  /**
+   * svg 图片
+   * @param url 
+   * @returns 
+   */
+  public SVGImage(url: string) {
+    return new SVGImage(this.draw, url);
   }
 
   // 加载插件函数

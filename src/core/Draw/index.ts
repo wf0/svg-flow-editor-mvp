@@ -8,6 +8,7 @@ import { CanvasDraw } from "./Canvas.ts";
 import { GraphEvent } from "../Event/Graph/index.ts";
 import { GraphDraw } from "./Graph.ts";
 import { EditorEvent } from "../Event/Editor/index.ts";
+import { LineDraw } from "./Line.ts";
 
 // 重构 draw
 export class Draw {
@@ -18,6 +19,8 @@ export class Draw {
   // 拓展的其他类
   private canvasDraw: CanvasDraw;
   private graphDraw: GraphDraw;
+  private lineDraw: LineDraw;
+
   private graphEvent: GraphEvent;
   private editorEvent: EditorEvent;
 
@@ -37,6 +40,7 @@ export class Draw {
     // 1. 拓展其他绘制类
     this.canvasDraw = new CanvasDraw(this);
     this.graphDraw = new GraphDraw(this);
+    this.lineDraw = new LineDraw(this);
     this.graphEvent = new GraphEvent(this);
     this.editorEvent = new EditorEvent(this);
 
@@ -192,4 +196,5 @@ export class Draw {
   public getGraphEvent = () => this.graphEvent;
   public getEditorEvent = () => this.editorEvent;
   public getCanvasDraw = () => this.canvasDraw;
+  public getLineDraw = () => this.lineDraw;
 }

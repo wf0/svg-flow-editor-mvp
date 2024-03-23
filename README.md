@@ -17,17 +17,21 @@
 ## 功能点
 
 - 流程图基本元件
-  - 矩形 rect 、 圆形 circle 、 椭圆 ellipse
+  - 矩形 rect  
+  - 圆形 circle  
+  - 椭圆 ellipse
+  - 统计图 echarts
+  - 自定义图片 image
+  - 自定义图标 icon
 - 元件基本操作
-  - 创建、删除、移动、旋转、定位、属性修改、框选、多选（ctrl）、层级处理等
-- 元件文本显示
-- global API
+  - 创建、删除、移动、旋转、定位、属性修改、框选、多选（ctrl）、层级处理、文本显示等
+- 全局 API
 - Command API
 - 右键菜单（内部、自定义）
 - 快捷键（内部、自定义）
 - event Bus 、 listener 事件监听机制
-- Canvas 背景网格、圆点、水印、辅助线
-- catalog、operation、footer 插件化
+- Canvas 实现背景网格、圆点、水印、辅助线
+- catalog、operation、footer、echart 插件化
 
 
 
@@ -40,8 +44,8 @@
   - 线段 line
   - HTML html
 - history 历史记录管理器（redo、undo、history）
-- tool工具类 一键美化、图片导出、组合/取消组合、锁定/取消锁定、自定义icon(使用 svg-image 实现)
-- network 协同 支持光标、用户操作、聊天通信，因此，需要在api 中进行预留触发接口
+- tool工具类： 一键美化、图片导出、组合/取消组合、锁定/取消锁定、
+- network协同： 支持用户光标、用户操作、聊天通信
 
 
 
@@ -104,6 +108,19 @@ editor.global.destroy()
 
 // 示例：加载元件库插件
 editor.plugin("pluginName")
+
+// 示例：使用 Echart
+const echart = editor.plugin("echart");
+// 定义echart 数据
+var data = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+var option = {
+    xAxis: { type: "category", data, },
+ 	// ... other options
+  };
+
+// 初始化统计图
+const line = echart?.init(option);
+
 ```
 
 
@@ -121,51 +138,11 @@ editor.plugin("pluginName")
 ### graph.getElement()
 
 - 方法说明：获取元件SVG结构；
-- 返回值：SVGRectElement|SVGEllipseElement；
+- 返回值：SVGRectElement|SVGEllipseElement|HTMLDivElement；
 
 ### graph.getID()
 
 - 方法说明：获取元件的ID属性；
-- 返回值：string；
-
-### graph.getX()
-
-- 方法说明：获取元件的x坐标（是graphBox的left属性）；
-- 返回值：number；
-
-### graph.getY()
-
-- 方法说明：获取元件的y坐标（是graphBox的top属性）；
-- 返回值：number；
-
-### graph.getWidth()
-
-- 方法说明：获取元件的宽度；
-- 返回值：number；
-
-### graph.getHeight()
-
-- 方法说明：获取元件的高度；
-- 返回值：number；
-
-### graph.getStroke()
-
-- 方法说明：获取元件的边框；
-- 返回值：string；
-
-### graph.getFill()
-
-- 方法说明：获取元件的填充样式；
-- 返回值：string；
-
-### graph.getRotate()
-
-- 方法说明：获取元件的旋转角度；
-- 返回值：number；
-
-### graph.getText()
-
-- 方法说明：获取元件的文本内容；
 - 返回值：string；
 
 ### graph.setID(nodeID: string)
@@ -173,34 +150,84 @@ editor.plugin("pluginName")
 - 方法说明：设置元件的ID属性；
 - 返回值：graph实例；
 
+### graph.getX()
+
+- 方法说明：获取元件的x坐标（是graphBox的left属性）；
+- 返回值：number；
+
 ### graph.setX(x: number)
 
 - 方法说明：设置元件的x坐标；
 - 返回值：graph实例；
+
+### graph.getY()
+
+- 方法说明：获取元件的y坐标（是graphBox的top属性）；
+- 返回值：number；
 
 ### graph.setY(y: number)
 
 - 方法说明：设置元件的y坐标；
 - 返回值：graph实例；
 
+### graph.getWidth()
+
+- 方法说明：获取元件的宽度；
+- 返回值：number；
+
 ### graph.setWidth(w: number)
 
 - 方法说明：设置元件的宽度；
 - 返回值：graph实例；
+
+### graph.getHeight()
+
+- 方法说明：获取元件的高度；
+- 返回值：number；
 
 ### graph.setHeight(h: number)
 
 - 方法说明：设置元件的高度；
 - 返回值：graph实例；
 
+### graph.getStroke()
+
+- 方法说明：获取元件的边框；
+- 返回值：string；
+
 ### graph.setStroke(stroke: string)
 
 - 方法说明：设置元件的边框；
 - 返回值：graph实例；
 
+### graph.getFill()
+
+- 方法说明：获取元件的填充样式；
+- 返回值：string；
+
 ### graph.setFill(fill: string)
 
 - 方法说明：设置元件的填充；
+- 返回值：graph实例；
+
+### graph.getRotate()
+
+- 方法说明：获取元件的旋转角度；
+- 返回值：number；
+
+### graph.setRotate(rotate: number)
+
+- 方法说明：设置元件旋转角度；
+- 返回值：graph实例；
+
+### graph.getText()
+
+- 方法说明：获取元件的文本内容；
+- 返回值：string；
+
+### graph.setText(text: string)
+
+- 方法说明：设置元件的文本内容；
 - 返回值：graph实例；
 
 ### graph.position(x: number, y: number)
@@ -208,15 +235,20 @@ editor.plugin("pluginName")
 - 方法说明：复合属性，内部调用 setX()、setY() 实现；
 - 返回值：graph实例；
 
-### graph.setRotate(rotate: number)
+### graph.getOption()
 
-- 方法说明：设置元件旋转角度；
-- 返回值：graph实例；
+- 方法说明：**Echart 特有属性**，获取统计图的配置信息；
+- 返回值：统计图配置信息；
 
-### graph.setText(text: string)
+### graph.setOption(option:object)
 
-- 方法说明：设置元件的文本内容；
-- 返回值：graph实例；
+- 方法说明：**Echart 特有属性**，设置统计图配置信息；
+- 返回值：graph示例；
+
+### graph.update()
+
+- 方法说明：**Echart 特有属性**，更新统计图配置信息；
+- 返回值：graph示例；
 
 
 
@@ -346,11 +378,11 @@ editor.listener.loaded = () => {
 
 - 方法说明：元件重置大小；
 - 回调参数说明：
-  - nodeID string
-  - width number
-  - height number
-  - x number
-  - y number
+  - **nodeID** string
+  - **width ** number
+  - **height **number
+  - **x **number
+  - **y **number
 - 用法示例
 
 ~~~javascript
@@ -374,7 +406,7 @@ editor.listener.destroyed = () => {
 
 - 方法说明：元件数量变化回调；
 - 回调参数说明：
-  - number 目前编辑器上的元件数量
+  - **number**目前编辑器上的元件数量
 - 用法示例
 
 ~~~javascript
@@ -387,7 +419,7 @@ editor.listener.graphNumberChanged = (number) => {
 
 - 方法说明：页面缩放；
 - 回调参数说明：
-  - scale 缩放比 0.4 - 2之间
+  - **scale **缩放比 0.4 - 2之间
 - 用法示例
 
 ~~~javascript
@@ -417,11 +449,11 @@ editor.eventBus.on('loaded',()=>{
 
 - 方法说明：元件重置大小；
 - 回调参数说明：
-  - nodeID string
-  - width number
-  - height number
-  - x number
-  - y number
+  - **nodeID **string
+  - **width **number
+  - **height **number
+  - **x **number
+  - **y **number
 - 用法示例
 
 ~~~javascript
@@ -445,7 +477,7 @@ editor.eventBus.on('destroyed',()=>{
 
 - 方法说明：元件数量变化回调；
 - 回调参数说明：
-  - number 目前编辑器上的元件数量
+  - **number **目前编辑器上的元件数量
 - 用法示例
 
 ~~~javascript
@@ -458,7 +490,7 @@ editor.eventBus.on('graphNumberChanged',(number)=>{
 
 - 方法说明：页面缩放；
 - 回调参数说明：
-  - scale 缩放比 0.4 - 2之间
+  - **scale **缩放比 0.4 - 2之间
 - 用法示例
 
 ~~~javascript
@@ -492,7 +524,7 @@ editor.eventBus.on('pageScale',(scale)=>{
 ## 自定义快捷键
 
 ~~~javascript
-editor.register.shortcutList([
+editor.register.shortcutList=[
     {
       key: KeyMap;
       ctrl?: boolean;
@@ -504,7 +536,7 @@ editor.register.shortcutList([
       callback?: (command: Command) => any;
       disable?: boolean;
     }
-  ])
+  ]
 ~~~
 
 
@@ -517,28 +549,4 @@ editor.register.shortcutList([
 
 ## 插件的使用
 
-  项目提供 元件库、顶部菜单、元件配置抽屉等插件，
 
-
-
-## 坐标系说明
-
-项目使用div做graph元件的外层盒子，因此，位置坐标
-
-
-
-## 折线
-
-正交连线 采用 最短路径算法 A*算法
-
-
-
-## npm 包
-
-升级补丁版本号(修改bug)：npm version patch  // 1.0.x
-
-升级次版本号(新增功能)：npm version minor  // 1.x.0
-
-升级主版本号(较大改版)：npm version major  // x.0.0
-
-再执行 npm publish

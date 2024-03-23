@@ -12,6 +12,11 @@ export interface EventBusMap {
   pageScale: EventType;
 }
 
+export interface EchartEventMap {
+  click: EventType;
+  dblclick: EventType;
+}
+
 export enum KeyMap {
   Space = " ",
   Delete = "Delete",

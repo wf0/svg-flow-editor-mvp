@@ -1,8 +1,11 @@
 import { IGraph, node } from "../../interface/Graph/index.ts";
 import { nextTick } from "../../utils/index.ts";
 import { Graph } from "../Graph/index.ts";
+import { Line } from "../Graph/Line.ts";
 import { Draw } from "./index.ts";
 const OFFSET = 10;
+const radius = 10; // 定义链接锚点半径
+const wh = 10; // 定义形变锚点宽高
 // 定义元件最值
 const MIN_WIDTH = 50;
 const MIN_HEIGHT = 50;
@@ -13,6 +16,8 @@ const MAX_HEIGHT = 500;
 export class GraphDraw {
   private draw: Draw;
   private move = false;
+  private _moveHandle!: (e: MouseEvent) => void;
+
   constructor(draw: Draw) {
     this.draw = draw;
   }
@@ -121,35 +126,151 @@ export class GraphDraw {
 
     // 2. 根据宽度 高度 绘制 4 个链接锚点
     nextTick(() => {
-      const radius = 10; // 定义链接锚点半径
       const fill = "#fff"; // 定义链接锚点的样式
       const stroke = "#067bef";
       const points = [];
       const width = graph.getWidth();
       const height = graph.getHeight();
-      points.push({ x: 0, y: height / 2 });
-      points.push({ x: width / 2, y: 0 });
-      points.push({ x: width, y: height / 2 });
-      points.push({ x: width / 2, y: height });
+      // type 标记是哪个点，在连接线的时候，需要做处理
+      points.push({ type: "0", x: 0, y: height / 2 });
+      points.push({ type: "1", x: width / 2, y: 0 });
+      points.push({ type: "2", x: width, y: height / 2 });
+      points.push({ type: "3", x: width / 2, y: height });
 
-      points.forEach(({ x, y }) => {
+      points.forEach((item) => {
         const linkItem = this.draw.createHTMLElement("div") as HTMLDivElement;
+        linkItem.setAttribute("linktype", item.type);
         linkItem.style.width = radius + "px";
         linkItem.style.height = radius + "px";
         linkItem.style.position = "absolute";
-        linkItem.style.left = x + radius / 2 + "px";
-        linkItem.style.top = y + radius / 2 + "px";
+        linkItem.style.left = item.x + radius / 2 + "px";
+        linkItem.style.top = item.y + radius / 2 + "px";
         linkItem.style.backgroundColor = fill;
         linkItem.style.borderColor = stroke;
         linkItem.style.borderRadius = radius + "px";
         link.appendChild(linkItem);
 
         // 添加事件
-        linkItem.addEventListener("mousedown", () => {
-          console.log("链接锚点 mousedown");
-        });
+        linkItem.addEventListener("mousedown", () =>
+          this.linkPointMousedown(graph, item.type)
+        );
       });
     });
+  }
+
+  /**
+   * 连接节点鼠标按下事件
+   * @param graph
+   * @param type
+   */
+  private linkPointMousedown(graph: IGraph, type: string) {
+    const editorBox = this.draw.getEditorBox();
+    const sid = graph.getID();
+    var st = type;
+    var et = "";
+
+    // 1. 获取当前元素的宽高位置信息
+    const width = graph.getWidth();
+    const height = graph.getHeight();
+    const x = graph.getX();
+    const y = graph.getY();
+
+    // 2. 需要计算起点位置 -- 锚点位置受padding影响
+    const typeMap: { [key: string]: { sx: number; sy: number } } = {
+      "0": { sx: x, sy: y + height / 2 },
+      "1": { sx: x + width / 2, sy: y },
+      "2": { sx: x + width, sy: y + height / 2 },
+      "3": { sx: x + width / 2, sy: y + height },
+    };
+    const sx = typeMap[type].sx + 10;
+    const sy = typeMap[type].sy + 10;
+
+    // 3. 阻止事件响应
+    const graphMain = this.draw.getGraphDraw().getGraphMain(sid);
+    graphMain.style.pointerEvents = "none";
+    // 所有的连接锚点-不支持连向自己
+    const linkPoints = graphMain
+      .querySelector('[class="sf-editor-box-graphs-main-links"]')
+      ?.querySelectorAll("div");
+    linkPoints?.forEach((i) => (i.style.pointerEvents = "none"));
+
+    // 4. 创建线条对象 - 传入的是初始位置 left top
+    const line = new Line(this.draw, sx, sy);
+
+    // 5. 初始化 startid
+    line.setGraphID("sid", sid);
+
+    // 6. 移动的核心事件
+    this._moveHandle = (e: MouseEvent) => {
+      line.setGraphID("eid", "");
+      et = "";
+      const { offsetX, offsetY } = e;
+      var dx = offsetX;
+      var dy = offsetY;
+      const target = e.target as HTMLDivElement;
+      const { className, offsetLeft, offsetTop } = target;
+      /**
+       * 需要做位置矫正
+       *  class='sf-editor-box-graphs' 正确
+       *  class='sf-editor-box-graphs-main' 异常 偏移量加 offsetLeft offsetTop 值
+       *  class='' 异常
+       */
+      if (className === "sf-editor-box-graphs") {
+      } else if (className === "sf-editor-box-graphs-main") {
+        dx = offsetLeft + offsetX;
+        dy = offsetTop + offsetY;
+      } else if (className === "") {
+        try {
+          const ctype = target.getAttribute("linktype") as string;
+          et = ctype;
+          const parentNode = target.parentNode?.parentNode as HTMLDivElement;
+          const eid = parentNode.getAttribute("graphid") as string;
+          const cg = new Graph(this.draw, eid);
+          line.setGraphID("eid", eid);
+          // 获取宽高位置信息
+          var cw = cg.getWidth();
+          var ch = cg.getHeight();
+          var x = cg.getX();
+          var y = cg.getY();
+          const typeMap: { [key: string]: { cx: number; cy: number } } = {
+            "0": { cx: x, cy: y + ch / 2 },
+            "1": { cx: x + cw / 2, cy: y },
+            "2": { cx: x + cw, cy: y + ch / 2 },
+            "3": { cx: x + cw / 2, cy: y + ch },
+          };
+          const { cx, cy } = typeMap[ctype];
+          dx = cx + radius;
+          dy = cy + radius;
+        } catch (error) {}
+      } else {
+        try {
+          // 移动到 rect 元件是上 获取 graphid
+          const gid = target.getAttribute("graphid") as string;
+          const g = new Graph(this.draw, gid);
+          const gx = g.getX();
+          const gy = g.getY();
+          dx = gx + offsetX + 10;
+          dy = gy + offsetY + 10;
+        } catch (error) {}
+      }
+      line.update(sx, sy, dx, dy);
+    };
+
+    // 7. 抬起结束绘制
+    const mouseup = () => {
+      line.drawEnd(st, et);
+      // 恢复当前的事件响应
+      graphMain.style.pointerEvents = "";
+      linkPoints?.forEach((i) => (i.style.pointerEvents = ""));
+
+      // 移除事件监听
+      editorBox.removeEventListener("mousemove", this._moveHandle);
+      editorBox.removeEventListener("mouseup", mouseup);
+    };
+
+    // 8. 给editorBox 添加 move 事件-以实现流程拖动
+    editorBox.addEventListener("mousemove", this._moveHandle);
+    editorBox.addEventListener("mouseup", mouseup);
   }
 
   /**
@@ -185,7 +306,6 @@ export class GraphDraw {
      *   7   6   5
      */
     nextTick(() => {
-      const wh = 10; // 定义形变锚点宽高
       const fill = "#fff"; // 定义链接锚点的样式
       const stroke = "#067bef";
       const points = [];

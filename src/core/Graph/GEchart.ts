@@ -26,6 +26,10 @@ export class GEchart extends GraphCommon {
 
     this.myChart = echarts.init(this.div);
 
+    this.myChart.on("click", () => {
+      console.log("echart click");
+    });
+
     this.setOption();
 
     // 监听元素尺寸变化，重新渲染echart 使得宽高自适应
@@ -41,11 +45,20 @@ export class GEchart extends GraphCommon {
   }
 
   /**
+   * 获取当前的 option
+   * @returns
+   */
+  public getOption() {
+    return this.option;
+  }
+
+  /**
    * 需要向外暴露 setOption 方法,供数据变化后重新渲染
    * @param option
    */
-  private setOption() {
+  public setOption(option?: object) {
     if (!this.option) throw new Error(messageInfo.optionError);
+    option && (this.option = option);
     this.myChart.setOption(this.option);
     return this;
   }

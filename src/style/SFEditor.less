@@ -27,6 +27,7 @@
             height: 100%;
             overflow: hidden;
 
+            // 其他元件样式
             &-main {
                 position: absolute;
                 left: 0;
@@ -113,6 +114,18 @@
                         text-align: center;
                     }
                 }
+            }
+
+            // 线条样式
+            &-line {
+                z-index: 99;
+                pointer-events: none;
+                position: absolute;
+                width: 0;
+                height: 0;
+                left: 0;
+                top: 0;
+                background-color: rgba(255, 0, 0, 0.1);
             }
 
             // 处理选中样式

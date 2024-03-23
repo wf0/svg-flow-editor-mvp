@@ -77,6 +77,8 @@ export class GraphEvent {
    * @param e
    */
   private graphDblclickHandle(e: Event, graph: IGraph) {
+    // @ts-ignore
+    if (e.target.tagName === "DIV") return;
     const nodeID = graph.getID();
     const selector = 'div[class="sf-editor-box-graphs-main-contenteditable"]';
 

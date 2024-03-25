@@ -77,8 +77,11 @@ export class GraphEvent {
    * @param e
    */
   private graphDblclickHandle(e: Event, graph: IGraph) {
+    // 支持双击文本编辑的容器
+    const support = ["rect", "ellipse"];
+
     // @ts-ignore
-    if (e.target.tagName === "DIV") return;
+    if (!support.includes(e.target.tagName)) return;
     const nodeID = graph.getID();
     const selector = 'div[class="sf-editor-box-graphs-main-contenteditable"]';
 

@@ -4,15 +4,20 @@ import { Draw } from "../Draw/index.ts";
 import { GraphCommon } from "./Common.ts";
 import elementResizeDetectorMaker from "element-resize-detector";
 import { messageInfo } from "../Config/index.ts";
+import { EventBus } from "../Event/EventBus.ts";
+import { EchartEventMap } from "../../interface/Event/index.ts";
 var erd = elementResizeDetectorMaker();
 
 export class GEchart extends GraphCommon {
   private div: HTMLDivElement;
   private myChart: any;
   private option: {}; // 对象引用，地址相同，不需要重新传递
+  public event: EventBus<EchartEventMap>;
 
   constructor(draw: Draw, option: object) {
     super(draw);
+    this.event = new EventBus();
+
     this.div = draw.createHTMLElement("div") as HTMLDivElement;
 
     this.option = option;
@@ -25,10 +30,24 @@ export class GEchart extends GraphCommon {
     super.setHeight.call(this, 150);
 
     this.myChart = echarts.init(this.div);
+    this.myChart.off("click"); // 图表渲染前销毁点击事件,防止点击图标多次触发
+    this.myChart.off("mouseout"); // 图表渲染前销毁点击事件,防止点击图标多次触发
+    this.myChart.off("mouseover"); // 图表渲染前销毁点击事件,防止点击图标多次触发
 
-    this.myChart.on("click", () => {
-      console.log("echart click");
-    });
+    // Echarts click
+    this.myChart.on("click", (params: object) =>
+      this.event.emit("click", params)
+    );
+
+    // Echarts 鼠标移出
+    this.myChart.on("mouseout", (params: object) =>
+      this.event.emit("mouseout", params)
+    );
+
+    // Echarts 鼠标移入
+    this.myChart.on("mouseover", (params: object) =>
+      this.event.emit("mouseover", params)
+    );
 
     this.setOption();
 
@@ -61,14 +80,5 @@ export class GEchart extends GraphCommon {
     option && (this.option = option);
     this.myChart.setOption(this.option);
     return this;
-  }
-
-  /**
-   * 向外提供 update 方法，供用户在 option 变化后更新页面内容
-   *  因 option 是引用地址，因此 可以不需要传递参数，从而实现数据更新
-   * @returns
-   */
-  public update() {
-    return this.setOption();
   }
 }

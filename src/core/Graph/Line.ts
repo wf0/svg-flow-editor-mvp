@@ -156,54 +156,69 @@ export class Line {
 
     // 8. 计算点坐标
     console.log("## 开始计算点的坐标", st, et);
-    // 左上角的点
-    points.push({ x: 0, y: 0 });
-
-    // 右上
-    points.push({ x: 0 + lw, y: 0 });
-
-    // 右下
-    points.push({ x: 0 + lw, y: 0 + lh });
-
-    // 左下
-    points.push({ x: 0, y: 0 + lh });
+    // // 左上角的点
+    // points.push({ x: 0, y: 0 });
+    // // 右上
+    // points.push({ x: 0 + lw, y: 0 });
+    // // 右下
+    // points.push({ x: 0 + lw, y: 0 + lh });
+    // // 左下
+    // points.push({ x: 0, y: 0 + lh });
 
     // 起点 st start point
-    const sp = typeMap[st]({ x: sx, y: sy, w: sw, h: sh });
-    points.push({ x: sp.x - lx + 10, y: sp.y - ly + 10 });
+    const spm = typeMap[st]({ x: sx, y: sy, w: sw, h: sh });
+    const sp = { x: spm.x - lx + 10, y: spm.y - ly + 10 };
+    points.push(sp);
+
     // 起点 向外 offset
-    const so = { x: sp.ox - lx + 10, y: sp.oy - ly + 10 };
+    const so = { x: spm.ox - lx + 10, y: spm.oy - ly + 10 };
     points.push(so);
-    // 向外延申的点到边上的距离
-    points.push({ x: 0, y: sp.oy - ly + 10 });
-    points.push({ x: sp.ox - lx + 10, y: 0 });
-    points.push({ x: lw, y: sp.oy - ly + 10 });
-    points.push({ x: sp.ox - lx + 10, y: lh });
+
+    // // 向外延申的点到边上的距离
+    // points.push({ x: 0, y: spm.oy - ly + 10 });
+    // points.push({ x: spm.ox - lx + 10, y: 0 });
+    // points.push({ x: lw, y: spm.oy - ly + 10 });
+    // points.push({ x: spm.ox - lx + 10, y: lh });
 
     // 终点 et
-    const ep = typeMap[et]({ x: ex, y: ey, w: ew, h: eh });
-    points.push({ x: ep.x - lx + 10, y: ep.y - ly + 10 });
+    const epm = typeMap[et]({ x: ex, y: ey, w: ew, h: eh });
+    const ep = { x: epm.x - lx + 10, y: epm.y - ly + 10 };
+    points.push(ep);
+
     // 终点向外延申
-    const eo = { x: ep.ox - lx + 10, y: ep.oy - ly + 10 };
+    const eo = { x: epm.ox - lx + 10, y: epm.oy - ly + 10 };
     points.push(eo);
-    // 向外延申的点到边上的距离
-    points.push({ x: 0, y: ep.oy - ly + 10 });
-    points.push({ x: lw, y: ep.oy - ly + 10 });
-    points.push({ x: ep.ox - lx + 10, y: 0 });
-    points.push({ x: ep.ox - lx + 10, y: lh });
+
+    // // 向外延申的点到边上的距离
+    // points.push({ x: 0, y: epm.oy - ly + 10 });
+    // points.push({ x: lw, y: epm.oy - ly + 10 });
+    // points.push({ x: epm.ox - lx + 10, y: 0 });
+    // points.push({ x: epm.ox - lx + 10, y: lh });
 
     // 两个延伸点的中点
     const diffX = Math.abs(so.x - eo.x);
     const diffY = Math.abs(so.y - eo.y);
     const minX = Math.min(so.x, eo.x);
     const minY = Math.min(so.y, eo.y);
-    points.push({ x: minX + diffX / 2, y: minY + diffY / 2 });
+    const cp = { x: minX + diffX / 2, y: minY + diffY / 2 };
+    points.push(cp);
 
-    // 中点的延伸点
-    points.push({ x: 0, y: minY + diffY / 2 });
-    points.push({ x: minX + diffX / 2, y: 0 });
-    points.push({ x: lw, y: minY + diffY / 2 });
-    points.push({ x: minX + diffX / 2, y: lh });
+    // // 中点的延伸点
+    // points.push({ x: 0, y: minY + diffY / 2 });
+    // points.push({ x: minX + diffX / 2, y: 0 });
+    // points.push({ x: lw, y: minY + diffY / 2 });
+    // points.push({ x: minX + diffX / 2, y: lh });
+
+    // 两个offset 的交点
+    // points.push({ x: so.x, y: eo.y }); // cb
+
+    /**
+     * 寻径算法 - 找当前点的上下左右，计算距离
+     */
+    function search() {
+      // 起始点开始计算上下左右
+      
+    }
 
     // 绘制点
     points.forEach(({ x, y }) => {
@@ -214,6 +229,12 @@ export class Line {
       rect.setAttribute("cy", y.toString());
       this.lineBox.querySelector("svg")?.appendChild(rect);
     });
+
+    // 连线
+    this.line.setAttribute(
+      "points",
+      `${sp.x} ${sp.y},${so.x} ${so.y},${eo.x} ${eo.y},${ep.x} ${ep.y}`
+    );
   }
 
   /**

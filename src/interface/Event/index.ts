@@ -14,7 +14,8 @@ export interface EventBusMap {
 
 export interface EchartEventMap {
   click: EventType;
-  dblclick: EventType;
+  mouseout: EventType;
+  mouseover: EventType;
 }
 
 export enum KeyMap {

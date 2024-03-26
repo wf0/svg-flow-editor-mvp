@@ -5,6 +5,7 @@ import { isMod } from "../../../utils/index.ts";
 import { Command } from "../../Command/Command.ts";
 import { Draw } from "../../Draw/index.ts";
 import { Graph } from "../../Graph/index.ts";
+import { Line } from "../../Graph/Line.ts";
 
 export class RegisterEvent {
   private draw: Draw;
@@ -164,6 +165,7 @@ export class RegisterEvent {
    * graph move 使用 上下左右实现元件的移动
    */
   private graphMoveHandle(payload?: cbParams) {
+    console.log("graphMoveHandle");
     const selected = this.draw.getGraphEvent().getAllSelected();
     if (!selected.length) return;
 
@@ -188,6 +190,30 @@ export class RegisterEvent {
       if (payload?.key == "ArrowDown") graph.setY(y + rd);
 
       // 4. 需要显示辅助线-暂未实现
+      // 5. 还需要处理 line 的移动更新
+
+      // graphid 可能是线的 sid 也可能是 eid
+      var lines: SVGPolygonElement[] = [];
+      this.draw
+        .getEditorBox()
+        .querySelectorAll("polyline")
+        .forEach((line) => {
+          const sid = line.getAttribute("sid");
+          const eid = line.getAttribute("eid");
+          if (sid === nodeID || eid === nodeID) lines.push(line);
+        });
+      // 1. 拿到line对象 - 需要拿到 lineid lineBox
+      if (!lines.length) return;
+      lines.forEach((line) => {
+        const lineid = line.getAttribute("lineid") as string;
+        const lineBox = line.parentNode?.parentNode as HTMLDivElement;
+        const sid = line.getAttribute("sid") as string;
+        const eid = line.getAttribute("eid") as string;
+        const st = line.getAttribute("st") as string;
+        const et = line.getAttribute("et") as string;
+        const l = new Line(this.draw, 0, 0, lineid, lineBox);
+        l.update(sid, eid, st, et);
+      });
     });
   }
 

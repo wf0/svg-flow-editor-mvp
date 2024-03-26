@@ -77,6 +77,7 @@ export class Line {
     // 需要同步设置宽高，位置信息
     this.setWidth(Math.abs(dx));
     this.setHeight(Math.abs(dy));
+    this.lineBox.style.zIndex = "99";
   }
 
   /**
@@ -93,6 +94,7 @@ export class Line {
     this.line.setAttribute("st", st);
     this.line.setAttribute("et", et);
     this.lineBox.style.backgroundColor = "rgba(0,0,0,0.1)";
+    this.lineBox.style.zIndex = "-1";
 
     // 设置背景尺寸相关
     this.background(sid, eid);
@@ -210,7 +212,6 @@ export class Line {
     this.drawPoint(endPoint, "green");
 
     const result = await this.search(list, startOffsetPoint, endOffsetPoint);
-
     var ops = "";
     result.forEach(({ x, y }) => {
       ops += `,${x} ${y}`;
@@ -263,7 +264,7 @@ export class Line {
       // A* 算法核心
       const AStart = () => {
         index++;
-        if (index > list.length * 2) return console.log("死循环");
+        if (index > list.length * 2) return resolve([]);
         const point = optimal.length ? optimal[optimal.length - 1] : start; // 当前的最优解
         if (point.x === end.x && point.y === end.y) return resolve(optimal);
         const optimalPoint = computedDistance(point);
@@ -276,41 +277,49 @@ export class Line {
 
   // 检查两个点组成的线段是否穿过起终点元素
   private checkLineThroughElements(p1: p, p2: p) {
-    let minX = Math.min(p1.x, p2.x);
-    let maxX = Math.max(p1.x, p2.x);
-    let minY = Math.min(p1.y, p2.y);
-    let maxY = Math.max(p1.y, p2.y);
-    const rects = [this.Sgraph, this.Egraph];
-    // 水平线
-    if (minY === maxY) {
-      for (let i = 0; i < rects.length; i++) {
-        let rect = rects[i];
-        if (
-          minY > rect.getY() - OFFSET &&
-          minY < rect.getY() + rect.getHeight() + OFFSET &&
-          minX < rect.getX() + rect.getWidth() + OFFSET &&
-          maxX > rect.getX() - OFFSET
-        ) {
-          return true;
-        }
-      }
-    }
-    // 垂直线
-    else if (minX === maxX) {
-      for (let i = 0; i < rects.length; i++) {
-        let rect = rects[i];
-        if (
-          minX > rect.getX() - OFFSET &&
-          minX < rect.getX() + rect.getWidth() + OFFSET &&
-          minY < rect.getY() + rect.getHeight() + OFFSET &&
-          maxY > rect.getY() - OFFSET
-        ) {
-          return true;
-        }
-      }
+    // 项目是横平竖直的场景，直接通过x、y 的取值范围即可判断出是否穿过矩形区域
+    const [sx, sy, sw, sh] = this.analysisGraph(this.Sgraph);
+    const [ex, ey, ew, eh] = this.analysisGraph(this.Egraph);
+
+    // 非法范围
+    const startX = [sx - this.lx, sx - this.lx + sw + 20];
+    const startY = [sy - this.ly, sy - this.ly + sh + 20];
+    const endX = [ex - this.lx, ex - this.ly + ew + 20];
+    const endY = [ey - this.ly, ey - this.ly + eh + 20];
+
+    // 1. 横线
+    if (p1.y === p2.y) {
+      // y 在范围内
+      const sy = p1.y > startY[0] && p1.y < startY[1];
+      const ey = p1.y > endY[0] && p1.y < endY[1];
+
+      // x 在同侧
+      const sx =
+        (p1.x < startX[0] && p2.x < startX[0]) ||
+        (p1.x > startX[1] && p2.x > startX[1]);
+      const ex =
+        (p1.x < endX[0] && p2.x < endX[0]) ||
+        (p1.x > endX[1] && p2.x > endX[1]);
+      // true 表示 穿过
+      return (sy && !sx) || (ey && !ex);
     }
 
-    return false;
+    // 2. 竖线
+    if (p1.x === p2.x) {
+      // x 在范围内
+      const sx = p1.x > startX[0] && p1.x < startX[1];
+      const ex = p1.x > endX[0] && p1.x < endX[1];
+
+      // x 在同侧
+      const sy =
+        (p1.y < startY[0] && p2.y < startY[0]) ||
+        (p1.y > startY[1] && p2.y > startY[1]);
+      const ey =
+        (p1.y < endY[0] && p2.y < endY[0]) ||
+        (p1.y > endY[1] && p2.y > endY[1]);
+      // true 表示 穿过
+      return (sx && !sy) || (ex && !ey);
+    }
   }
 
   /**

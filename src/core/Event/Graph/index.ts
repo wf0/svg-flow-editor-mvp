@@ -1,5 +1,6 @@
 import { IGraph, node } from "../../../interface/Graph/index.ts";
 import { Draw } from "../../Draw/index.ts";
+import { Line } from "../../Graph/Line.ts";
 const worker = new Worker(
   new URL("/src/core/Worker/AuxiliaryLine.worker.ts", import.meta.url),
   {
@@ -227,6 +228,31 @@ export class GraphEvent {
 
     // 启用线程处理辅助线
     this.workerEvent(graph);
+
+    // 还需要处理 line 的移动更新
+    const graphid = (e.target as SVGAElement).getAttribute("graphid");
+    // graphid 可能是线的 sid 也可能是 eid
+    var lines: SVGPolygonElement[] = [];
+    this.draw
+      .getEditorBox()
+      .querySelectorAll("polyline")
+      .forEach((line) => {
+        const sid = line.getAttribute("sid");
+        const eid = line.getAttribute("eid");
+        if (sid === graphid || eid === graphid) lines.push(line);
+      });
+    // 1. 拿到line对象 - 需要拿到 lineid lineBox
+    if (!lines.length) return;
+    lines.forEach((line) => {
+      const lineid = line.getAttribute("lineid") as string;
+      const lineBox = line.parentNode?.parentNode as HTMLDivElement;
+      const sid = line.getAttribute("sid") as string;
+      const eid = line.getAttribute("eid") as string;
+      const st = line.getAttribute("st") as string;
+      const et = line.getAttribute("et") as string;
+      const l = new Line(this.draw, 0, 0, lineid, lineBox);
+      l.update(sid, eid, st, et);
+    });
   }
 
   /**

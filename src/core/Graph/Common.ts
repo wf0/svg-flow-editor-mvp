@@ -12,9 +12,9 @@ export class GraphCommon {
   private nodeID: string;
   public getID: () => string;
 
-  constructor(draw: Draw) {
+  constructor(draw: Draw, nodeID?: string) {
     this.draw = draw;
-    this.nodeID = nanoid();
+    this.nodeID = nodeID || nanoid();
 
     /** getter */
     this.getID = () => this.nodeID;

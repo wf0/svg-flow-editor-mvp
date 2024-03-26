@@ -1,4 +1,4 @@
-import { Draw } from "../Draw/index.ts";
+import { Draw } from "../../Draw/index.ts";
 
 // 全局API
 export class Global {

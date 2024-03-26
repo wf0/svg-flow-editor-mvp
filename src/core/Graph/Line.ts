@@ -1,28 +1,22 @@
-// 直角折线 https://site.logic-flow.cn/article/article03#%E7%9B%B4%E8%A7%92%E6%8A%98%E7%BA%BF
+/**
+ * 直角折线
+ *  1. 实现思路借鉴 logicFlow，并结合自身项目实际，提出下列直角折线实现算法
+ *     https://site.logic-flow.cn/article/article03#%E7%9B%B4%E8%A7%92%E6%8A%98%E7%BA%BF
+ *    1.1 找到所有相关、可能经过的点（中点，交点）
+ *    1.2 需要提供判断点是否在矩形内部的辅助方法
+ *    1.3 还需要判断 offset 是否相近
+ *    1.4 找到当前点的 x y 相同的点作为可达点【并且可达距离均为1 直接计算曼哈顿距离即可】
+ *    1.5 还需要判断当前两点的向量是否穿过矩形
+ */
 
 import { nanoid } from "nanoid";
 import { Draw } from "../Draw/index.ts";
 import { Graph } from "./index.ts";
+import { LineKey } from "../../interface/Graph/index.ts";
+import { type1, type2, type3, type4 } from "../../utils/index.ts";
 
 const OFFSET = 50; // 定义折线的偏移量
-
-type line = {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  startID?: string;
-  startType?: string;
-  endID?: string;
-  endType?: string;
-};
-
-type graphInfo = {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-};
+type p = { x: number; y: number; cost?: number }; // 定义点的类型
 
 export class Line {
   private ID: string;
@@ -30,24 +24,44 @@ export class Line {
   private draw: Draw;
   private lineBox: HTMLDivElement;
 
-  constructor(draw: Draw, sx: number, sy: number) {
-    this.ID = nanoid();
+  private Sgraph!: Graph;
+  private Egraph!: Graph;
+
+  // 记录背景相关尺寸
+  private lx!: number;
+  private ly!: number;
+  private lw!: number;
+  private lh!: number;
+
+  constructor(
+    draw: Draw,
+    sx: number,
+    sy: number,
+    lineid?: string,
+    lineBox?: HTMLDivElement
+  ) {
+    this.ID = lineid || nanoid();
     this.draw = draw;
 
-    this.line = draw.createSVGElement("polyline") as SVGPolylineElement;
-    this.line.setAttribute("fill", "transparent");
-    this.line.setAttribute("stroke", "black");
-    this.line.setAttribute("stroke-dasharray", "5,5");
-    this.line.setAttribute("stroke-width", "2");
-
-    // 1. 获取分组
-    this.lineBox = draw.getLineDraw().createLineGroup(this, sx, sy);
+    // 需要兼容不是创建型，而是外部生成
+    if (lineBox) {
+      this.lineBox = lineBox;
+      this.line = lineBox.querySelector("polyline") as SVGPolylineElement;
+    } else {
+      this.line = draw.createSVGElement("polyline") as SVGPolylineElement;
+      this.line.setAttribute("fill", "transparent");
+      this.line.setAttribute("stroke", "black");
+      this.line.setAttribute("stroke-dasharray", "5,5");
+      this.line.setAttribute("stroke-width", "2");
+      // 1. 获取分组 - lineBox 是外层的 DIV,用于处理宽度高度 定位信息
+      this.lineBox = draw.getLineDraw().createLineGroup(this, sx, sy);
+    }
   }
 
   /**
    * move 过程中 update 线条位置
    */
-  public update(sx: number, sy: number, ex: number, ey: number) {
+  public move(sx: number, sy: number, ex: number, ey: number) {
     const dx = sx - ex;
     const dy = sy - ey;
     if (dx < 0 && dy < 0)
@@ -66,20 +80,46 @@ export class Line {
   }
 
   /**
-   * 线条绘制结束
+   * 开始绘制直角折线 A* 算法 + 曼哈顿距离
+   * @param payload
    */
-  public drawEnd(st: string, et: string) {
+  public drawLine(st: string, et: string) {
     console.log("### 绘制最终折线，根据框的宽高位置信息获取基础数据");
     const eid = this.line.getAttribute("eid") as string;
     const sid = this.line.getAttribute("sid") as string;
     if (!eid || !st || !et) return this.lineBox.remove();
-
-    // 不然处理折线的寻径算法
     this.line.setAttribute("stroke-dasharray", "");
+    this.line.setAttribute("points", "");
+    this.line.setAttribute("st", st);
+    this.line.setAttribute("et", et);
+    this.lineBox.style.backgroundColor = "rgba(0,0,0,0.1)";
 
+    // 设置背景尺寸相关
+    this.background(sid, eid);
+
+    // 开始寻径
+    this.routing(st, et);
+  }
+
+  /**
+   * 移动过程中更新line的位置
+   */
+  public update(sid: string, eid: string, st: string, et: string) {
+    // 1. 清空 circle
+    this.lineBox.querySelectorAll("circle").forEach((i) => i.remove());
+    this.background(sid, eid);
+    this.routing(st, et);
+  }
+
+  /**
+   * 计算背景位置
+   */
+  private background(sid: string, eid: string) {
     // 1. 获取 sid eid 构建 graph
     const Sgraph = new Graph(this.draw, sid);
     const Egraph = new Graph(this.draw, eid);
+    this.Sgraph = Sgraph;
+    this.Egraph = Egraph;
 
     // 2. 获取start的宽高 位置信息
     const sx = Sgraph.getX();
@@ -93,148 +133,281 @@ export class Line {
     const ew = Egraph.getWidth();
     const eh = Egraph.getHeight();
 
-    // 4. 需要知道哪个元件在最后 也就是 graph x 最大
-    const maxGrapg = sx > ex ? Sgraph : Egraph;
-
     // 5. 构建 OFFSET 的矩形 --- 受padding的影响
     const lx = Math.min(sx, ex) - OFFSET + 10;
     const ly = Math.min(sy, ey) - OFFSET + 10;
     this.setX(lx);
     this.setY(ly);
-    this.lineBox.style.backgroundColor = "rgba(0,0,0,0.1)";
-    // 6. 取消直线
-    this.line.setAttribute("points", "");
 
-    // 7. 设置宽高
-    const mw = maxGrapg.getWidth();
-    const mh = maxGrapg.getHeight();
-    const mx = maxGrapg.getX();
-    const my = maxGrapg.getY();
-
-    // 自此，整个线的宽高= lx -> mx + mw + OFFSET
-    const lw = mx - lx + mw + OFFSET + 10;
-    const lh = my - ly + mh + OFFSET + 10;
+    //  宽高就看谁的大
+    const mx = Math.max(sx + sw, ex + ew);
+    const my = Math.max(sy + sh, ey + eh);
+    const lw = mx - lx + OFFSET + 10;
+    const lh = my - ly + OFFSET + 10;
     this.setWidth(lw);
     this.setHeight(lh);
 
-    // 点的坐标是以div为基准！不是以画布宽高！
-    var points = [];
+    this.lx = lx;
+    this.ly = ly;
+    this.lw = lw;
+    this.lh = lh;
+  }
 
-    const typeMap: {
-      [key: string]: (p: graphInfo) => {
-        ox: number;
-        oy: number;
-        x: number;
-        y: number;
-      };
-    } = {
-      "0": (p: graphInfo) => ({
-        ox: p.x - OFFSET,
-        oy: p.y + p.h / 2,
-        x: p.x,
-        y: p.y + p.h / 2,
-      }),
-      "1": (p: graphInfo) => ({
-        ox: p.x + p.w / 2,
-        oy: p.y - OFFSET,
-        x: p.x + p.w / 2,
-        y: p.y,
-      }),
-      "2": (p: graphInfo) => ({
-        ox: p.x + p.w + OFFSET,
-        oy: p.y + p.h / 2,
-        x: p.x + p.w,
-        y: p.y + p.h / 2,
-      }),
-      "3": (p: graphInfo) => ({
-        ox: p.x + p.w / 2,
-        oy: p.y + p.h + OFFSET,
-        x: p.x + p.w / 2,
-        y: p.y + p.h,
-      }),
-    };
+  /**
+   * 寻径
+   */
+  private async routing(st: string, et: string) {
+    var points = []; // 定义可能经过的点
 
-    // 8. 计算点坐标
-    console.log("## 开始计算点的坐标", st, et);
-    // // 左上角的点
-    // points.push({ x: 0, y: 0 });
-    // // 右上
-    // points.push({ x: 0 + lw, y: 0 });
-    // // 右下
-    // points.push({ x: 0 + lw, y: 0 + lh });
-    // // 左下
-    // points.push({ x: 0, y: 0 + lh });
+    const typeMap: LineKey = { "0": type1, "1": type2, "2": type3, "3": type4 }; // 定义类型映射
 
-    // 起点 st start point
-    const spm = typeMap[st]({ x: sx, y: sy, w: sw, h: sh });
-    const sp = { x: spm.x - lx + 10, y: spm.y - ly + 10 };
-    points.push(sp);
+    // 【辅助函数】做点的纠正-因为 计算得到的是 基于背景的 而线的绘制基于新的 div 坐标，需要做处理 【并且受 padding 的影响】
+    const getX = (x: number) => x - this.lx + 10;
+    const getY = (y: number) => y - this.ly + 10;
 
-    // 起点 向外 offset
-    const so = { x: spm.ox - lx + 10, y: spm.oy - ly + 10 };
-    points.push(so);
+    // 1.【起点】
+    const [sx, sy, sw, sh] = this.analysisGraph(this.Sgraph);
+    const startType = typeMap[st]({ x: sx, y: sy, w: sw, h: sh }, OFFSET);
+    const startPoint = { x: getX(startType.x), y: getY(startType.y) };
 
-    // // 向外延申的点到边上的距离
-    // points.push({ x: 0, y: spm.oy - ly + 10 });
-    // points.push({ x: spm.ox - lx + 10, y: 0 });
-    // points.push({ x: lw, y: spm.oy - ly + 10 });
-    // points.push({ x: spm.ox - lx + 10, y: lh });
+    // 2. 【终点】
+    const [ex, ey, ew, eh] = this.analysisGraph(this.Egraph);
+    const endType = typeMap[et]({ x: ex, y: ey, w: ew, h: eh }, OFFSET);
+    const endPoint = { x: getX(endType.x), y: getY(endType.y) };
 
-    // 终点 et
-    const epm = typeMap[et]({ x: ex, y: ey, w: ew, h: eh });
-    const ep = { x: epm.x - lx + 10, y: epm.y - ly + 10 };
-    points.push(ep);
+    // 3. 【伪起点】
+    const startOffsetPoint = { x: getX(startType.ox), y: getY(startType.oy) };
+    points.push(startOffsetPoint);
 
-    // 终点向外延申
-    const eo = { x: epm.ox - lx + 10, y: epm.oy - ly + 10 };
-    points.push(eo);
+    // 4. 【伪终点】
+    const endOffsetPoint = { x: getX(endType.ox), y: getY(endType.oy) };
+    points.push(endOffsetPoint);
 
-    // // 向外延申的点到边上的距离
-    // points.push({ x: 0, y: epm.oy - ly + 10 });
-    // points.push({ x: lw, y: epm.oy - ly + 10 });
-    // points.push({ x: epm.ox - lx + 10, y: 0 });
-    // points.push({ x: epm.ox - lx + 10, y: lh });
+    // 5. 【该方向的两个交点】
+    const intersection = this.getIntersection(
+      startPoint,
+      startOffsetPoint,
+      endPoint,
+      endOffsetPoint
+    );
+    intersection?.length && points.push(...intersection);
 
-    // 两个延伸点的中点
-    const diffX = Math.abs(so.x - eo.x);
-    const diffY = Math.abs(so.y - eo.y);
-    const minX = Math.min(so.x, eo.x);
-    const minY = Math.min(so.y, eo.y);
-    const cp = { x: minX + diffX / 2, y: minY + diffY / 2 };
-    points.push(cp);
+    // 6. 【startOffset 的边距4个交点】
+    const startOffsetBoundary = this.getBoundaryPoints(startOffsetPoint);
+    startOffsetBoundary.length && points.push(...startOffsetBoundary);
 
-    // // 中点的延伸点
-    // points.push({ x: 0, y: minY + diffY / 2 });
-    // points.push({ x: minX + diffX / 2, y: 0 });
-    // points.push({ x: lw, y: minY + diffY / 2 });
-    // points.push({ x: minX + diffX / 2, y: lh });
+    // 7. 【endOffset 的边距交点】
+    const endOffsetBoundary = this.getBoundaryPoints(endOffsetPoint);
+    endOffsetBoundary.length && points.push(...endOffsetBoundary);
 
-    // 两个offset 的交点
-    // points.push({ x: so.x, y: eo.y }); // cb
+    // 绘制直线
+    const list: p[] = this.deduplication(points); // 最终结果
+    // 结果供 demo 绘制
+    // 结果供 demo 绘制
+    // 结果供 demo 绘制
+    list.forEach((p) => this.drawPoint(p));
+    this.drawPoint(startPoint, "green");
+    this.drawPoint(endPoint, "green");
 
-    /**
-     * 寻径算法 - 找当前点的上下左右，计算距离
-     */
-    function search() {
-      // 起始点开始计算上下左右
-      
-    }
+    const result = await this.search(list, startOffsetPoint, endOffsetPoint);
 
-    // 绘制点
-    points.forEach(({ x, y }) => {
-      const rect = this.draw.createSVGElement("circle");
-      rect.setAttribute("fill", "red");
-      rect.setAttribute("r", "8");
-      rect.setAttribute("cx", x.toString());
-      rect.setAttribute("cy", y.toString());
-      this.lineBox.querySelector("svg")?.appendChild(rect);
+    var ops = "";
+    result.forEach(({ x, y }) => {
+      ops += `,${x} ${y}`;
     });
-
-    // 连线
     this.line.setAttribute(
       "points",
-      `${sp.x} ${sp.y},${so.x} ${so.y},${eo.x} ${eo.y},${ep.x} ${ep.y}`
+      `${startPoint.x} ${startPoint.y},${startOffsetPoint.x} ${startOffsetPoint.y} ${ops} ,
+      ${endOffsetPoint.x} ${endOffsetPoint.y},${endPoint.x} ${endPoint.y}`
     );
+  }
+
+  /**
+   * A* 算法
+   */
+  private search(list: p[], start: p, end: p) {
+    return new Promise<p[]>((resolve) => {
+      var optimal: p[] = []; // 最优解
+      var prePoint = { x: Infinity, y: Infinity }; // 当前上一个节点
+      var index = 0;
+
+      // 计算距离权重
+      const computedDistance = (p: p) => {
+        if (prePoint.x === p.x && prePoint.y === p.y) {
+          // 如果重复找同一个点，则删除该点
+          list.splice(
+            list.findIndex((i) => i.x === p.x && i.y === p.y),
+            1
+          );
+        }
+        prePoint = p;
+        console.group("开始 A* 算法");
+        console.log("当前点", p);
+        // 获取list中 x、y 相同的点，并计算最短路径
+        const ps = list.filter((i: p) => i.x === p.x || i.y === p.y);
+
+        // 循环当前可达的点，并计算距离
+        ps.forEach((i: p) => {
+          i.cost = Infinity; // 默认无穷大
+          // 计算曼哈顿距离
+          if (this.checkLineThroughElements(p, i)) return;
+          i.cost = Math.abs(i.x - end.x) + Math.abs(i.y - end.y);
+        });
+
+        ps.sort((a, b) => (a.cost as number) - (b.cost as number));
+        this.drawPoint(ps[0], "blue");
+        console.groupEnd();
+        return ps[0];
+      };
+
+      // A* 算法核心
+      const AStart = () => {
+        index++;
+        if (index > list.length * 2) return console.log("死循环");
+        const point = optimal.length ? optimal[optimal.length - 1] : start; // 当前的最优解
+        if (point.x === end.x && point.y === end.y) return resolve(optimal);
+        const optimalPoint = computedDistance(point);
+        optimal.push(optimalPoint);
+        AStart();
+      };
+      AStart();
+    });
+  }
+
+  // 检查两个点组成的线段是否穿过起终点元素
+  private checkLineThroughElements(p1: p, p2: p) {
+    let minX = Math.min(p1.x, p2.x);
+    let maxX = Math.max(p1.x, p2.x);
+    let minY = Math.min(p1.y, p2.y);
+    let maxY = Math.max(p1.y, p2.y);
+    const rects = [this.Sgraph, this.Egraph];
+    // 水平线
+    if (minY === maxY) {
+      for (let i = 0; i < rects.length; i++) {
+        let rect = rects[i];
+        if (
+          minY > rect.getY() - OFFSET &&
+          minY < rect.getY() + rect.getHeight() + OFFSET &&
+          minX < rect.getX() + rect.getWidth() + OFFSET &&
+          maxX > rect.getX() - OFFSET
+        ) {
+          return true;
+        }
+      }
+    }
+    // 垂直线
+    else if (minX === maxX) {
+      for (let i = 0; i < rects.length; i++) {
+        let rect = rects[i];
+        if (
+          minX > rect.getX() - OFFSET &&
+          minX < rect.getX() + rect.getWidth() + OFFSET &&
+          minY < rect.getY() + rect.getHeight() + OFFSET &&
+          maxY > rect.getY() - OFFSET
+        ) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * 计算两条线段的交点
+   */
+  private getIntersection(p1: p, p2: p, p3: p, p4: p) {
+    // p1 与 p2 的x值相同，则该线段是竖线
+    const stateX1 = p1.x === p2.x;
+    // p1 与 p2 的y值相同，则该线段是横线
+    const stateY1 = p1.y === p2.y;
+
+    // p3 与 p4 的x值相同，则该线段是竖线
+    const stateX2 = p3.x === p4.x;
+    // p3 与 p4 的y值相同，则该线段是横线
+    const stateY2 = p3.y === p4.y;
+
+    // 同向没有交点
+    if ((stateX1 && stateX2) || (stateY1 && stateY2)) return;
+
+    const pl1 = { x: p4.x, y: p2.y };
+    const pl2 = { x: p2.x, y: p4.y };
+    return [pl1, pl2].filter((i) => !this.inside(i));
+  }
+
+  /**
+   * 获取点与背景边界的交点
+   * @param p
+   * @returns
+   */
+  private getBoundaryPoints(p: p) {
+    const { x, y } = p;
+    const p1 = { x: 0, y };
+    const p2 = { x: this.lw, y };
+    const p3 = { x, y: 0 };
+    const p4 = { x, y: this.lh };
+    return [p1, p2, p3, p4].filter((i) => !this.inside(i));
+  }
+
+  // 【辅助函数】判断当前点是否在两个矩形之间
+  private inside({ x, y }: p) {
+    const [sx, sy, sw, sh] = this.analysisGraph(this.Sgraph);
+    const [ex, ey, ew, eh] = this.analysisGraph(this.Egraph);
+
+    // 非法范围
+    const startX = [sx - this.lx, sx - this.lx + sw + 20];
+    const startY = [sy - this.ly, sy - this.ly + sh + 20];
+    const endX = [ex - this.lx, ex - this.ly + ew + 20];
+    const endY = [ey - this.ly, ey - this.ly + eh + 20];
+    const isInStart =
+      x > startX[0] && x < startX[1] && y > startY[0] && y < startY[1];
+
+    const isInEnd = x > endX[0] && x < endX[1] && y > endY[0] && y < endY[1];
+
+    // 只有 x y 都在非法范围内，才是在矩形内部
+    return isInStart || isInEnd;
+  }
+
+  /**
+   * 去重
+   * @param points
+   * @returns
+   */
+  private deduplication(points: p[]) {
+    let list: p[] = [];
+    let map: { [key: string]: boolean } = {};
+    points.forEach(({ x, y }) => {
+      if (map[x + "-" + y]) return;
+      map[x + "-" + y] = true;
+      list.push({ x, y });
+    });
+    return JSON.parse(JSON.stringify(list)); // 深拷贝简单实现
+  }
+
+  /**
+   * 解析 元件的四个属性
+   */
+  private analysisGraph(graph: Graph) {
+    const x = graph.getX();
+    const y = graph.getY();
+    const w = graph.getWidth();
+    const h = graph.getHeight();
+    return [x, y, w, h];
+  }
+
+  /**
+   * demodemo
+   * @param p
+   * @param color
+   */
+  private drawPoint(p: p, color?: string) {
+    const circle = this.draw.createSVGElement("circle");
+    circle.setAttribute("r", "4");
+    circle.setAttribute("cx", p.x.toString());
+    circle.setAttribute("cy", p.y.toString());
+    circle.setAttribute("fill", color || "red");
+    // @ts-ignore
+    this.lineBox.querySelector("svg")?.appendChild(circle);
   }
 
   /**

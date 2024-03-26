@@ -1,14 +1,6 @@
 import { allTheme, messageInfo } from "../core/Config/index.ts";
-
-export type IThemeOpt = {
-  [key: string]: string;
-  background: string; // 背景颜色
-  stroke: string; // 元件边框颜色
-  fill: string; // 元件填充颜色
-  text: string; // 文本颜色
-  line: string; // 线条颜色
-  auxiliaryLine: string; // 辅助线颜色
-};
+import { IThemeOpt } from "../interface/Draw/index.ts";
+import { graphInfo } from "../interface/Graph/index.ts";
 
 // 封装 nextTick()
 function nextTick(fn: Function) {
@@ -65,4 +57,35 @@ function setTheme(theme: string, option?: IThemeOpt) {
   head.appendChild(styleTag);
 }
 
-export { nextTick, isMod, setTheme };
+// 封装节点的类型与位置关系
+// 类型1的获取点位方式
+function type1(p: graphInfo, OFFSET: number) {
+  const ox = p.x - OFFSET;
+  const oy = p.y + p.h / 2;
+  const x = p.x;
+  const y = p.y + p.h / 2;
+  return { ox, oy, x, y };
+}
+function type2(p: graphInfo, OFFSET: number) {
+  const ox = p.x + p.w / 2;
+  const oy = p.y - OFFSET;
+  const x = p.x + p.w / 2;
+  const y = p.y;
+  return { ox, oy, x, y };
+}
+function type3(p: graphInfo, OFFSET: number) {
+  const ox = p.x + p.w + OFFSET;
+  const oy = p.y + p.h / 2;
+  const x = p.x + p.w;
+  const y = p.y + p.h / 2;
+  return { ox, oy, x, y };
+}
+function type4(p: graphInfo, OFFSET: number) {
+  const ox = p.x + p.w / 2;
+  const oy = p.y + p.h + OFFSET;
+  const x = p.x + p.w / 2;
+  const y = p.y + p.h;
+  return { ox, oy, x, y };
+}
+
+export { nextTick, isMod, setTheme, type1, type2, type3, type4 };

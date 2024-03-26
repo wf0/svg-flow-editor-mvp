@@ -166,8 +166,6 @@ export class GraphDraw {
   private linkPointMousedown(graph: IGraph, type: string) {
     const editorBox = this.draw.getEditorBox();
     const sid = graph.getID();
-    var st = type;
-    var et = "";
 
     // 1. 获取当前元素的宽高位置信息
     const width = graph.getWidth();
@@ -182,8 +180,13 @@ export class GraphDraw {
       "2": { sx: x + width, sy: y + height / 2 },
       "3": { sx: x + width / 2, sy: y + height },
     };
+    // 记录线条信息-起始点坐标
     const sx = typeMap[type].sx + 10;
     const sy = typeMap[type].sy + 10;
+    var st = type;
+    var et = "";
+    var ex = 0;
+    var ey = 0;
 
     // 3. 阻止事件响应
     const graphMain = this.draw.getGraphDraw().getGraphMain(sid);
@@ -205,8 +208,7 @@ export class GraphDraw {
       line.setGraphID("eid", "");
       et = "";
       const { offsetX, offsetY } = e;
-      var dx = offsetX;
-      var dy = offsetY;
+
       const target = e.target as HTMLDivElement;
       const { className, offsetLeft, offsetTop } = target;
       /**
@@ -216,9 +218,11 @@ export class GraphDraw {
        *  class='' 异常
        */
       if (className === "sf-editor-box-graphs") {
+        ex = offsetX;
+        ey = offsetY;
       } else if (className === "sf-editor-box-graphs-main") {
-        dx = offsetLeft + offsetX;
-        dy = offsetTop + offsetY;
+        ex = offsetLeft + offsetX;
+        ey = offsetTop + offsetY;
       } else if (className === "") {
         try {
           const ctype = target.getAttribute("linktype") as string;
@@ -239,8 +243,8 @@ export class GraphDraw {
             "3": { cx: x + cw / 2, cy: y + ch },
           };
           const { cx, cy } = typeMap[ctype];
-          dx = cx + radius;
-          dy = cy + radius;
+          ex = cx + radius;
+          ey = cy + radius;
         } catch (error) {}
       } else {
         try {
@@ -249,16 +253,16 @@ export class GraphDraw {
           const g = new Graph(this.draw, gid);
           const gx = g.getX();
           const gy = g.getY();
-          dx = gx + offsetX + 10;
-          dy = gy + offsetY + 10;
+          ex = gx + offsetX + 10;
+          ey = gy + offsetY + 10;
         } catch (error) {}
       }
-      line.update(sx, sy, dx, dy);
+      line.move(sx, sy, ex, ey);
     };
 
     // 7. 抬起结束绘制
     const mouseup = () => {
-      line.drawEnd(st, et);
+      line.drawLine(st, et);
       // 恢复当前的事件响应
       graphMain.style.pointerEvents = "";
       linkPoints?.forEach((i) => (i.style.pointerEvents = ""));

@@ -20,3 +20,24 @@ export interface node {
   text?: string;
   url?: string;
 }
+
+// 线中应用的元件参数-宽高位置信息
+export type graphInfo = {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+};
+
+// 节点类型 索引
+export type LineKey = {
+  [key: string]: (
+    p: graphInfo,
+    o: number
+  ) => {
+    ox: number;
+    oy: number;
+    x: number;
+    y: number;
+  };
+};

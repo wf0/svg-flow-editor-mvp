@@ -7,7 +7,7 @@ type ISVG = SVGRectElement | SVGEllipseElement;
 export class Graph extends GraphCommon {
   private element: ISVG;
   constructor(draw: Draw, nodeID: string) {
-    super(draw);
+    super(draw, nodeID);
 
     // 重写相关方法
     this.getID = () => nodeID;

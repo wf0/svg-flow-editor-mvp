@@ -44,6 +44,8 @@ function setTheme(theme: string, option?: IThemeOpt) {
       themeHTML += `--${key}:${value};`;
     }
   }
+  // 添加主题色
+  themeHTML += `--mainColor:#3080E9`;
 
   // 4. 创建新的 style
 

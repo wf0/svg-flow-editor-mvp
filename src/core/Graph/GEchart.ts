@@ -2,11 +2,9 @@
 import * as echarts from "echarts";
 import { Draw } from "../Draw/index.ts";
 import { GraphCommon } from "./Common.ts";
-import elementResizeDetectorMaker from "element-resize-detector";
 import { messageInfo } from "../Config/index.ts";
 import { EventBus } from "../Event/EventBus.ts";
 import { EchartEventMap } from "../../interface/Event/index.ts";
-var erd = elementResizeDetectorMaker();
 
 export class GEchart extends GraphCommon {
   private div: HTMLDivElement;
@@ -50,9 +48,9 @@ export class GEchart extends GraphCommon {
     );
 
     this.setOption();
-
     // 监听元素尺寸变化，重新渲染echart 使得宽高自适应
-    erd.listenTo(this.div, () => this.myChart.resize());
+    const ob = new ResizeObserver(this.myChart.resize);
+    ob.observe(this.div);
   }
 
   /**

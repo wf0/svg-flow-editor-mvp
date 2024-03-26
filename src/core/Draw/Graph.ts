@@ -46,6 +46,12 @@ export class GraphDraw {
     graphBox.classList.add("sf-editor-box-graphs-main-item");
     graphBox.setAttribute("type", "graphBox"); // 标记是 graph 的盒子 svg 的外层
 
+    // 协同用户信息
+    // const user = this.draw.createHTMLElement("div") as HTMLDivElement;
+    // user.classList.add("user");
+    // user.innerHTML='用户A_asda7'
+    // graphBox.appendChild(user);
+
     // graphBox 内部装 svg
     const svg = this.draw.createSVGElement("svg") as SVGSVGElement;
     svg.setAttribute("width", "100%");

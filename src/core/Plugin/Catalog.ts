@@ -125,6 +125,10 @@ export class Catalog {
       // line: "",
       // table: "",
       // tab: "",
+      line: { type: "cLine", width: 300, height: 150, x, y },
+      bar: { type: "cBar", width: 300, height: 150, x, y },
+      radar: { type: "cRadar", width: 300, height: 150, x, y },
+      pie: { type: "cPie", width: 300, height: 150, x, y },
     };
     this.command.executeAddGraph(typeMap[type as string]);
   }

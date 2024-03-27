@@ -2,12 +2,22 @@ import { GEchart } from "../../core/Graph/GEchart.ts";
 import { Ellipse } from "../../core/Graph/Ellipse.ts";
 import { SVGImage } from "../../core/Graph/Image.ts";
 import { Rect } from "../../core/Graph/Rect.ts";
+import { Text } from "../../core/Graph/Text.ts";
 
-export type IGraph = Rect | Ellipse | SVGImage | GEchart;
+export type IGraph = Rect | Ellipse | SVGImage | GEchart | Text;
 
 // 单个节点的信息
 export interface node {
-  type?: "rect" | "circle" | "ellipse" | "image" | "text";
+  type?:
+    | "rect"
+    | "circle"
+    | "ellipse"
+    | "image"
+    | "text"
+    | "cLine"
+    | "cBar"
+    | "cRadar"
+    | "cPie";
   nodeID?: string;
   width: number;
   height: number;

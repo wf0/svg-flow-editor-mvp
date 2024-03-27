@@ -1,5 +1,6 @@
 import { IGraph, node } from "../../../interface/Graph/index.ts";
 import { Draw } from "../../Draw/index.ts";
+import { GEchart } from "../../Graph/GEchart.ts";
 import { Line } from "../../Graph/Line.ts";
 const worker = new Worker(
   new URL("/src/core/Worker/AuxiliaryLine.worker.ts", import.meta.url),
@@ -80,6 +81,10 @@ export class GraphEvent {
   private graphDblclickHandle(e: Event, graph: IGraph) {
     // 支持双击文本编辑的容器
     const support = ["rect", "ellipse"];
+
+    // @ts-ignore
+    if (e.target.tagName === "CANVAS")
+      return this.draw.getEchartDraw().updateOption(graph as GEchart);
 
     // @ts-ignore
     if (!support.includes(e.target.tagName)) return;

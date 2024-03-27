@@ -1,9 +1,15 @@
 import { IBackground, IThemeOpt } from "../../interface/Draw/index.ts";
 import { IGraph, node } from "../../interface/Graph/index.ts";
 import { nextTick, setTheme } from "../../utils/index.ts";
-import { messageInfo } from "../Config/index.ts";
+import {
+  barOption,
+  lineOption,
+  messageInfo,
+  pieOption,
+} from "../Config/index.ts";
 import { Draw } from "../Draw/index.ts";
 import { Ellipse } from "../Graph/Ellipse.ts";
+import { GEchart } from "../Graph/GEchart.ts";
 import { SVGImage } from "../Graph/Image.ts";
 import { Rect } from "../Graph/Rect.ts";
 
@@ -56,6 +62,10 @@ export class CommandAdapt {
       rect: () => new Rect(this.draw, width, height),
       ellipse: () => new Ellipse(this.draw, width, height),
       image: () => new SVGImage(this.draw, url as string, width, height),
+      cLine: () => new GEchart(this.draw, lineOption),
+      cBar: () => new GEchart(this.draw, barOption),
+      // cRadar: () => new GEchart(this.draw, barOption),
+      cPie: () => new GEchart(this.draw, pieOption),
     };
 
     const graph = graphMap[type as string]();

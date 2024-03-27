@@ -276,10 +276,16 @@
             padding: 4px 0 4px 20px;
         }
 
+
         &-item {
             padding: 5px 10px;
             display: none;
             flex-wrap: wrap;
+
+            img {
+                width: 100%;
+                height: 120px;
+            }
 
             .upload {
                 border: 1px dashed #dcdfe6;
@@ -299,6 +305,7 @@
                     text-align: center;
                 }
             }
+
 
             .graph {
                 cursor: move;
@@ -324,6 +331,8 @@
 
                 }
             }
+
+
         }
 
         .more {
@@ -583,4 +592,69 @@
         z-index: 98;
     }
 
+    // 所有的弹窗信息位置展示
+    &-dialog {
+        position: absolute;
+        z-index: 99;
+        background-color: #fff;
+        right: 0;
+        top: 0;
+        width: 260px;
+        height: 100%;
+        border: solid #ccc 1px;
+        overflow: hidden;
+        overflow-y: auto;
+        padding: 20px;
+
+        .title {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #72767b;
+            font-size: 18px;
+            font-weight: 700;
+            padding-bottom: 20px;
+
+            span {
+                padding-bottom: 5px;
+                border-bottom: solid var(--mainColor) 1px;
+            }
+
+            i {
+                cursor: pointer;
+            }
+        }
+
+        // 统计图的更新
+        &-echart {}
+    }
+
+}
+
+.sf-editor-overflow {
+
+    /* 设置滚动条的宽度 */
+    &::-webkit-scrollbar {
+        width: 4px;
+        /* 水平滚动条的高度 */
+        height: 4px;
+        /* 垂直滚动条的宽度 */
+    }
+
+    /* 设置滚动条滑块的样式 */
+    &::-webkit-scrollbar-thumb {
+        background-color: darkgrey;
+        /* 滑块颜色 */
+        // border-radius: 6px;
+        /* 滑块圆角 */
+    }
+
+    /* 设置滚动条轨道的样式 */
+    &::-webkit-scrollbar-track {
+        background: lightgrey;
+        /* 轨道颜色 */
+        // border-radius: 6px;
+        /* 轨道圆角 */
+    }
 }

@@ -94,7 +94,7 @@ export class Line {
     this.line.setAttribute("points", "");
     this.line.setAttribute("st", st);
     this.line.setAttribute("et", et);
-    this.lineBox.style.backgroundColor = "rgba(0,0,0,0.1)";
+    // this.lineBox.style.backgroundColor = "rgba(0,0,0,0.1)";
     this.lineBox.style.zIndex = "-1";
 
     // 设置背景尺寸相关
@@ -156,7 +156,7 @@ export class Line {
     const minGraph = maxGrapg === Sgraph ? Egraph : Sgraph;
     const dx = maxGrapg.getX() - (minGraph.getX() + minGraph.getWidth());
     const dy = maxGrapg.getY() - (minGraph.getY() + minGraph.getHeight());
-    if (dx < OFFSET || dy < OFFSET) this.IOT = false;
+    if (dx < OFFSET && dy < OFFSET) this.IOT = false;
     else this.IOT = true;
     this.lx = lx;
     this.ly = ly;
@@ -245,9 +245,9 @@ export class Line {
     // 结果供 demo 绘制
     // 结果供 demo 绘制
     // 结果供 demo 绘制
-    list.forEach((p) => this.drawPoint(p));
-    this.drawPoint(startPoint, "green");
-    this.drawPoint(endPoint, "green");
+    // list.forEach((p) => this.drawPoint(p));
+    // this.drawPoint(startPoint, "green");
+    // this.drawPoint(endPoint, "green");
 
     // 进行 A* 算法查找
     const result = await this.search(list, startOffsetPoint, endOffsetPoint);
@@ -268,7 +268,8 @@ export class Line {
   /**
    * A* 算法
    */
-  private search(list: p[], start: p, end: p) {
+  private search(li: p[], start: p, end: p) {
+    const list: p[] = JSON.parse(JSON.stringify(li));
     return new Promise<p[]>((resolve) => {
       var optimal: p[] = []; // 最优解
       var prePoint = { x: Infinity, y: Infinity }; // 当前上一个节点
@@ -278,22 +279,20 @@ export class Line {
       const computedDistance = (p: p) => {
         if (prePoint.x === p.x && prePoint.y === p.y) {
           // 如果重复找同一个点，则删除该点
-          list.splice(
-            list.findIndex((i) => i.x === p.x && i.y === p.y),
-            1
-          );
+          const i = list.findIndex((i) => i.x === p.x && i.y === p.y);
+          list.splice(i, 1);
         }
         prePoint = p;
         console.group("开始 A* 算法");
         console.log("当前点", p);
         // 获取list中 x、y 相同的点，并计算最短路径
-        const ps = list.filter((i: p) => i.x === p.x || i.y === p.y);
+        const ps = list.filter((i) => i.x === p.x || i.y === p.y);
 
         // 循环当前可达的点，并计算距离
         ps.forEach((i: p) => {
           i.cost = Infinity; // 默认无穷大
-          // 计算曼哈顿距离
           if (this.checkLineThroughElements(p, i)) return;
+          // 计算曼哈顿距离
           i.cost = Math.abs(i.x - end.x) + Math.abs(i.y - end.y);
         });
 
@@ -319,49 +318,41 @@ export class Line {
 
   // 检查两个点组成的线段是否穿过起终点元素
   private checkLineThroughElements(p1: p, p2: p) {
-    // 项目是横平竖直的场景，直接通过x、y 的取值范围即可判断出是否穿过矩形区域
-    const [sx, sy, sw, sh] = this.analysisGraph(this.Sgraph);
-    const [ex, ey, ew, eh] = this.analysisGraph(this.Egraph);
+    let rects = [this.Sgraph, this.Egraph];
+    let minX = Math.min(p1.x, p2.x);
+    let maxX = Math.max(p1.x, p2.x);
+    let minY = Math.min(p1.y, p2.y);
+    let maxY = Math.max(p1.y, p2.y);
 
-    // 非法范围
-    const startX = [sx - this.lx, sx - this.lx + sw + 20];
-    const startY = [sy - this.ly, sy - this.ly + sh + 20];
-    const endX = [ex - this.lx, ex - this.ly + ew + 20];
-    const endY = [ey - this.ly, ey - this.ly + eh + 20];
-
-    // 1. 横线
+    // 水平线
     if (p1.y === p2.y) {
-      // y 在范围内
-      const sy = p1.y > startY[0] && p1.y < startY[1];
-      const ey = p1.y > endY[0] && p1.y < endY[1];
-
-      // x 在同侧
-      const sx =
-        (p1.x < startX[0] && p2.x < startX[0]) ||
-        (p1.x > startX[1] && p2.x > startX[1]);
-      const ex =
-        (p1.x < endX[0] && p2.x < endX[0]) ||
-        (p1.x > endX[1] && p2.x > endX[1]);
-      // true 表示 穿过
-      return (sy && !sx) || (ey && !ex);
+      for (let i = 0; i < rects.length; i++) {
+        let rect = rects[i];
+        if (
+          minY > rect.getY() - this.ly &&
+          minY < rect.getY() + rect.getHeight() - this.ly &&
+          minX < rect.getX() + rect.getWidth() - this.lx &&
+          maxX > rect.getX() - this.lx
+        ) {
+          return true;
+        }
+      }
+    } else if (p1.x === p2.x) {
+      // 垂直线
+      for (let i = 0; i < rects.length; i++) {
+        let rect = rects[i];
+        if (
+          minX > rect.getX() - this.lx &&
+          minX < rect.getX() + rect.getWidth() - this.lx &&
+          minY < rect.getY() + rect.getHeight() - this.ly &&
+          maxY > rect.getY() - this.ly
+        ) {
+          return true;
+        }
+      }
     }
 
-    // 2. 竖线
-    if (p1.x === p2.x) {
-      // x 在范围内
-      const sx = p1.x > startX[0] && p1.x < startX[1];
-      const ex = p1.x > endX[0] && p1.x < endX[1];
-
-      // x 在同侧
-      const sy =
-        (p1.y < startY[0] && p2.y < startY[0]) ||
-        (p1.y > startY[1] && p2.y > startY[1]);
-      const ey =
-        (p1.y < endY[0] && p2.y < endY[0]) ||
-        (p1.y > endY[1] && p2.y > endY[1]);
-      // true 表示 穿过
-      return (sx && !sy) || (ex && !ey);
-    }
+    return false;
   }
 
   /**

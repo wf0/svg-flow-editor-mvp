@@ -14,6 +14,7 @@ import { Catalog } from "./Plugin/Catalog.ts";
 import { Operation } from "./Plugin/Operation.ts";
 import { SEchart } from "./Plugin/Echart.ts";
 import "../style/SFEditor.less";
+import { Text } from "./Graph/Text.ts";
 
 // 定义插件类型
 type pluginName = "catalog" | "footer" | "operation" | "echart";
@@ -75,6 +76,10 @@ class SFEditor {
    */
   public SVGImage(url: string) {
     return new SVGImage(this.draw, url);
+  }
+
+  public Text(text: string) {
+    return new Text(this.draw, text);
   }
 
   // 加载插件函数

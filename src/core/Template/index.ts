@@ -524,16 +524,16 @@ export const catalogTemp = `
 	统计图
 </h3>
 <div class="sf-editor-catalog-item" adapt="chart">
-	<div draggable="true" class="graph" type="logo">
+	<div draggable="true" class="graph" type="line" title="折线图">
 		<i class="iconfont icon-tubiao-zhexiantu"></i>
 	</div>
-	<div draggable="true" class="graph" type="logo">
+	<div draggable="true" class="graph" type="bar" title="柱状图">
 		<i class="iconfont icon-tubiao-zhuzhuangtu"></i>
 	</div>
-	<div draggable="true" class="graph" type="logo">
+	<div draggable="true" class="graph" type="radar" title="雷达图">
 		<i class="iconfont icon-gongyezujian-yibiaopan"></i>
 	</div>
-	<div draggable="true" class="graph" type="logo">
+	<div draggable="true" class="graph" type="pie" title="饼图">
 		<i class="iconfont icon-tubiao-bingtu"></i>
 	</div>
 </div>
@@ -541,4 +541,13 @@ export const catalogTemp = `
 
 <!-- 提示 -->
 <div class="more">更多图形</div>
+`;
+
+export const echartUpdateTemp = `
+<div class="sf-editor-dialog-echart">
+	<div class="title">
+		<span>统计图配置</span>
+		<i class="iconfont icon-guanbiclose"></i>
+	</div>
+</div>
 `;

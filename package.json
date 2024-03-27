@@ -10,12 +10,12 @@
   },
   "scripts": {
     "dev": "vite",
-    "tsc": "tsc",
     "preview": "vite preview",
-    "build": "npm run tsc && vite build",
-    "build:assets": "cp -r src/assets/ dist/",
-    "build:js": "babel src/ -d dist/",
-    "prepublishOnly": "npm run build"
+    "build": "tsc && vite build",
+    "patch": "npm version patch",
+    "minor": "npm version minor",
+    "major": "npm version major",
+    "libs": "npm run patch && npm publish"
   },
   "keyword": [
     "svg",
@@ -25,7 +25,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "color-convert": "^2.0.1",
-    "cp": "^0.2.0",
     "dayjs": "^1.11.10",
     "echarts": "^5.5.0",
     "less": "^4.2.0",
@@ -38,7 +37,6 @@
   "devDependencies": {
     "@types/color-convert": "^2.0.3",
     "@types/node": "^20.11.30",
-    "@types/pako": "^2.0.3",
-    "babel-cli": "^6.26.0"
+    "@types/pako": "^2.0.3"
   }
 }

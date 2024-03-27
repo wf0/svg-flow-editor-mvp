@@ -2,6 +2,7 @@ import { IGraph, node } from "../../../interface/Graph/index.ts";
 import { Draw } from "../../Draw/index.ts";
 import { GEchart } from "../../Graph/GEchart.ts";
 import { Line } from "../../Graph/Line.ts";
+import { workerEvent } from "../../Worker/AuxiliaryLine.worker.ts";
 const worker = new Worker(
   new URL("/src/core/Worker/AuxiliaryLine.worker.ts", import.meta.url),
   {
@@ -284,13 +285,11 @@ export class GraphEvent {
     const x = graph.getX();
     const y = graph.getY();
     const current: node = { nodeID, width, height, x, y };
-    worker.postMessage({ current, nodes: this.nodes });
-    worker.onmessage = ({ data }) => {
-      // 清空所有的辅助线
-      if (!data.length) return this.draw.getCanvasDraw().unDrawAuxiliaryLine();
-      // 不然绘制辅助线
-      this.draw.getCanvasDraw().drawAuxiliaryLine(data);
-    };
+    const data = workerEvent(current, this.nodes);
+    // 清空所有的辅助线
+    if (!data.length) return this.draw.getCanvasDraw().unDrawAuxiliaryLine();
+    // 不然绘制辅助线
+    this.draw.getCanvasDraw().drawAuxiliaryLine(data);
   }
 
   /**

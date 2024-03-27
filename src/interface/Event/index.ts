@@ -10,6 +10,8 @@ export interface EventBusMap {
   destroyed: EventType;
   graphNumberChanged: EventType;
   pageScale: EventType;
+  saved: EventType;
+  closed: EventType;
 }
 
 export interface EchartEventMap {

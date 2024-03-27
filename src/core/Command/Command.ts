@@ -35,6 +35,21 @@ export class Command {
   public executeGroup: CommandAdapt["group"];
   public executeUnGroup: CommandAdapt["ungroup"];
 
+  /** operation 相关操作API */
+  public executeNewFile: CommandAdapt["newFile"];
+  public executeReName: CommandAdapt["rename"];
+  public executePreview: CommandAdapt["preview"];
+  public executeSave: CommandAdapt["save"];
+  public executeSaveAs: CommandAdapt["saveas"];
+  public executeShare: CommandAdapt["share"];
+  public executeRelease: CommandAdapt["release"];
+  public executePrint: CommandAdapt["print"];
+  public executeHistory: CommandAdapt["history"];
+  public executeClose: CommandAdapt["close"];
+  public executeBeautify: CommandAdapt["beautify"];
+  public executeLock: CommandAdapt["lock"];
+  public executeUnLock: CommandAdapt["unlock"];
+
   constructor(draw: Draw) {
     const adapt = new CommandAdapt(draw);
 
@@ -61,5 +76,20 @@ export class Command {
     this.executePutDown = adapt.putdown.bind(adapt);
     this.executeGroup = adapt.group.bind(adapt);
     this.executeUnGroup = adapt.ungroup.bind(adapt);
+
+    /** operation 相关操作API */
+    this.executeNewFile = adapt.newFile.bind(adapt);
+    this.executeReName = adapt.rename.bind(adapt);
+    this.executePreview = adapt.preview.bind(adapt);
+    this.executeSave = adapt.save.bind(adapt);
+    this.executeSaveAs = adapt.saveas.bind(adapt);
+    this.executeShare = adapt.share.bind(adapt);
+    this.executeRelease = adapt.release.bind(adapt);
+    this.executePrint = adapt.print.bind(adapt);
+    this.executeHistory = adapt.history.bind(adapt);
+    this.executeClose = adapt.close.bind(adapt);
+    this.executeBeautify = adapt.beautify.bind(adapt);
+    this.executeLock = adapt.lock.bind(adapt);
+    this.executeUnLock = adapt.unlock.bind(adapt);
   }
 }

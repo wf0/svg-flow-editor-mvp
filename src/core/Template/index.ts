@@ -152,104 +152,104 @@ export const operationTemp = `
 		<span index="0">
 			文件
 			<div class="sf-left-box">
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="newfile">
 					<span>
 						<i class="iconfont icon-jiahao"></i>新建
 					</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="rename">
 					<span>
 						<i class="iconfont icon-bianji"></i>重命名
 					</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="preview">
 					<span>
 						<i class="iconfont icon-preview"></i>预览
 					</span>
 				</div>
 				<div class="line"></div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="save">
 					<span>
 						<i class="iconfont icon-baocun2"></i>保存
 					</span>
 					<span class="shortcut">Ctrl + S</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="saveas">
 					<span>
 						<i class="iconfont icon-lingcun"></i>另存为
 					</span>
 					<span class="shortcut">Ctrl + Shift + S</span>
 				</div>
 				<div class="line"></div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="share">
 					<span>
 						<i class="iconfont icon-fenxiang"></i>分享协作
 					</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="release">
 					<span>
 						<i class="iconfont icon-fabu1"></i>发布
 					</span>
 				</div>
 				<div class="line"></div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="history">
 					<span>
 						<i class="iconfont icon-lishijilu"></i>历史记录
 					</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="print">
 					<span>
 						<i class="iconfont icon-dayinji_o"></i>打印
 					</span>
 					<span>Ctrl + P</span>
 				</div>
-				<div class="sf-left-box-item">
-					<span style="padding-left:25px"> 关闭 </span>
+				<div class="sf-left-box-item" command="close">
+					<span style="padding-left: 25px"> 关闭 </span>
 				</div>
 			</div>
 		</span>
 		<span index="1">
 			编辑
 			<div class="sf-left-box">
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="revoke">
 					<span>
 						<i class="iconfont icon-shangyibu"></i>撤销
 					</span>
 					<span>Ctrl + Z</span>
-				</div>	
-				<div class="sf-left-box-item">
+				</div>
+				<div class="sf-left-box-item" command="restore">
 					<span>
 						<i class="iconfont icon-xiayibu"></i>恢复
 					</span>
 					<span>Ctrl + Y</span>
 				</div>
 				<div class="line"></div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="copy">
 					<span>
 						<i class="iconfont icon-fuzhi1"></i>复制
 					</span>
 					<span>Ctrl + C</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="paste">
 					<span>
 						<i class="iconfont icon-niantie1"></i>粘贴
 					</span>
 					<span>Ctrl + V</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="cut">
 					<span>
 						<i class="iconfont icon-jianqie"></i>剪切
 					</span>
 					<span>Ctrl + X</span>
 				</div>
 				<div class="line"></div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="beautify">
 					<span>
 						<i class="iconfont icon-huabumeihua"></i>一键美化
 					</span>
 					<span>Ctrl + Shift + F</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="delete">
 					<span>
 						<i class="iconfont icon-shanchu"></i>删除
 					</span>
@@ -260,122 +260,134 @@ export const operationTemp = `
 		<span index="3">
 			视图
 			<div class="sf-left-box">
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="add">
 					<span>
 						<i class="iconfont icon-jiahao"></i>放大
 					</span>
 					<span>Alt + (+)</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="minus">
 					<span>
 						<i class="iconfont icon-jianhao"></i>缩小
 					</span>
 					<span>Alt + ( - )</span>
 				</div>
-				<div class='line'></div>
-				<div class="sf-left-box-item">
-					<span style="padding-left:25px"> 50% </span>
+				<div class="line"></div>
+				<div class="sf-left-box-item" command="50">
+					<span style="padding-left: 25px"> 50% </span>
 				</div>
-				<div class="sf-left-box-item">
-					<span style="padding-left:25px"> 75% </span>
+				<div class="sf-left-box-item" command="75">
+					<span style="padding-left: 25px"> 75% </span>
 				</div>
-				<div class="sf-left-box-item">
-					<span style="padding-left:25px"> 100% </span>
+				<div class="sf-left-box-item" command="100">
+					<span style="padding-left: 25px"> 100% </span>
 				</div>
-				<div class="sf-left-box-item">
-					<span style="padding-left:25px"> 150% </span>
+				<div class="sf-left-box-item" command="150">
+					<span style="padding-left: 25px"> 150% </span>
 				</div>
-				<div class="sf-left-box-item">
-					<span style="padding-left:25px"> 200% </span>
+				<div class="sf-left-box-item" command="200">
+					<span style="padding-left: 25px"> 200% </span>
 				</div>
-				<div class='line'></div>
-				<div class="sf-left-box-item">
-					<span style="padding-left:25px"> 重置缩放 </span>
+				<div class="line"></div>
+				<div class="sf-left-box-item" command="resize">
+					<span style="padding-left: 25px"> 重置缩放 </span>
 				</div>
 			</div>
 		</span>
 		<span index="4">
 			插入
 			<div class="sf-left-box">
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="xxx">
 					<span>
 						<i class="iconfont icon-kaifazhong"></i>开发中
 					</span>
-				</div>	
+				</div>
 			</div>
 		</span>
 		<span index="5">
 			画布
 			<div class="sf-left-box">
-				<div class="sf-left-box-item">
-					<span style="padding-left:25px"> 画布大小 </span>
-					<span><i class="iconfont icon-you"></i></span>
+				<div class="sf-left-box-item" command="canvas">
+					<span style="padding-left: 25px"> 画布大小 </span>
+					<span>
+						<i class="iconfont icon-you"></i>
+					</span>
 				</div>
-				<div class="sf-left-box-item">
-					<span style="padding-left:25px"> 背景颜色 </span>
-					<span><i class="iconfont icon-you"></i></span>
-				</div>
-				<div class="line"></div>
-				<div class="sf-left-box-item">
-					<span style="padding-left:25px"> 网格设置 </span>
-					<span><i class="iconfont icon-you"></i></span>
-				</div>
-				<div class="sf-left-box-item">
-				<span style="padding-left:25px"> 圆点设置 </span>
-					<span><i class="iconfont icon-you"></i></span>
-				</div>
-				<div class="sf-left-box-item">
-					<span style="padding-left:25px"> 水印设置 </span>
-					<span><i class="iconfont icon-you"></i></span>
+				<div class="sf-left-box-item" command="backgroundcolor">
+					<span style="padding-left: 25px"> 背景颜色 </span>
+					<span>
+						<i class="iconfont icon-you"></i>
+					</span>
 				</div>
 				<div class="line"></div>
-				<div class="sf-left-box-item">
-					<span style="padding-left:25px"> 主题切换 </span>
-					<span><i class="iconfont icon-you"></i></span>
+				<div class="sf-left-box-item" command="grid">
+					<span style="padding-left: 25px"> 网格设置 </span>
+					<span>
+						<i class="iconfont icon-you"></i>
+					</span>
+				</div>
+				<div class="sf-left-box-item" command="origin">
+					<span style="padding-left: 25px"> 圆点设置 </span>
+					<span>
+						<i class="iconfont icon-you"></i>
+					</span>
+				</div>
+				<div class="sf-left-box-item" command="water">
+					<span style="padding-left: 25px"> 水印设置 </span>
+					<span>
+						<i class="iconfont icon-you"></i>
+					</span>
+				</div>
+				<div class="line"></div>
+				<div class="sf-left-box-item" command="theme">
+					<span style="padding-left: 25px"> 主题切换 </span>
+					<span>
+						<i class="iconfont icon-you"></i>
+					</span>
 				</div>
 			</div>
 		</span>
 		<span index="6">
 			排列
 			<div class="sf-left-box">
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="top">
 					<span>
 						<i class="iconfont icon-zhiyudingceng"></i>置于顶层
 					</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="bottom">
 					<span>
 						<i class="iconfont icon-zhiyudiceng"></i>置于底层
 					</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="holdup">
 					<span>
 						<i class="iconfont icon-shangyiyiceng"></i>上移一层
 					</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="putdown">
 					<span>
 						<i class="iconfont icon-xiayiyiceng"></i>下移一层
 					</span>
 				</div>
 				<div class="line"></div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="group">
 					<span>
 						<i class="iconfont icon-zuhe"></i>组合
 					</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="ungroup">
 					<span>
 						<i class="iconfont icon-quxiaozuhe"></i>取消组合
 					</span>
 				</div>
 				<div class="line"></div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="lock">
 					<span>
 						<i class="iconfont icon-suo"></i>锁定
 					</span>
 				</div>
-				<div class="sf-left-box-item">
+				<div class="sf-left-box-item" command="unlock">
 					<span>
 						<i class="iconfont icon-jiesuo"></i>解锁
 					</span>
@@ -384,47 +396,48 @@ export const operationTemp = `
 		</span>
 	</div>
 	<div class="right">
-		<div class="right-shear">分享协作</div>
-		<i class="iconfont icon-xiazai"></i>
+		<div class="right-shear" command="share">分享协作</div>
+		<i class="iconfont icon-xiazai" command="download"></i>
 		<img src="/public/user.png" alt="" />
 	</div>
 </div>
 <div class="sf-editor-operation-bottom">
 	<!-- 撤销 -->
-	<i class="iconfont icon-shangyibu"></i>
+	<i class="iconfont icon-shangyibu" command="revoke"></i>
 	<!-- 重做 -->
-	<i class="iconfont icon-xiayibu"></i>
+	<i class="iconfont icon-xiayibu" command="restore"></i>
 	<!-- 美化 -->
-	<i class="iconfont icon-huabumeihua"></i>
+	<i class="iconfont icon-huabumeihua" command="beautify"></i>
 	<div class="line"></div>
 	<!-- 背景颜色 -->
 	<i
 	   class="iconfont icon-ibg"
+	   command="backgroundcolor"
 	   style="
-            color: var(--background);
-            border: solid #ccc 1px;
-            border-radius: 4px;
-          "></i>
+          color: var(--background);
+          border: solid #ccc 1px;
+          border-radius: 4px;
+        "></i>
 	<!-- 插入图片 -->
-	<i class="iconfont icon-tupian"></i>
+	<i class="iconfont icon-tupian" command="upload"></i>
 	<div class="line"></div>
 	<!-- 加粗 -->
-	<i class="iconfont icon-jiacu"></i>
+	<i class="iconfont icon-jiacu" command="bold"></i>
 	<!-- 斜体 -->
-	<i class="iconfont icon-xieti"></i>
+	<i class="iconfont icon-xieti" command="italic"></i>
 	<!-- 下划线 -->
-	<i class="iconfont icon-xiahuaxian"></i>
+	<i class="iconfont icon-xiahuaxian" command="underline"></i>
 	<!-- 字体颜色 -->
-	<i class="iconfont icon-zitiyanse"></i>
+	<i class="iconfont icon-zitiyanse" command="color"></i>
 	<!-- 填充 -->
-	<i class="iconfont icon-beijingyanse"></i>
+	<i class="iconfont icon-beijingyanse" command="fill"></i>
 	<div class="line"></div>
 	<!-- 连线宽度 -->
-	<i class="iconfont icon-xiantiaokuandu"></i>
+	<i class="iconfont icon-xiantiaokuandu" command="xxx"></i>
 	<!-- 连线样式 -->
-	<i class="iconfont icon-xiantiaoyangshi"></i>
+	<i class="iconfont icon-xiantiaoyangshi" command="xxx"></i>
 	<!-- 图层 -->
-	<i class="iconfont icon-zhiyudingceng"></i>
+	<i class="iconfont icon-zhiyudingceng" command="xxx"></i>
 </div>
 `;
 

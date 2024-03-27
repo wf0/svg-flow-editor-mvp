@@ -68,16 +68,16 @@ export class CommandAdapt {
       cPie: () => new GEchart(this.draw, pieOption),
     };
 
-    const graph = graphMap[type as string]();
+    const graph = graphMap[type as string] && graphMap[type as string]();
 
     // 如果属性存在，则手动设置属性
-    nodeID && graph.setID(nodeID);
-    x && graph.setX(x);
-    y && graph.setY(y);
-    rotate && graph.setRotate(rotate);
-    stroke && graph.setStroke(stroke);
-    fill && graph.setFill(fill);
-    text && graph.setText(text);
+    graph && nodeID && graph.setID(nodeID);
+    graph && x && graph.setX(x);
+    graph && y && graph.setY(y);
+    graph && rotate && graph.setRotate(rotate);
+    graph && stroke && graph.setStroke(stroke);
+    graph && fill && graph.setFill(fill);
+    graph && text && graph.setText(text);
 
     // 返回元件 供链式调用
     return graph;
@@ -129,7 +129,11 @@ export class CommandAdapt {
     editorEvent.scalePage("Add");
   }
 
-  // 设置指定值
+  /**
+   *  设置指定值
+   * @param scale 0.4 - 2
+   * @returns
+   */
   public setPageScale(scale: number) {
     if (!scale || typeof scale !== "number") return;
     const editorEvent = this.draw.getEditorEvent();
@@ -146,6 +150,7 @@ export class CommandAdapt {
     }, 100);
   }
 
+  // 退出全屏
   public exitFullScreen() {
     try {
       document.exitFullscreen();
@@ -158,11 +163,21 @@ export class CommandAdapt {
 
   /** 右键菜单事件响应 */
   // 复制粘贴相关操作，使用 Clipboard API 实现 - https://developer.mozilla.org/zh-CN/docs/Web/API/Clipboard_API
-  public paste() {}
-  public copy() {}
-  public cut() {}
-  public undo() {}
-  public redo() {}
+  public paste() {
+    console.log("commandAdapt - paste");
+  }
+  public copy() {
+    console.log("commandAdapt - copy");
+  }
+  public cut() {
+    console.log("commandAdapt - cut");
+  }
+  public undo() {
+    console.log("commandAdapt - undo");
+  }
+  public redo() {
+    console.log("commandAdapt - redo");
+  }
 
   // 置于顶层
   public top() {
@@ -226,5 +241,79 @@ export class CommandAdapt {
     console.warn(
       "【注意】样式有权重之分，如果手动设置了样式，则默认样式可能不生效！"
     );
+  }
+  // 顶部菜单功能
+  public newFile() {
+    console.log("commandAdapt -newFile");
+  }
+  public rename() {
+    console.log("commandAdapt - rename");
+  }
+  public preview() {
+    console.log("commandAdapt - preview");
+  }
+  public save() {
+    console.log("commandAdapt - save");
+    // 执行回调 触发 Save 事件
+    nextTick(() => {
+      const eventBus = this.draw.getEventBus();
+      const listener = this.draw.getListener();
+      const graphLoadedSubscribe = eventBus.isSubscribe("saved");
+      graphLoadedSubscribe && eventBus.emit("saved");
+      listener.saved && listener.saved();
+    });
+  }
+  public saveas() {
+    console.log("commandAdapt - saveas");
+  }
+  public share() {
+    console.log("commandAdapt - share");
+  }
+  public release() {
+    console.log("commandAdapt - release");
+  }
+  public history() {
+    console.log("commandAdapt - history");
+  }
+  public print() {
+    console.log("commandAdapt - print");
+  }
+  public close() {
+    console.log("commandAdapt - close");
+    // 执行回调 触发 close 事件
+    nextTick(() => {
+      const eventBus = this.draw.getEventBus();
+      const listener = this.draw.getListener();
+      const graphLoadedSubscribe = eventBus.isSubscribe("closed");
+      graphLoadedSubscribe && eventBus.emit("closed");
+      listener.closed && listener.closed();
+    });
+  }
+  public beautify() {
+    console.log("commandAdapt - beautify");
+  }
+  public canvas() {
+    console.log("commandAdapt - canvas");
+  }
+  public backgroundcolor() {
+    console.log("commandAdapt - backgroundcolor");
+  }
+  public grid() {
+    console.log("commandAdapt - grid");
+  }
+  public origin() {
+    console.log("commandAdapt - origin");
+  }
+  public water() {
+    console.log("commandAdapt - water");
+  }
+  public theme() {
+    console.log("commandAdapt - theme");
+  }
+  public lock() {
+    console.log("commandAdapt - lock");
+  }
+  public unlock() {
+    console.log("commandAdapt - unlock");
   }
 }

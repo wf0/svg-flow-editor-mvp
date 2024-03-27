@@ -7,6 +7,8 @@ export class Listener {
   public loaded: EventType | null;
   public graphNumberChanged: EventType | null;
   public pageScale: EventType | null;
+  public saved: EventType | null;
+  public closed: EventType | null;
 
   constructor() {
     this.loaded = null; // 编辑器加载完成
@@ -14,5 +16,7 @@ export class Listener {
     this.graphResized = null; // 重置大小
     this.graphNumberChanged = null; // 元件数量变化
     this.pageScale = null; // 页面缩放
+    this.saved = null; // 保存时触发
+    this.closed = null; // operation close 可用于用户退出、返回
   }
 }

@@ -549,4 +549,14 @@ editor.register.shortcutList=[
 
 ## 插件的使用
 
+## 版本升级说明
+
+升级补丁版本号(修改bug)：npm version patch  // 1.0.x
+
+升级次版本号(新增功能)：npm version minor  // 1.x.0
+
+升级主版本号(较大改版)：npm version major  // x.0.0
+
+再执行npm publish
+
 

@@ -3,12 +3,12 @@ import { Draw } from "../../Draw/index.ts";
 import { GEchart } from "../../Graph/GEchart.ts";
 import { Line } from "../../Graph/Line.ts";
 import { workerEvent } from "../../Worker/AuxiliaryLine.worker.ts";
-const worker = new Worker(
-  new URL("/src/core/Worker/AuxiliaryLine.worker.ts", import.meta.url),
-  {
-    type: "module",
-  }
-);
+// const worker = new Worker(
+//   new URL("/src/core/Worker/AuxiliaryLine.worker.ts", import.meta.url),
+//   {
+//     type: "module",
+//   }
+// );
 
 /**
  * graph 元件事件响应

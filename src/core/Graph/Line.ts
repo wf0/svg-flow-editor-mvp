@@ -442,15 +442,15 @@ export class Line {
    * @param p
    * @param color
    */
-  private drawPoint(p: p, color?: string) {
-    const circle = this.draw.createSVGElement("circle");
-    circle.setAttribute("r", "4");
-    circle.setAttribute("cx", p.x.toString());
-    circle.setAttribute("cy", p.y.toString());
-    circle.setAttribute("fill", color || "red");
-    // @ts-ignore
-    this.lineBox.querySelector("svg")?.appendChild(circle);
-  }
+  // private drawPoint(p: p, color?: string) {
+  //   const circle = this.draw.createSVGElement("circle");
+  //   circle.setAttribute("r", "4");
+  //   circle.setAttribute("cx", p.x.toString());
+  //   circle.setAttribute("cy", p.y.toString());
+  //   circle.setAttribute("fill", color || "red");
+  //   // @ts-ignore
+  //   this.lineBox.querySelector("svg")?.appendChild(circle);
+  // }
 
   /**
    * 设置关联ID

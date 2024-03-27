@@ -13,8 +13,9 @@ import { Footer } from "./Plugin/Footer.ts";
 import { Catalog } from "./Plugin/Catalog.ts";
 import { Operation } from "./Plugin/Operation.ts";
 import { SEchart } from "./Plugin/Echart.ts";
-import "../style/SFEditor.less";
 import { Text } from "./Graph/Text.ts";
+import "../assets/font_4458457_4ftw0i6fgnl/iconfont.css";
+import "../style/SFEditor.less";
 
 // 定义插件类型
 type pluginName = "catalog" | "footer" | "operation" | "echart";

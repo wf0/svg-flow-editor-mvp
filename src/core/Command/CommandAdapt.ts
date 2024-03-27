@@ -1,6 +1,6 @@
-import { IBackground } from "../../interface/Draw/index.ts";
+import { IBackground, IThemeOpt } from "../../interface/Draw/index.ts";
 import { IGraph, node } from "../../interface/Graph/index.ts";
-import { IThemeOpt, nextTick, setTheme } from "../../utils/index.ts";
+import { nextTick, setTheme } from "../../utils/index.ts";
 import { messageInfo } from "../Config/index.ts";
 import { Draw } from "../Draw/index.ts";
 import { Ellipse } from "../Graph/Ellipse.ts";
@@ -73,10 +73,9 @@ export class CommandAdapt {
     return graph;
   }
 
-
   /**
    * 删除元件
-   * @returns 
+   * @returns
    */
   public deleteGraph() {
     const selected = this.draw.getGraphEvent().getAllSelected();
@@ -148,6 +147,7 @@ export class CommandAdapt {
   }
 
   /** 右键菜单事件响应 */
+  // 复制粘贴相关操作，使用 Clipboard API 实现 - https://developer.mozilla.org/zh-CN/docs/Web/API/Clipboard_API
   public paste() {}
   public copy() {}
   public cut() {}

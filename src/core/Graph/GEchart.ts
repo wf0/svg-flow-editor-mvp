@@ -5,6 +5,7 @@ import { GraphCommon } from "./Common.ts";
 import { messageInfo } from "../Config/index.ts";
 import { EventBus } from "../Event/EventBus.ts";
 import { EchartEventMap } from "../../interface/Event/index.ts";
+const ob = (fn: ResizeObserverCallback) => new ResizeObserver(fn);
 
 export class GEchart extends GraphCommon {
   private div: HTMLDivElement;
@@ -48,9 +49,9 @@ export class GEchart extends GraphCommon {
     );
 
     this.setOption();
+
     // 监听元素尺寸变化，重新渲染echart 使得宽高自适应
-    const ob = new ResizeObserver(this.myChart.resize);
-    ob.observe(this.div);
+    ob(() => this.myChart.resize()).observe(this.div);
   }
 
   /**

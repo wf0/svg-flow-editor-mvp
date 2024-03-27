@@ -26,6 +26,7 @@ export class Line {
 
   private Sgraph!: Graph;
   private Egraph!: Graph;
+  private IOT!: boolean; // 是否可取 offset
 
   // 记录背景相关尺寸
   private lx!: number;
@@ -42,7 +43,7 @@ export class Line {
   ) {
     this.ID = lineid || nanoid();
     this.draw = draw;
-
+    this.IOT = true;
     // 需要兼容不是创建型，而是外部生成
     if (lineBox) {
       this.lineBox = lineBox;
@@ -146,9 +147,17 @@ export class Line {
     const my = Math.max(sy + sh, ey + eh);
     const lw = mx - lx + OFFSET + 10;
     const lh = my - ly + OFFSET + 10;
+
     this.setWidth(lw);
     this.setHeight(lh);
 
+    // 4. 需要知道哪个元件在最后 也就是 graph x 最大
+    const maxGrapg = sx > ex ? Sgraph : Egraph;
+    const minGraph = maxGrapg === Sgraph ? Egraph : Sgraph;
+    const dx = maxGrapg.getX() - (minGraph.getX() + minGraph.getWidth());
+    const dy = maxGrapg.getY() - (minGraph.getY() + minGraph.getHeight());
+    if (dx < OFFSET || dy < OFFSET) this.IOT = false;
+    else this.IOT = true;
     this.lx = lx;
     this.ly = ly;
     this.lw = lw;
@@ -160,6 +169,7 @@ export class Line {
    */
   private async routing(st: string, et: string) {
     var points = []; // 定义可能经过的点
+    const OFT = this.IOT ? OFFSET : 4;
 
     const typeMap: LineKey = { "0": type1, "1": type2, "2": type3, "3": type4 }; // 定义类型映射
 
@@ -169,12 +179,12 @@ export class Line {
 
     // 1.【起点】
     const [sx, sy, sw, sh] = this.analysisGraph(this.Sgraph);
-    const startType = typeMap[st]({ x: sx, y: sy, w: sw, h: sh }, OFFSET);
+    const startType = typeMap[st]({ x: sx, y: sy, w: sw, h: sh }, OFT);
     const startPoint = { x: getX(startType.x), y: getY(startType.y) };
 
     // 2. 【终点】
     const [ex, ey, ew, eh] = this.analysisGraph(this.Egraph);
-    const endType = typeMap[et]({ x: ex, y: ey, w: ew, h: eh }, OFFSET);
+    const endType = typeMap[et]({ x: ex, y: ey, w: ew, h: eh }, OFT);
     const endPoint = { x: getX(endType.x), y: getY(endType.y) };
 
     // 3. 【伪起点】
@@ -185,14 +195,42 @@ export class Line {
     const endOffsetPoint = { x: getX(endType.ox), y: getY(endType.oy) };
     points.push(endOffsetPoint);
 
-    // 5. 【该方向的两个交点】
-    const intersection = this.getIntersection(
-      startPoint,
-      startOffsetPoint,
-      endPoint,
-      endOffsetPoint
-    );
-    intersection?.length && points.push(...intersection);
+    // 5. 【取线段方向的交点】
+    const seg1 = [startPoint, startOffsetPoint];
+    const seg2 = [endPoint, endOffsetPoint];
+    const intersection = this.getIntersection(seg1, seg2);
+    intersection && points.push(intersection);
+
+    // 6. 【如果线段没有交点，则需要取垂线的水平方向交点】
+    if (!intersection) {
+      let p1 = this.getIntersection(
+        [startPoint, startOffsetPoint], // 假设经过起点的垂直线是垂直的
+        [endOffsetPoint, { x: endOffsetPoint.x + 10, y: endOffsetPoint.y }] // 那么就要计算经过伪终点的水平线。水平线上的点y坐标相同，所以x坐标随便加减多少数值都可以
+      );
+      p1 && points.push(p1);
+      let p2 = this.getIntersection(
+        [startPoint, startOffsetPoint], // 假设经过起点的垂直线是水平的
+        [endOffsetPoint, { x: endOffsetPoint.x, y: endOffsetPoint.y + 10 }] // 那么就要计算经过伪终点的垂直线。
+      );
+      p2 && points.push(p2);
+      // // 下面同上
+      let p3 = this.getIntersection(
+        [endPoint, endOffsetPoint],
+        [
+          startOffsetPoint,
+          { x: startOffsetPoint.x + 10, y: startOffsetPoint.y },
+        ]
+      );
+      p3 && points.push(p3);
+      let p4 = this.getIntersection(
+        [endPoint, endOffsetPoint],
+        [
+          startOffsetPoint,
+          { x: startOffsetPoint.x, y: startOffsetPoint.y + 10 },
+        ]
+      );
+      p4 && points.push(p4);
+    }
 
     // 6. 【startOffset 的边距4个交点】
     const startOffsetBoundary = this.getBoundaryPoints(startOffsetPoint);
@@ -203,7 +241,7 @@ export class Line {
     endOffsetBoundary.length && points.push(...endOffsetBoundary);
 
     // 绘制直线
-    const list: p[] = this.deduplication(points); // 最终结果
+    const list: p[] = this.deduplication(points); // 去重后的最终结果
     // 结果供 demo 绘制
     // 结果供 demo 绘制
     // 结果供 demo 绘制
@@ -211,11 +249,15 @@ export class Line {
     this.drawPoint(startPoint, "green");
     this.drawPoint(endPoint, "green");
 
+    // 进行 A* 算法查找
     const result = await this.search(list, startOffsetPoint, endOffsetPoint);
+
+    // 最优结果绘制
     var ops = "";
     result.forEach(({ x, y }) => {
       ops += `,${x} ${y}`;
     });
+
     this.line.setAttribute(
       "points",
       `${startPoint.x} ${startPoint.y},${startOffsetPoint.x} ${startOffsetPoint.y} ${ops} ,
@@ -256,7 +298,7 @@ export class Line {
         });
 
         ps.sort((a, b) => (a.cost as number) - (b.cost as number));
-        this.drawPoint(ps[0], "blue");
+        // this.drawPoint(ps[0], "blue");
         console.groupEnd();
         return ps[0];
       };
@@ -325,23 +367,23 @@ export class Line {
   /**
    * 计算两条线段的交点
    */
-  private getIntersection(p1: p, p2: p, p3: p, p4: p) {
-    // p1 与 p2 的x值相同，则该线段是竖线
-    const stateX1 = p1.x === p2.x;
-    // p1 与 p2 的y值相同，则该线段是横线
-    const stateY1 = p1.y === p2.y;
-
-    // p3 与 p4 的x值相同，则该线段是竖线
-    const stateX2 = p3.x === p4.x;
-    // p3 与 p4 的y值相同，则该线段是横线
-    const stateY2 = p3.y === p4.y;
-
-    // 同向没有交点
-    if ((stateX1 && stateX2) || (stateY1 && stateY2)) return;
-
-    const pl1 = { x: p4.x, y: p2.y };
-    const pl2 = { x: p2.x, y: p4.y };
-    return [pl1, pl2].filter((i) => !this.inside(i));
+  private getIntersection(seg1: p[], seg2: p[]) {
+    // 两条垂直线不会相交
+    if (seg1[0].x === seg1[1].x && seg2[0].x === seg2[1].x) {
+      return null;
+    }
+    // 两条水平线不会相交
+    if (seg1[0].y === seg1[1].y && seg2[0].y === seg2[1].y) {
+      return null;
+    }
+    // seg1是水平线、seg2是垂直线
+    if (seg1[0].y === seg1[1].y && seg2[0].x === seg2[1].x) {
+      return { x: seg2[0].x, y: seg1[0].y };
+    }
+    // seg1是垂直线、seg2是水平线
+    if (seg1[0].x === seg1[1].x && seg2[0].y === seg2[1].y) {
+      return { x: seg1[0].x, y: seg2[0].y };
+    }
   }
 
   /**

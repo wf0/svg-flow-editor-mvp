@@ -85,6 +85,21 @@ export const contextmenuTemp = `
 		</span>
 		<span>Ctrl+A</span>
 	</div>
+	<div class="sf-editor-box-contextmenu-main-line graph-item"></div>
+	<div class="sf-editor-box-contextmenu-main-item graph-item" command="lock">
+		<span>
+			<i class="iconfont icon-suo"></i>
+			锁定
+		</span>
+		<span>Ctrl+A</span>
+	</div>
+	<div class="sf-editor-box-contextmenu-main-item graph-item" command="unlock">
+		<span>
+			<i class="iconfont icon-jiesuo"></i>
+			取消锁定
+		</span>
+		<span>Ctrl+A</span>
+	</div>
 </div>
 `;
 

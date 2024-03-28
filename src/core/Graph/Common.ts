@@ -113,6 +113,7 @@ export class GraphCommon {
     const graph = this as unknown as IGraph;
     const oldID = graph.getID();
     graph.nodeID = nodeID;
+    this.nodeID = nodeID;
     // 通过oldID 修改页面属性
     this.draw
       .getEditorBox()

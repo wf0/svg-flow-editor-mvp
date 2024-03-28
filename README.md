@@ -25,6 +25,7 @@
   - 自定义图标 icon
 - 元件基本操作
   - 创建、删除、移动、旋转、定位、属性修改、框选、多选（ctrl）、层级处理、文本显示等
+- 直角折线
 - 全局 API
 - Command API
 - 右键菜单（内部、自定义）
@@ -120,6 +121,11 @@ var option = {
 
 // 初始化统计图
 const line = echart?.init(option);
+
+// 监听统计图事件
+line.event.on('click', params => {
+  // your code...
+})
 
 ```
 
@@ -244,12 +250,6 @@ const line = echart?.init(option);
 
 - 方法说明：**Echart 特有属性**，设置统计图配置信息；
 - 返回值：graph示例；
-
-### graph.update()
-
-- 方法说明：**Echart 特有属性**，更新统计图配置信息；
-- 返回值：graph示例；
-
 
 
 ## Command APIS
@@ -549,14 +549,5 @@ editor.register.shortcutList=[
 
 ## 插件的使用
 
-## 版本升级说明
-
-升级补丁版本号(修改bug)：npm version patch  // 1.0.x
-
-升级次版本号(新增功能)：npm version minor  // 1.x.0
-
-升级主版本号(较大改版)：npm version major  // x.0.0
-
-再执行npm publish
 
 

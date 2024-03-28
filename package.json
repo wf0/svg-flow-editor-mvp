@@ -5,8 +5,8 @@
   "main": "/src/core/index.ts",
   "type": "module",
   "repository": {
-    "type": "gitee",
-    "url": "gitee+https://gitee.com/wfeng0/svg-flow-editor-mvp"
+    "type": "git",
+    "url": "git+https://github.com/wf0/svg-flow-editor-mvp.git"
   },
   "scripts": {
     "dev": "vite",
@@ -17,11 +17,17 @@
     "major": "npm version major",
     "libs": "npm run patch && npm publish"
   },
-  "keyword": [
+  "author": {
+    "name": "WF",
+    "email": "1982392655@qq.com"
+  },
+  "keywords": [
     "svg",
-    "flow"
+    "flow",
+    "chart",
+    "canvas",
+    "A* 算法"
   ],
-  "author": "WF",
   "license": "Apache-2.0",
   "dependencies": {
     "color-convert": "^2.0.1",

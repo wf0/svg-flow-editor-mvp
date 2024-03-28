@@ -543,11 +543,71 @@ editor.register.shortcutList=[
 
 ## 内部右键菜单
 
+- 
+
+
+
 ## 自定义右键菜单
+
+
 
 ## 全局API
 
+### editor.destroy()
+
+- 方法说明：销毁编辑器
+
+
+
 ## 插件的使用
+
+~~~javascript
+const editor = new SFEditor('.box')
+
+// 使用 footer 插件 - 无返回值
+editor.plugin('footer')
+
+// 使用元件库插件 - 无返回值
+editor.plugin('catalog')
+
+// 使用顶部菜单栏插件 - 无返回值
+editor.plugin('operation')
+
+// 使用统计图插件-自定义统计图
+const echart = editor.plugin('echart') // 只有注册统计图插件，才可通过外部访问、创建统计图，并且只有 echart 会返回实例对象
+
+// 这个配置信息是官网的样例
+const option = {
+  xAxis: {
+    type: 'category',
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  },
+  yAxis: {
+    type: 'value'
+  },
+  series: [
+    {
+      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      type: 'line',
+      smooth: true
+    }
+  ]
+};
+
+// 初始化统计图
+const line = echart.init(option)
+
+// 监听事件回调
+line.event.on('click',params => {
+    // your code...
+})
+
+// 外部更新了数据后，执行 setOption 进行重绘
+option.xAxis.data[0] = '快乐星期一'
+line.setOption(option)
+
+// 不同的插件之间无任何关联，可以任选插件进行注册使用
+~~~
 
 
 

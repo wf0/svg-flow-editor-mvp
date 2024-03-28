@@ -62,7 +62,7 @@ export class GraphDraw {
     element.setAttribute("type", "graph");
 
     const editorBox = this.draw.getEditorBox();
-    const graphsSelector = '[class="sf-editor-box-graphs"]';
+    const graphsSelector = ".sf-editor-box-graphs";
     const graphs = editorBox.querySelector(graphsSelector) as HTMLDivElement;
 
     // 特殊处理 ==> 针对 echart 不需要 svg 包一层
@@ -100,9 +100,7 @@ export class GraphDraw {
       const listener = this.draw.getListener();
       const nums = this.getNodesNumber();
       // 同步 footer number 元件数量
-      const footerBox = this.draw
-        .getRoot()
-        .querySelector('[class="sf-editor-footer"]');
+      const footerBox = this.draw.getRoot().querySelector(".sf-editor-footer");
       // 如果用户加载了 footer 插件，则同步更新数据
       if (footerBox) {
         const number = footerBox.querySelector(
@@ -199,7 +197,7 @@ export class GraphDraw {
     graphMain.style.pointerEvents = "none";
     // 所有的连接锚点-不支持连向自己
     const linkPoints = graphMain
-      .querySelector('[class="sf-editor-box-graphs-main-links"]')
+      .querySelector(".sf-editor-box-graphs-main-links")
       ?.querySelectorAll("div");
     linkPoints?.forEach((i) => (i.style.pointerEvents = "none"));
 
@@ -291,9 +289,7 @@ export class GraphDraw {
     // 先清空所有的连接锚点，然后再创建
     const nodeID = graph.getID();
     const mainBox = this.getGraphMain(nodeID);
-    mainBox
-      .querySelector('[class="sf-editor-box-graphs-main-links"]')
-      ?.remove();
+    mainBox.querySelector(".sf-editor-box-graphs-main-links")?.remove();
   }
 
   /**
@@ -367,9 +363,7 @@ export class GraphDraw {
   public cancelFormatPoint(graph: IGraph) {
     const nodeID = graph.getID();
     const mainBox = this.getGraphMain(nodeID);
-    mainBox
-      .querySelector('[class="sf-editor-box-graphs-main-formats"]')
-      ?.remove();
+    mainBox.querySelector(".sf-editor-box-graphs-main-formats")?.remove();
   }
 
   /**
@@ -602,7 +596,7 @@ export class GraphDraw {
     this.draw
       .getEditorBox()
       .querySelectorAll(
-        'div[class="sf-editor-box-graphs-main"],div[class="sf-editor-box-graphs-main selected"]'
+        "div.sf-editor-box-graphs-main,div.sf-editor-box-graphs-main selected"
       )
       .forEach((mainBox) => {
         const nodeID = mainBox.getAttribute("graphid") as string;

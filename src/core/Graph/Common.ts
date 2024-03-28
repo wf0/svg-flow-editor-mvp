@@ -209,6 +209,32 @@ export class GraphCommon {
   }
 
   /**
+   * 设置 Rect 圆角
+   * @param radius
+   * @returns
+   */
+  public setRadius(radius: number) {
+    const graph = this as unknown as IGraph;
+    const element = graph.getElement();
+    if (element.tagName !== "rect") return graph;
+    element.setAttribute("rx", radius.toString());
+    element.setAttribute("ry", radius.toString());
+    return graph;
+  }
+
+  /**
+   * 设置线条宽度
+   * @param w
+   * @returns
+   */
+  public setStrokeWidth(w: number) {
+    const graph = this as unknown as IGraph;
+    const element = graph.getElement();
+    element.setAttribute("stroke-width", w.toString());
+    return graph;
+  }
+
+  /**
    * 设置位置
    * @param x
    * @param y

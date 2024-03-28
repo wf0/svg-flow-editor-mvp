@@ -38,7 +38,7 @@ export class LineDraw {
 
     const graphBox = this.draw
       .getEditorBox()
-      .querySelector('[class="sf-editor-box-graphs"]') as HTMLDivElement;
+      .querySelector(".sf-editor-box-graphs") as HTMLDivElement;
 
     // 添加元素
     graphBox.appendChild(lineBox);

@@ -13,21 +13,9 @@ export class EchartDraw {
    * 更新统计图配置项
    */
   public updateOption(_graph: GEchart) {
-    // 1. 创建抽屉
-    const div = this.draw.createHTMLElement("div") as HTMLDivElement;
-    div.classList.add("sf-editor-dialog");
-    div.innerHTML = echartUpdateTemp;
-    this.draw.getRoot().appendChild(div);
-
-    // 2. 添加关闭事件
-    const close = div.querySelector('i[class="iconfont icon-guanbiclose"]');
-    close?.addEventListener("click", () => div.remove());
-
     // 3. 解析当前的 option
     // const opt = graph.getOption();
-
     // 确认按钮
-
     // 取消按钮
     // graph.setOption(lineOption);
   }

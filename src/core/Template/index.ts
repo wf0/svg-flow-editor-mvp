@@ -573,11 +573,70 @@ export const catalogTemp = `
 <div class="more">更多图形</div>
 `;
 
-export const echartUpdateTemp = `
-<div class="sf-editor-dialog-echart">
-	<div class="title">
-		<span>统计图配置</span>
-		<i class="iconfont icon-guanbiclose"></i>
+export const graphInfo = `
+<div class="sf-editor-graphBox">
+	<div class="sf-editor-graphBox-item">
+		<span>描边</span>
+		<div>
+			<span style="background-color:#e03131" command="stroke-e03131"></span>
+			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>
+			<span style="background-color:#1971c2" command="stroke-1971c2"></span>
+			<span style="background-color:#f08c00" command="stroke-f08c00"></span>
+			<span style="background-color:#A5D8FF" command="stroke-A5D8FF"></span>
+			<span style="background-color:#D0BFFF" command="stroke-D0BFFF"></span>
+			<span style="background-color:#FCC2D7" command="stroke-FCC2D7"></span>
+			<span class="line"></span>
+			<input type="color" value="#E01515" id="color" />
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item">
+		<span>填充</span>
+		<div>
+			<span class="transparent" title="透明色" command='transparent'></span>
+			<span style="background-color:#e03131" command='fill-e03131'></span>
+			<span style="background-color:#1971c2" command='fill-1971c2'></span>
+			<span style="background-color:#f08c00" command='fill-f08c00'></span>
+			<span style="background-color:#A5D8FF" command='fill-A5D8FF'></span>
+			<span style="background-color:#D0BFFF" command='fill-D0BFFF'></span>
+			<span style="background-color:#FCC2D7" command='fill-FCC2D7'></span>
+			<span class="line"></span>
+			<input type="color" value="#E01515" id="background" />
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item">
+		<span>线宽</span>
+		<div>
+			<span class="lineWidth-one lineWidth" command="strokeWidth-1"></span>
+			<span class="lineWidth-two lineWidth" command="strokeWidth-4"></span>
+			<span class="lineWidth-three lineWidth" command="strokeWidth-7"></span>
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item">
+		<span>圆角类型</span>
+		<div>
+			<span class="borderRadius-one borderRadius" command="radius-1"></span>
+			<span class="borderRadius-two borderRadius" command="radius-10"></span>
+			<span class="borderRadius-three borderRadius" command="radius-20"></span>
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item">
+		<span>图层</span>
+		<div>
+			<span class="icon"><i class="iconfont icon-zhiyudingceng"></i></span>
+			<span class="icon"><i class="iconfont icon-zhiyudiceng"></i></span>
+			<span class="icon"><i class="iconfont icon-shangyiyiceng"></i></span>
+			<span class="icon"><i class="iconfont icon-xiayiyiceng"></i></span>
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item">
+		<span>操作</span>
+		<div>
+			<span class="icon"><i class="iconfont icon-fuzhi"></i></span>
+			<span class="icon"><i class="iconfont icon-shanchu"></i></span>
+			<span class="icon"><i class="iconfont icon-huabumeihua"></i></span>
+			<span class="icon"><i class="iconfont icon-suo"></i></span>
+			<span class="icon"><i class="iconfont icon-jiesuo"></i></span>
+		</div>
 	</div>
 </div>
 `;

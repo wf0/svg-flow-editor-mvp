@@ -117,7 +117,7 @@ export class EditorEvent {
     this.sy = offsetY;
 
     // 重置选区样式
-    const selector = 'div[class="sf-editor-box-selectmask"]';
+    const selector = "div.sf-editor-box-selectmask";
     const mask = this.editorBox.querySelector(selector) as HTMLDivElement;
     mask.style.left = offsetX + "px";
     mask.style.top = offsetY + "px";
@@ -125,7 +125,7 @@ export class EditorEvent {
 
     // 元件禁止响应
     this.editorBox
-      .querySelectorAll("div[class='sf-editor-box-graphs-main']")
+      .querySelectorAll("div.sf-editor-box-graphs-main")
       .forEach((i) => ((i as HTMLDivElement).style.pointerEvents = "none"));
   }
 
@@ -137,7 +137,7 @@ export class EditorEvent {
   private mousemoveHandle(e: MouseEvent) {
     if (!this.move) return;
     const { offsetX, offsetY } = e;
-    const selector = 'div[class="sf-editor-box-selectmask"]';
+    const selector = "div.sf-editor-box-selectmask";
     const mask = this.editorBox.querySelector(selector) as HTMLDivElement;
     // 这里处理反向框选   x 往左边拖动，则拖动的位置始终是left的坐标
     if (offsetX - this.sx < 0) mask.style.left = `${offsetX}px`;
@@ -154,7 +154,7 @@ export class EditorEvent {
   private async mouseupHandle(e: MouseEvent) {
     if (!this.move) return;
     this.move = false;
-    const selector = 'div[class="sf-editor-box-selectmask"]';
+    const selector = "div.sf-editor-box-selectmask";
     const mask = this.editorBox.querySelector(selector) as HTMLDivElement;
     mask.style.left = "0";
     mask.style.top = "0";
@@ -162,7 +162,7 @@ export class EditorEvent {
     mask.style.height = "0";
     mask.style.display = "none";
     this.editorBox
-      .querySelectorAll("div[class='sf-editor-box-graphs-main']")
+      .querySelectorAll("div.sf-editor-box-graphs-main")
       .forEach((i) => ((i as HTMLDivElement).style.pointerEvents = ""));
     // 正常情况下，单击左键的时间不会超过 120 毫秒，如果超过，则认为用户在框选
     const et = Number(dayjs().format("mmssSSS"));
@@ -287,9 +287,7 @@ export class EditorEvent {
     // 实现缩放 - 这里要考虑其他的 transform 不然会冲突
     editorBox.style.transform = `scale(${result}) ${transform[1]}${transform[2]}`;
     // 同时还需要考虑 footer 的缩放比例同步显示
-    const footerBox = this.draw
-      .getRoot()
-      .querySelector('[class="sf-editor-footer"]');
+    const footerBox = this.draw.getRoot().querySelector(".sf-editor-footer");
 
     if (footerBox) {
       // 修改缩放比例 command=resize
@@ -318,6 +316,10 @@ export class EditorEvent {
 
     // 取消形变锚点
     this.draw.getGraphDraw().cancelAllFormatPoint();
+
+    // 取消dialog 显示
+    this.draw.getDialogDraw().closeDialog();
+
     e.stopPropagation();
     e.preventDefault();
   }
@@ -328,7 +330,7 @@ export class EditorEvent {
    */
   public contextmenu(e: Event, graph?: IGraph) {
     // 1. 先看有没有菜单，有的话更新位置，没有再创建
-    const menuselector = 'div[class="sf-editor-box-contextmenu"]';
+    const menuselector = "div.sf-editor-box-contextmenu";
     const menu = this.editorBox.querySelector(menuselector);
     // 添加selected 样式
     if (graph) {
@@ -346,7 +348,7 @@ export class EditorEvent {
    * 更新右键菜单的位置
    */
   private updateContentmenu(e: Event, graph?: IGraph) {
-    const menuselector = 'div[class="sf-editor-box-contextmenu"]';
+    const menuselector = "div.sf-editor-box-contextmenu";
     const menu = this.editorBox.querySelector(menuselector) as HTMLDivElement;
     // 控制元件的右键菜单显示隐藏
     const menuBox = menu.querySelector("div") as HTMLDivElement;
@@ -378,7 +380,7 @@ export class EditorEvent {
 
     // 添加事件
     this.editorBox
-      .querySelector('div[class="sf-editor-box-contextmenu"]')
+      .querySelector("div.sf-editor-box-contextmenu")
       ?.querySelectorAll("[command]")
       .forEach((i) =>
         i.addEventListener("click", (e) =>
@@ -493,7 +495,7 @@ export class EditorEvent {
 
   // 取消右键菜单
   public cancelContextmenu() {
-    const menuselector = 'div[class="sf-editor-box-contextmenu"]';
+    const menuselector = "div.sf-editor-box-contextmenu";
     const menu = this.editorBox.querySelector(menuselector) as HTMLDivElement;
     menu && menu.remove();
   }

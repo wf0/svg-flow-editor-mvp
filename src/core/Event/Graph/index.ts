@@ -1,5 +1,5 @@
-import { IGraph, node } from "../../../interface/Graph/index.ts";
-import { rotateBase } from "../../Base64/index.ts";
+import { IGraph, IUpdateGraph, node } from "../../../interface/Graph/index.ts";
+import { Command } from "../../Command/Command.ts";
 import { Draw } from "../../Draw/index.ts";
 import { GEchart } from "../../Graph/GEchart.ts";
 import { Line } from "../../Graph/Line.ts";
@@ -19,10 +19,12 @@ export class GraphEvent {
   private move!: boolean;
   private sx!: number;
   private sy!: number;
+  private command: Command;
 
   private nodes!: node[];
   constructor(draw: Draw) {
     this.draw = draw;
+    this.command = new Command(draw);
   }
 
   /**
@@ -63,20 +65,15 @@ export class GraphEvent {
     const mainBox = this.draw.getGraphDraw().getGraphMain(nodeID);
     mainBox.classList.add("selected");
 
-    // 处理rotate资源
-    const rotate = mainBox.querySelector('[class="rotate"]') as HTMLDivElement;
-    rotate.style.background = `url('${rotateBase}') 100% 100% no-repeat`;
-    rotate.style.cursor = `url(https://www.processon.com/v5_editor/compile/rotate.44fbc97b.svg),url(${rotateBase}), grabbing`;
-    rotate.style.backgroundSize = "16px";
-
     // 3. 取消右键菜单
     this.draw.getEditorEvent().cancelContextmenu();
-    const format = mainBox.querySelector(
-      '[class="sf-editor-box-graphs-main-formats"]'
-    );
+    const format = mainBox.querySelector(".sf-editor-box-graphs-main-formats");
 
     // 4. 看有没有创建形变锚点
     !format && this.draw.getGraphDraw().createFormatPoint(graph);
+
+    // 5. 显示dialog 配置元件信息
+    this.openDialog();
 
     e.stopPropagation();
     e.preventDefault();
@@ -97,7 +94,7 @@ export class GraphEvent {
     // @ts-ignore
     if (!support.includes(e.target.tagName)) return;
     const nodeID = graph.getID();
-    const selector = 'div[class="sf-editor-box-graphs-main-contenteditable"]';
+    const selector = "div.sf-editor-box-graphs-main-contenteditable";
 
     const graphDraw = this.draw.getGraphDraw();
 
@@ -154,9 +151,7 @@ export class GraphEvent {
    */
   private mouseenterHandle(e: MouseEvent, graph: IGraph) {
     const mainBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
-    const link = mainBox.querySelector(
-      '[class="sf-editor-box-graphs-main-links"]'
-    );
+    const link = mainBox.querySelector(".sf-editor-box-graphs-main-links");
     !link && this.draw.getGraphDraw().createLinkPoint(graph);
     e.stopPropagation();
     e.preventDefault();
@@ -307,6 +302,50 @@ export class GraphEvent {
     editorEvent.contextmenu(e, graph);
     e.stopPropagation();
     e.preventDefault();
+  }
+
+  /**
+   * 元件点击事件-打开配置弹窗
+   */
+  private openDialog() {
+    this.draw.getDialogDraw().openDialog("元件配置", "graphInfo");
+    // 添加事件
+    const dialogMain = this.draw.getRoot().querySelector(".sf-editor-dialog");
+
+    // 提取公共方法
+    const updateGraph = (o: IUpdateGraph) => this.command.executeUpdateGraph(o);
+
+    const spanHandle = (e: Event, command: string) => {
+      // 1. 解析参数
+      const [key, value] = command.split("-");
+      if (key === "stroke") updateGraph({ stroke: `#${value}` });
+      if (key === "fill") updateGraph({ fill: `#${value}` });
+      if (key === "transparent") updateGraph({ fill: "transparent" });
+      if (key === "strokeWidth") updateGraph({strokeWidth:Number(value)});
+      if (key === "radius") updateGraph({ radius: Number(value) });
+
+      e.stopPropagation();
+      e.preventDefault();
+    };
+
+    const inputHandle = (e: Event, id: string) => {
+      const color = (e.target as HTMLInputElement).value;
+      const payload = id === "color" ? { stroke: color } : { fill: color };
+      updateGraph(payload);
+      e.stopPropagation();
+      e.preventDefault();
+    };
+
+    // 给 span 添加事件
+    dialogMain?.querySelectorAll("[command]").forEach((item) => {
+      const command = item.getAttribute("command") as string;
+      item.addEventListener("click", (e) => spanHandle(e, command));
+    });
+    // 给 input 绑定 change 事件
+    dialogMain?.querySelectorAll("input").forEach((input) => {
+      const id = input.getAttribute("id") as string;
+      input.addEventListener("change", (e) => inputHandle(e, id));
+    });
   }
 
   /**

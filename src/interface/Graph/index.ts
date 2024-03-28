@@ -51,3 +51,10 @@ export type LineKey = {
     y: number;
   };
 };
+
+export interface IUpdateGraph {
+  stroke?: string;
+  fill?: string;
+  strokeWidth?: number;
+  radius?: number;
+}

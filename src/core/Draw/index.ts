@@ -10,6 +10,7 @@ import { GraphDraw } from "./Graph.ts";
 import { EditorEvent } from "../Event/Editor/index.ts";
 import { LineDraw } from "./Line.ts";
 import { EchartDraw } from "./Echart.ts";
+import { DialogDraw } from "./Dialog.ts";
 
 // 重构 draw
 export class Draw {
@@ -25,6 +26,7 @@ export class Draw {
 
   private graphEvent: GraphEvent;
   private editorEvent: EditorEvent;
+  private dialogDraw: DialogDraw;
 
   private root!: HTMLDivElement; // 根节点 sf-editor 子节点有 box footer catalog operation
   private editorBox!: HTMLDivElement; // svg、canvas 操作区 sf-editor-box
@@ -46,6 +48,7 @@ export class Draw {
     this.graphEvent = new GraphEvent(this);
     this.editorEvent = new EditorEvent(this);
     this.echartDraw = new EchartDraw(this);
+    this.dialogDraw = new DialogDraw(this);
 
     // 2. 初始化样式
     setTheme("colorful_theme1");
@@ -132,15 +135,15 @@ export class Draw {
   public resize() {
     // 有 footer
     const footerBox = this.root.querySelector(
-      '[class="sf-editor-footer"]'
+      ".sf-editor-footer"
     ) as HTMLDivElement;
 
     const operationBox = this.root.querySelector(
-      '[class="sf-editor-operation"]'
+      ".sf-editor-operation"
     ) as HTMLDivElement;
 
     const catalogBox = this.root.querySelector(
-      '[class="sf-editor-catalog"]'
+      ".sf-editor-catalog"
     ) as HTMLDivElement;
 
     // 重置绘制区宽高
@@ -201,4 +204,5 @@ export class Draw {
   public getCanvasDraw = () => this.canvasDraw;
   public getLineDraw = () => this.lineDraw;
   public getEchartDraw = () => this.echartDraw;
+  public getDialogDraw = () => this.dialogDraw;
 }

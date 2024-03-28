@@ -28,7 +28,7 @@ export class Footer {
   private initEvent() {
     const footerBox = this.draw
       .getRoot()
-      .querySelector('[class="sf-editor-footer"]') as HTMLDivElement;
+      .querySelector(".sf-editor-footer") as HTMLDivElement;
 
     // 定义事件映射
     const eventMap: { [key: string]: () => void } = {
@@ -57,7 +57,7 @@ export class Footer {
     // 修改元件icon
     const footerBox = this.draw
       .getRoot()
-      .querySelector('[class="sf-editor-footer"]') as HTMLDivElement;
+      .querySelector(".sf-editor-footer") as HTMLDivElement;
     const fullScreen = footerBox.querySelector(
       '[command="fullscreen"]'
     ) as HTMLDivElement;

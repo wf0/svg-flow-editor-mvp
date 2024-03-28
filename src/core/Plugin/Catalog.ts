@@ -27,7 +27,7 @@ export class Catalog {
   private initEvent() {
     const catalogBox = this.draw
       .getRoot()
-      .querySelector('[class="sf-editor-catalog"]') as HTMLDivElement;
+      .querySelector(".sf-editor-catalog") as HTMLDivElement;
 
     // 菜单添加展开关闭事件
     catalogBox.querySelectorAll("[command]").forEach((item) => {
@@ -54,7 +54,7 @@ export class Catalog {
   private click(command: string) {
     const catalogBox = this.draw
       .getRoot()
-      .querySelector('[class="sf-editor-catalog"]') as HTMLDivElement;
+      .querySelector(".sf-editor-catalog") as HTMLDivElement;
 
     // 互斥，隐藏所有的节点
     catalogBox.querySelectorAll("[adapt]").forEach((i) => {
@@ -90,7 +90,7 @@ export class Catalog {
   private dragend(e: Event, type: string | null) {
     const catalogBox = this.draw
       .getRoot()
-      .querySelector('[class="sf-editor-catalog"]') as HTMLDivElement;
+      .querySelector(".sf-editor-catalog") as HTMLDivElement;
 
     // 获取offset
     const { offsetX, offsetY } = e as DragEvent;
@@ -116,7 +116,7 @@ export class Catalog {
         y,
       },
       // text: { type: "text" },
-      rect: { type: "rect", width: 100, height: 50, x, y },
+      rect: { type: "rect", width: 150, height: 80, x, y },
       circle: { type: "ellipse", width: 50, height: 50, x, y },
       ellipse: { type: "ellipse", width: 50, height: 30, x, y },
       // curve: "",

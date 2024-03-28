@@ -1,5 +1,5 @@
 import { IBackground, IThemeOpt } from "../../interface/Draw/index.ts";
-import { IGraph, node } from "../../interface/Graph/index.ts";
+import { IGraph, IUpdateGraph, node } from "../../interface/Graph/index.ts";
 import { nextTick, setTheme } from "../../utils/index.ts";
 import {
   barOption,
@@ -11,6 +11,7 @@ import { Draw } from "../Draw/index.ts";
 import { Ellipse } from "../Graph/Ellipse.ts";
 import { GEchart } from "../Graph/GEchart.ts";
 import { SVGImage } from "../Graph/Image.ts";
+import { Graph } from "../Graph/index.ts";
 import { Rect } from "../Graph/Rect.ts";
 
 // Command Adapt API 操作核心库
@@ -97,9 +98,7 @@ export class CommandAdapt {
       const listener = this.draw.getListener();
       const nums = this.draw.getGraphDraw().getNodesNumber();
       // 同步 footer number 元件数量
-      const footerBox = this.draw
-        .getRoot()
-        .querySelector('[class="sf-editor-footer"]');
+      const footerBox = this.draw.getRoot().querySelector(".sf-editor-footer");
       // 如果用户加载了 footer 插件，则同步更新数据
       if (footerBox) {
         const number = footerBox.querySelector(
@@ -315,5 +314,21 @@ export class CommandAdapt {
   }
   public unlock() {
     console.log("commandAdapt - unlock");
+  }
+
+  // 设置元件圆角
+  public updateGraph(payload: IUpdateGraph) {
+    // rx 和 ry 来实现圆角
+    const selected = this.draw.getGraphEvent().getAllSelected();
+    if (!selected.length) return;
+    const { stroke, fill, strokeWidth, radius } = payload;
+    selected.forEach((item) => {
+      const graphid = item.getAttribute("graphid") as string;
+      const graph = new Graph(this.draw, graphid);
+      radius && graph.setRadius(radius);
+      stroke && graph.setStroke(stroke);
+      fill && graph.setFill(fill);
+      strokeWidth && graph.setStrokeWidth(strokeWidth);
+    });
   }
 }

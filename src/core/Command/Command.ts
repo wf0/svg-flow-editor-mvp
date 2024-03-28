@@ -50,6 +50,9 @@ export class Command {
   public executeLock: CommandAdapt["lock"];
   public executeUnLock: CommandAdapt["unlock"];
 
+  /** 更新元件的信息-stroke、fill、线宽、圆角 */
+  public executeUpdateGraph: CommandAdapt["updateGraph"];
+
   constructor(draw: Draw) {
     const adapt = new CommandAdapt(draw);
 
@@ -91,5 +94,8 @@ export class Command {
     this.executeBeautify = adapt.beautify.bind(adapt);
     this.executeLock = adapt.lock.bind(adapt);
     this.executeUnLock = adapt.unlock.bind(adapt);
+
+    // 设置rect 圆角
+    this.executeUpdateGraph = adapt.updateGraph.bind(adapt);
   }
 }

@@ -25,15 +25,15 @@ export class Operation {
   private initEvent() {
     const operationBox = this.draw
       .getRoot()
-      .querySelector('[class="sf-editor-operation"]') as HTMLDivElement;
+      .querySelector(".sf-editor-operation") as HTMLDivElement;
 
     // 菜单顶部添加点击事件-实现关闭菜单项-需要在按钮点击时 阻止冒泡
     operationBox.addEventListener("click", this.maskHandle.bind(this));
 
     // 菜单顶部选择器
-    const topSelector = '[class="sf-editor-operation-top"]';
+    const topSelector = ".sf-editor-operation-top";
     // 菜单底部选择器
-    const bottomSelector = '[class="sf-editor-operation-bottom"]';
+    const bottomSelector = ".sf-editor-operation-bottom";
     const top = operationBox?.querySelector(topSelector);
     const bottom = operationBox?.querySelector(bottomSelector);
 
@@ -62,7 +62,7 @@ export class Operation {
   private maskHandle(e: Event) {
     // 关闭蒙版
     const root = this.draw.getRoot();
-    const mask = root.querySelector('[class="sf-editor-mask"]');
+    const mask = root.querySelector(".sf-editor-mask");
     mask && mask.remove();
 
     // 2. 关闭所有的菜单项
@@ -77,14 +77,14 @@ export class Operation {
   private clickHandle(e: Event, span: HTMLSpanElement) {
     // 1. 先创建蒙版
     const root = this.draw.getRoot();
-    const mask = root.querySelector('[class="sf-editor-mask"]');
+    const mask = root.querySelector(".sf-editor-mask");
     !mask && this.createMask();
 
     // 2. 关闭所有的菜单项
     this.closeAllSpan();
 
     // 3. 获取当前点击 span 下的菜单
-    const box = span.querySelector('[class="sf-left-box"]') as HTMLDivElement;
+    const box = span.querySelector(".sf-left-box") as HTMLDivElement;
     box && (box.style.display = "block");
 
     // 4. 处理样式问题
@@ -103,7 +103,7 @@ export class Operation {
   private addCommandEvent(e: Event, span: HTMLSpanElement) {
     // 获取 mask 点击时支持关闭
     const root = this.draw.getRoot();
-    const mask = root.querySelector('[class="sf-editor-mask"]');
+    const mask = root.querySelector(".sf-editor-mask");
 
     // 事件映射
     const eventMap: { [key: string]: () => void } = {
@@ -189,7 +189,7 @@ export class Operation {
       }
 
       // 3. 关闭当前的菜单
-      const box = span.querySelector('[class="sf-left-box"]') as HTMLDivElement;
+      const box = span.querySelector(".sf-left-box") as HTMLDivElement;
       box && (box.style.display = "none");
       span.style.backgroundColor = "";
 
@@ -233,13 +233,13 @@ export class Operation {
   private closeAllSpan() {
     const operationBox = this.draw
       .getRoot()
-      .querySelector('[class="sf-editor-operation"]');
+      .querySelector(".sf-editor-operation");
 
-    const topSelector = '[class="sf-editor-operation-top"]';
+    const topSelector = ".sf-editor-operation-top";
     const top = operationBox?.querySelector(topSelector) as HTMLDivElement;
 
     // 先隐藏其他的
-    const allBox = top.querySelectorAll('[class="sf-left-box"]');
+    const allBox = top.querySelectorAll(".sf-left-box");
     // @ts-ignore
     allBox.forEach((i) => (i.style.display = "none"));
 

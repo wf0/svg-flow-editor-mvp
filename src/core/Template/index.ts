@@ -1,3 +1,5 @@
+import { userBase } from "../Base64/index.ts";
+
 export const contextmenuTemp = `
 <div class="sf-editor-box-contextmenu-main">
 	<!-- svg右键 -->
@@ -398,7 +400,7 @@ export const operationTemp = `
 	<div class="right">
 		<div class="right-shear" command="share">分享协作</div>
 		<i class="iconfont icon-xiazai" command="download"></i>
-		<img src="/public/user.png" alt="" />
+		<img src="${userBase}" alt="" />
 	</div>
 </div>
 <div class="sf-editor-operation-bottom">

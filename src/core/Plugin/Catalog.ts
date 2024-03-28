@@ -2,6 +2,7 @@ import { node } from "../../interface/Graph/index.ts";
 import { Command } from "../Command/Command.ts";
 import { Draw } from "../Draw/index.ts";
 import { SVGImage } from "../Graph/Image.ts";
+import { logoBase, positionBase } from "../Base64/index.ts";
 import { catalogTemp } from "../Template/index.ts";
 
 // 元件库
@@ -102,13 +103,13 @@ export class Catalog {
         type: "image",
         width: 40,
         height: 50,
-        url: "/src/assets/favor.svg",
+        url: logoBase,
         x,
         y,
       },
       position: {
         type: "image",
-        url: "/src/assets/position.svg",
+        url: positionBase,
         width: 40,
         height: 50,
         x,

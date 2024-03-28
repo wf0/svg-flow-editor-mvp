@@ -1,4 +1,5 @@
 import { IGraph, node } from "../../../interface/Graph/index.ts";
+import { rotateBase } from "../../Base64/index.ts";
 import { Draw } from "../../Draw/index.ts";
 import { GEchart } from "../../Graph/GEchart.ts";
 import { Line } from "../../Graph/Line.ts";
@@ -61,6 +62,12 @@ export class GraphEvent {
     if (!ctrlKey) this.draw.getGraphDraw().cancelAllFormatPoint();
     const mainBox = this.draw.getGraphDraw().getGraphMain(nodeID);
     mainBox.classList.add("selected");
+
+    // 处理rotate资源
+    const rotate = mainBox.querySelector('[class="rotate"]') as HTMLDivElement;
+    rotate.style.background = `url('${rotateBase}') 100% 100% no-repeat`;
+    rotate.style.cursor = `url(https://www.processon.com/v5_editor/compile/rotate.44fbc97b.svg),url(${rotateBase}), grabbing`;
+    rotate.style.backgroundSize = "16px";
 
     // 3. 取消右键菜单
     this.draw.getEditorEvent().cancelContextmenu();

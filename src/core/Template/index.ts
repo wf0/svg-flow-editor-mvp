@@ -121,7 +121,7 @@ export const footerTemp = `
 	<i class="iconfont icon-huanyuanhuabu" style="display:none" title="退出全屏" command="exitfullscreen"></i>
 
 	<!-- 帮助 -->
-	<i class="iconfont icon-bangzhu" title="帮助" command="help"></i>
+	<i class="iconfont icon-bangzhu" style="cursor:help" title="帮助" command="help"></i>
 </div>
 `;
 

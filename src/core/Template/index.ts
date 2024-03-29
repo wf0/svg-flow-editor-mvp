@@ -333,12 +333,26 @@ export const operationTemp = `
 						<i class="iconfont icon-you"></i>
 					</span>
 				</div>
-				<div class="sf-left-box-item" command="background">
-					<span style="padding-left: 25px"> 背景设置 </span>
-					<span>
-						<i class="iconfont icon-you"></i>
+				<div class="line"></div>
+				<div class="sf-left-box-item" command="grid">
+					<span style="padding-left:24px"> 
+						<i class="iconfont "></i>
+						显示网格 
 					</span>
 				</div>
+				<div class="sf-left-box-item" command="origin">
+					<span style="padding-left:24px"> 
+						<i class="iconfont "></i>
+						显示圆点 
+					</span>
+				</div>
+				<div class="sf-left-box-item" command="warter">
+					<span style="padding-left:24px"> 
+						<i class="iconfont "></i>
+						显示水印 
+					</span>
+				</div>
+				<div class="line"></div>
 				<div class="sf-left-box-item" command="theme">
 					<span style="padding-left: 25px"> 主题切换 </span>
 					<span>
@@ -693,14 +707,8 @@ export const canvasSettingTemp = `
 		<div class="custom">
 		</div>
 	</div>
-</div
-`;
-
-// 背景设置
-export const backgroundSettingTemp = `
-<div class="sf-editor-graphBox">
 	<div class="sf-editor-graphBox-item">
-		<span>网格设置</span>
+		<span>网格颜色</span>
 		<div>
 			<span style="background-color:#e03131" command="stroke-e03131"></span>
 			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>
@@ -714,7 +722,7 @@ export const backgroundSettingTemp = `
 		</div>
 	</div>
 	<div class="sf-editor-graphBox-item">
-		<span>圆点设置</span>
+		<span>圆点颜色</span>
 		<div>
 			<span style="background-color:#e03131" command="stroke-e03131"></span>
 			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>
@@ -728,7 +736,7 @@ export const backgroundSettingTemp = `
 		</div>
 	</div>
 	<div class="sf-editor-graphBox-item">
-		<span>水印设置</span>
+		<span>水印颜色</span>
 		<div>
 			<span style="background-color:#e03131" command="stroke-e03131"></span>
 			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>

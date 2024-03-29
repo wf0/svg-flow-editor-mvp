@@ -1,8 +1,6 @@
 import { IUpdateGraph } from "../../interface/Graph/index.ts";
-import { setTheme } from "../../utils/index.ts";
 import { Command } from "../Command/Command.ts";
 import {
-  backgroundSettingTemp,
   canvasSettingTemp,
   graphInfoTemp,
   themeTemp,
@@ -56,7 +54,6 @@ export class DialogDraw {
       themeTemp,
       graphInfoTemp,
       canvasSettingTemp,
-      backgroundSettingTemp,
     };
     const main = this.dialogBox.querySelector(".main") as HTMLDivElement;
     main.innerHTML = map[temp];

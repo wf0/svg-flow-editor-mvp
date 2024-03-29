@@ -32,7 +32,6 @@ export class CommandAdapt {
     const canvas = this.draw.getCanvasDraw();
     canvas.clearCanvas();
     if (!payload) return;
-
     // 解析参数
     const { origin, originColor } = payload;
     const { gridline, gridlineColor } = payload;

@@ -1,3 +1,4 @@
+import { IBackground } from "../../interface/Draw/index.ts";
 import { nextTick } from "../../utils/index.ts";
 import { Command } from "../Command/Command.ts";
 import { Draw } from "../Draw/index.ts";
@@ -167,7 +168,6 @@ export class Operation {
         // 2. 注册 span 事件
         main?.querySelectorAll("[command]").forEach((item) => {
           const command = item.getAttribute("command") as string;
-          console.log("command", command);
           item.addEventListener("click", (e) =>
             dilaog.spanClickHandle(e, command)
           );
@@ -195,8 +195,10 @@ export class Operation {
           dialogEvent(); // 2. 注册事件
           break;
 
-        case "background":
-          dilaog.openDialog("背景设置", "backgroundSettingTemp");
+        case "grid":
+        case "origin":
+        case "warter":
+          canvasHandle(command);
           break;
 
         case "theme":
@@ -226,10 +228,72 @@ export class Operation {
       e.preventDefault();
     };
 
+    // 网格、圆点、水印的菜单展开
+    const backgroundHandle = (item: Element) => {
+      const index = span.getAttribute("index");
+
+      if (index !== "5") return;
+
+      const command = item.getAttribute("command") as string;
+      if (!["grid", "origin", "warter"].find((i) => i === command)) return;
+
+      // item 是当前的div ，需要修改下面的 i 的状态 和 span 的style padding left 属性
+      const spanItem = item.querySelector("span") as HTMLSpanElement;
+      const i = item.querySelector("i") as HTMLElement;
+
+      // 1. 获取当前 canvas 绘制状态
+      const canvasDraw = this.draw.getCanvasDraw();
+
+      const { origin, gridline, watermark } = canvasDraw.getBackground();
+
+      spanItem.style.paddingLeft = "24px";
+      i.classList.remove("icon-dagoucheck");
+
+      // 是否开启网格
+      if (gridline && command === "grid") {
+        spanItem.style.paddingLeft = "";
+        i.classList.add("icon-dagoucheck");
+      }
+      // 是否开启圆点
+      else if (origin && command === "origin") {
+        spanItem.style.paddingLeft = "";
+        i.classList.add("icon-dagoucheck");
+      }
+      // 是否开启水印
+      if (watermark && command === "warter") {
+        spanItem.style.paddingLeft = "";
+        i.classList.add("icon-dagoucheck");
+      }
+    };
+
+    // 网格、圆点、水印的开启与关闭事件响应
+    const canvasHandle = (command: string) => {
+      // 1. 获取当前 canvas 绘制状态
+      const canvasDraw = this.draw.getCanvasDraw();
+
+      const oldVal = canvasDraw.getBackground();
+      var payload: IBackground = {};
+      if (command === "origin")
+        payload = Object.assign(oldVal, {
+          origin: !oldVal.origin,
+          gridline: false,
+        });
+      if (command === "grid")
+        payload = Object.assign(oldVal, {
+          gridline: !oldVal.gridline,
+          origin: false,
+        });
+      if (command === "warter")
+        payload = Object.assign(oldVal, { watermark: !oldVal.watermark });
+
+      this.command.executeBackground(payload);
+    };
+
     // 添加事件
-    span
-      .querySelectorAll("[command]")
-      .forEach((item) => item.addEventListener("click", eventHandle));
+    span.querySelectorAll("[command]").forEach((item) => {
+      item.addEventListener("click", eventHandle);
+      backgroundHandle(item);
+    });
 
     // 阻止默认事件
     e.stopPropagation();

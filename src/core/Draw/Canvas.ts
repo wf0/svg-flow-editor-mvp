@@ -278,6 +278,9 @@ export class CanvasDraw {
     this.background.origin && this.origin(this.background.originColor);
   }
 
+  // 供顶部菜单展开时，决定显示谁已经勾选
+  public getBackground = () => this.background;
+
   /**
    * 销毁 canvas
    */

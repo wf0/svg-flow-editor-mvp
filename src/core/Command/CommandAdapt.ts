@@ -39,12 +39,11 @@ export class CommandAdapt {
 
     // 2. 不然根据参数决定渲染
     // 网格背景与小圆点背景互斥
-    if (gridline || gridlineColor) canvas.gridLine(gridlineColor);
-    else if (origin || originColor) canvas.origin(originColor);
+    if (gridline) canvas.gridLine(gridlineColor);
+    else if (origin) canvas.origin(originColor);
 
     // 水印则是独立存在
-    if (watermark || watermarkColor || watermarkText)
-      canvas.waterMark(watermarkText, watermarkColor);
+    if (watermark) canvas.waterMark(watermarkText, watermarkColor);
   }
 
   /**

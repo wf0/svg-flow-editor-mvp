@@ -1,3 +1,4 @@
+import { IBackground } from "../../interface/Draw/index.ts";
 import { IUpdateGraph } from "../../interface/Graph/index.ts";
 import { Command } from "../Command/Command.ts";
 import {
@@ -62,6 +63,25 @@ export class DialogDraw {
   public closeDialog() {
     this.dialogBox.remove();
   }
+  // 设置网格水印颜色相干方法
+  private setColor(command: string, value: string) {
+    // 1. 获取当前 canvas 绘制状态
+    const canvasDraw = this.draw.getCanvasDraw();
+
+    const oldVal = canvasDraw.getBackground();
+
+    var payload: IBackground = {};
+    if (command === "gridcolor")
+      payload = Object.assign(oldVal, { gridlineColor: value });
+
+    if (command === "origincolor")
+      payload = Object.assign(oldVal, { originColor: value });
+
+    if (command === "watercolor")
+      payload = Object.assign(oldVal, { watermarkColor: value });
+
+    this.command.executeBackground(payload);
+  }
 
   // dialog 弹窗的 command span 事件
   public spanClickHandle(e: Event, command: string) {
@@ -78,12 +98,7 @@ export class DialogDraw {
     if (key === "strokeWidth") updateGraph({ strokeWidth: Number(value) });
     if (key === "radius") updateGraph({ radius: Number(value) });
     if (key === "style") updateGraph({ dasharray: value || "" });
-    if (key === "layer") {
-      // value === "top";
-      // value === "bottom";
-      // value === "holdup";
-      // value === "putdown";
-    }
+    // if (key === "layer") { }
 
     // 画布大小事件
     if (key === "bgcolor")
@@ -99,6 +114,8 @@ export class DialogDraw {
       const [w, h] = sizeMap[value];
       this.command.setPageSize(w, h);
     }
+    if (["gridcolor", "origincolor", "watercolor"].find((i) => i === key))
+      this.setColor(key, `#${value}`);
 
     e.stopPropagation();
     e.preventDefault();
@@ -106,12 +123,16 @@ export class DialogDraw {
 
   // dialog 弹窗的 input 事件
   public inputHandle = (e: Event, id: string) => {
+    console.log(id);
     const color = (e.target as HTMLInputElement).value;
     const updateGraph = (o: IUpdateGraph) => this.command.executeUpdateGraph(o);
 
     if (id === "color") updateGraph({ stroke: color });
     if (id === "background") updateGraph({ fill: color });
     if (id === "bgcolor") this.command.executeSetTheme({ background: color });
+    if (id === "gridcolor") this.setColor(id, color);
+    if (id === "origincolor") this.setColor(id, color);
+    if (id === "watercolor") this.setColor(id, color);
     e.stopPropagation();
     e.preventDefault();
   };

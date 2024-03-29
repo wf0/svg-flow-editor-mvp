@@ -346,7 +346,7 @@ export const operationTemp = `
 						显示圆点 
 					</span>
 				</div>
-				<div class="sf-left-box-item" command="warter">
+				<div class="sf-left-box-item" command="water">
 					<span style="padding-left:24px"> 
 						<i class="iconfont "></i>
 						显示水印 
@@ -710,43 +710,49 @@ export const canvasSettingTemp = `
 	<div class="sf-editor-graphBox-item">
 		<span>网格颜色</span>
 		<div>
-			<span style="background-color:#e03131" command="stroke-e03131"></span>
-			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>
-			<span style="background-color:#1971c2" command="stroke-1971c2"></span>
-			<span style="background-color:#f08c00" command="stroke-f08c00"></span>
-			<span style="background-color:#A5D8FF" command="stroke-A5D8FF"></span>
-			<span style="background-color:#D0BFFF" command="stroke-D0BFFF"></span>
-			<span style="background-color:#FCC2D7" command="stroke-FCC2D7"></span>
+			<span style="background-color:#e03131" command="gridcolor-e03131"></span>
+			<span style="background-color:#2f9e44" command="gridcolor-2f9e44"></span>
+			<span style="background-color:#1971c2" command="gridcolor-1971c2"></span>
+			<span style="background-color:#f08c00" command="gridcolor-f08c00"></span>
+			<span style="background-color:#A5D8FF" command="gridcolor-A5D8FF"></span>
+			<span style="background-color:#D0BFFF" command="gridcolor-D0BFFF"></span>
+			<span style="background-color:#FCC2D7" command="gridcolor-FCC2D7"></span>
 			<span class="line"></span>
-			<input type="color" value="#E01515" id="color" />
+			<input type="color" value="#E01515" id="gridcolor" />
 		</div>
 	</div>
 	<div class="sf-editor-graphBox-item">
 		<span>圆点颜色</span>
 		<div>
-			<span style="background-color:#e03131" command="stroke-e03131"></span>
-			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>
-			<span style="background-color:#1971c2" command="stroke-1971c2"></span>
-			<span style="background-color:#f08c00" command="stroke-f08c00"></span>
-			<span style="background-color:#A5D8FF" command="stroke-A5D8FF"></span>
-			<span style="background-color:#D0BFFF" command="stroke-D0BFFF"></span>
-			<span style="background-color:#FCC2D7" command="stroke-FCC2D7"></span>
+			<span style="background-color:#e03131" command="origincolor-e03131"></span>
+			<span style="background-color:#2f9e44" command="origincolor-2f9e44"></span>
+			<span style="background-color:#1971c2" command="origincolor-1971c2"></span>
+			<span style="background-color:#f08c00" command="origincolor-f08c00"></span>
+			<span style="background-color:#A5D8FF" command="origincolor-A5D8FF"></span>
+			<span style="background-color:#D0BFFF" command="origincolor-D0BFFF"></span>
+			<span style="background-color:#FCC2D7" command="origincolor-FCC2D7"></span>
 			<span class="line"></span>
-			<input type="color" value="#E01515" id="color" />
+			<input type="color" value="#E01515" id="origincolor" />
 		</div>
 	</div>
 	<div class="sf-editor-graphBox-item">
 		<span>水印颜色</span>
 		<div>
-			<span style="background-color:#e03131" command="stroke-e03131"></span>
-			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>
-			<span style="background-color:#1971c2" command="stroke-1971c2"></span>
-			<span style="background-color:#f08c00" command="stroke-f08c00"></span>
-			<span style="background-color:#A5D8FF" command="stroke-A5D8FF"></span>
-			<span style="background-color:#D0BFFF" command="stroke-D0BFFF"></span>
-			<span style="background-color:#FCC2D7" command="stroke-FCC2D7"></span>
+			<span style="background-color:#e03131" command="watercolor-e03131"></span>
+			<span style="background-color:#2f9e44" command="watercolor-2f9e44"></span>
+			<span style="background-color:#1971c2" command="watercolor-1971c2"></span>
+			<span style="background-color:#f08c00" command="watercolor-f08c00"></span>
+			<span style="background-color:#A5D8FF" command="watercolor-A5D8FF"></span>
+			<span style="background-color:#D0BFFF" command="watercolor-D0BFFF"></span>
+			<span style="background-color:#FCC2D7" command="watercolor-FCC2D7"></span>
 			<span class="line"></span>
-			<input type="color" value="#E01515" id="color" />
+			<input type="color" value="#E01515" id="watercolor" />
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item">
+		<span>自定义水印文本</span>
+		<div>
+			<input />
 		</div>
 	</div>
 </div

@@ -197,7 +197,7 @@ export class Operation {
 
         case "grid":
         case "origin":
-        case "warter":
+        case "water":
           canvasHandle(command);
           break;
 
@@ -235,7 +235,7 @@ export class Operation {
       if (index !== "5") return;
 
       const command = item.getAttribute("command") as string;
-      if (!["grid", "origin", "warter"].find((i) => i === command)) return;
+      if (!["grid", "origin", "water"].find((i) => i === command)) return;
 
       // item 是当前的div ，需要修改下面的 i 的状态 和 span 的style padding left 属性
       const spanItem = item.querySelector("span") as HTMLSpanElement;
@@ -260,7 +260,7 @@ export class Operation {
         i.classList.add("icon-dagoucheck");
       }
       // 是否开启水印
-      if (watermark && command === "warter") {
+      if (watermark && command === "water") {
         spanItem.style.paddingLeft = "";
         i.classList.add("icon-dagoucheck");
       }
@@ -283,7 +283,7 @@ export class Operation {
           gridline: !oldVal.gridline,
           origin: false,
         });
-      if (command === "warter")
+      if (command === "water")
         payload = Object.assign(oldVal, { watermark: !oldVal.watermark });
 
       this.command.executeBackground(payload);

@@ -755,32 +755,39 @@
         }
     }
 
-}
+    // 修改滚动条的样式
+    &-overflow {
+        position: relative;
 
-.sf-editor-overflow {
-    position: relative;
+        /* 设置滚动条的宽度 */
+        &::-webkit-scrollbar {
+            width: 4px;
+            /* 水平滚动条的高度 */
+            height: 4px;
+            /* 垂直滚动条的宽度 */
+        }
 
-    /* 设置滚动条的宽度 */
-    &::-webkit-scrollbar {
-        width: 4px;
-        /* 水平滚动条的高度 */
-        height: 4px;
-        /* 垂直滚动条的宽度 */
+        /* 设置滚动条滑块的样式 */
+        &::-webkit-scrollbar-thumb {
+            background-color: darkgrey;
+            /* 滑块颜色 */
+            border-radius: 4px;
+            /* 滑块圆角 */
+        }
+
+        /* 设置滚动条轨道的样式 */
+        &::-webkit-scrollbar-track {
+            background: lightgrey;
+            /* 轨道颜色 */
+            border-radius: 4px;
+            /* 轨道圆角 */
+        }
     }
 
-    /* 设置滚动条滑块的样式 */
-    &::-webkit-scrollbar-thumb {
-        background-color: darkgrey;
-        /* 滑块颜色 */
-        border-radius: 4px;
-        /* 滑块圆角 */
+    // 协同用户光标
+    &-network {
+        box-shadow: 0 4px 10px 0 rgba(255, 0, 0, 0.4);
+        position: relative;
     }
 
-    /* 设置滚动条轨道的样式 */
-    &::-webkit-scrollbar-track {
-        background: lightgrey;
-        /* 轨道颜色 */
-        border-radius: 4px;
-        /* 轨道圆角 */
-    }
 }

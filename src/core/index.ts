@@ -14,11 +14,13 @@ import { Catalog } from "./Plugin/Catalog.ts";
 import { Operation } from "./Plugin/Operation.ts";
 import { SEchart } from "./Plugin/Echart.ts";
 import { Text } from "./Graph/Text.ts";
+import { IWebsocket } from "../interface/Websocket/index.ts";
+import { messageInfo } from "./Config/index.ts";
 import "../assets/font_4458457_4ftw0i6fgnl/iconfont.css";
 import "../style/SFEditor.less";
 
 // 定义插件类型
-type pluginName = "catalog" | "footer" | "operation" | "echart";
+type pluginName = "catalog" | "footer" | "operation" | "echart" | "websocket";
 
 class SFEditor {
   public listener: Listener;
@@ -84,13 +86,22 @@ class SFEditor {
   }
 
   // 加载插件函数
-  public plugin(name: pluginName) {
+  public plugin(name: pluginName, payload?: IWebsocket) {
     // name 是插件名称
     if (name === "footer") new Footer(this.draw);
     if (name === "operation") new Catalog(this.draw);
     if (name === "catalog") new Operation(this.draw);
     // echart 的插件需要向外提供操作对象，方法都在 Echart 对象中
     if (name === "echart") return new SEchart(this.draw);
+    // 支持 websocket 协同插件
+    if (name === "websocket") {
+      const state = !payload || !payload.socketurl;
+      if (state) throw new Error(messageInfo.websocket.url);
+      else {
+        const websocket = this.draw.getWebsocket();
+        websocket.openWebSocket(payload);
+      }
+    }
   }
 }
 

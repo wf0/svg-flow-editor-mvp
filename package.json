@@ -15,7 +15,8 @@
     "patch": "npm version patch",
     "minor": "npm version minor",
     "major": "npm version major",
-    "libs": "npm run patch && npm publish"
+    "libs": "npm run patch && npm publish",
+    "service": "cd src/core/Websocket && hotnode service"
   },
   "author": {
     "name": "WF",
@@ -44,6 +45,7 @@
   "devDependencies": {
     "@types/color-convert": "^2.0.3",
     "@types/node": "^20.11.30",
-    "@types/pako": "^2.0.3"
+    "@types/pako": "^2.0.3",
+    "ws": "^8.16.0"
   }
 }

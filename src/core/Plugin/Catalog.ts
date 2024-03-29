@@ -115,23 +115,28 @@ export class Catalog {
         x,
         y,
       },
-      // text: { type: "text" },
       rect: { type: "rect", width: 150, height: 80, x, y },
       circle: { type: "ellipse", width: 50, height: 50, x, y },
       ellipse: { type: "ellipse", width: 50, height: 30, x, y },
-      // curve: "",
-      // triangle: "",
-      // star: "",
-      // arrow: "",
-      // line: "",
-      // table: "",
-      // tab: "",
-      line: { type: "cLine", width: 300, height: 150, x, y },
-      bar: { type: "cBar", width: 300, height: 150, x, y },
-      radar: { type: "cRadar", width: 300, height: 150, x, y },
-      pie: { type: "cPie", width: 300, height: 150, x, y },
+      line: { type: "line", width: 300, height: 150, x, y },
+      bar: { type: "bar", width: 300, height: 150, x, y },
+      radar: { type: "radar", width: 300, height: 150, x, y },
+      pie: { type: "pie", width: 300, height: 150, x, y },
     };
-    this.command.executeAddGraph(typeMap[type as string]);
+    const graph = this.command.executeAddGraph(typeMap[type as string]);
+    // 正在拖拽添加元件，广播给其他客户端
+    const nodeID = graph.getID();
+    const width = graph.getWidth();
+    const height = graph.getHeight();
+    const value = {
+      nodeID,
+      width,
+      height,
+      type,
+      x: typeMap[type as string].x,
+      y: typeMap[type as string].y,
+    };
+    graph.broadcastGraph("addGraph", value);
   }
 
   /**

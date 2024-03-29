@@ -20,8 +20,8 @@ export class GraphEvent {
   private sx!: number;
   private sy!: number;
   private command: Command;
-
   private nodes!: node[];
+
   constructor(draw: Draw) {
     this.draw = draw;
     this.command = new Command(draw);
@@ -72,8 +72,14 @@ export class GraphEvent {
     // 4. 看有没有创建形变锚点
     !format && this.draw.getGraphDraw().createFormatPoint(graph);
 
-    // 5. 显示dialog 配置元件信息
-    this.openDialog();
+    // 5. 显示dialog 配置元件信息 要区分是单击还是在拖动
+    // this.openDialog();
+
+    // 6. 用户单击，需要协同显示用户光标信息
+    const websocket = this.draw.getWebsocket();
+    if (websocket.connection) {
+      // websocket.sendMessage({ operate: "graphClick", nodeID });
+    }
 
     e.stopPropagation();
     e.preventDefault();

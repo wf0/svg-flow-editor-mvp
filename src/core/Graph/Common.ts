@@ -1,4 +1,5 @@
 import { IGraph } from "../../interface/Graph/index.ts";
+import { wsMessage } from "../../interface/Websocket/index.ts";
 import { Draw } from "../Draw/index.ts";
 import { nanoid } from "nanoid";
 
@@ -234,11 +235,10 @@ export class GraphCommon {
     return graph;
   }
 
-
   /**
    * 设置线条样式
-   * @param dasharray 
-   * @returns 
+   * @param dasharray
+   * @returns
    */
   public setStrokeDasharray(dasharray: string) {
     const graph = this as unknown as IGraph;
@@ -257,6 +257,7 @@ export class GraphCommon {
     const graph = this as unknown as IGraph;
     graph.setX(x);
     graph.setY(y);
+    this.broadcastGraph("updateGraph", { x, y, nodeID: graph.getID() });
     return graph;
   }
 
@@ -265,10 +266,17 @@ export class GraphCommon {
    * @param graph
    */
   protected addToEditor(graph: IGraph) {
-    // 获取 graphDraw
-    const graphDraw = this.draw.getGraphDraw();
-    // 添加到 editor
-    graphDraw.addGraph(graph);
+    const graphDraw = this.draw.getGraphDraw(); // 获取 graphDraw
+    graphDraw.addGraph(graph); // 添加到 editor
+  }
+
+  /**
+   * 广播当前元件信息 - 添加、删除、更新都用一个方法实现【手动去调用，才不会死循环】
+   */
+  public broadcastGraph(operate: wsMessage["operate"], value: any) {
+    const websocket = this.draw.getWebsocket();
+    if (!websocket.connection) return;
+    websocket.sendMessage({ operate, value });
   }
 
   /**

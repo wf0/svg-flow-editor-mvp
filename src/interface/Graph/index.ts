@@ -14,10 +14,10 @@ export interface node {
     | "ellipse"
     | "image"
     | "text"
-    | "cLine"
-    | "cBar"
-    | "cRadar"
-    | "cPie";
+    | "line" // 这个是折线图
+    | "bar"
+    | "radar"
+    | "pie";
   nodeID?: string;
   width: number;
   height: number;

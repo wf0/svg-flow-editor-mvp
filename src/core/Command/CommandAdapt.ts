@@ -55,16 +55,15 @@ export class CommandAdapt {
     // 解析参数
     const { type, nodeID, width, height } = payload;
     const { x, y, stroke, fill, text, rotate, url } = payload;
-
     // 1. 根据 type 先构建出元件
     const graphMap: { [key: string]: () => IGraph } = {
       rect: () => new Rect(this.draw, width, height),
-      ellipse: () => new Ellipse(this.draw, width, height),
+      ellipse: () => new Ellipse(this.draw, width / 2, height / 2),
       image: () => new SVGImage(this.draw, url as string, width, height),
-      cLine: () => new GEchart(this.draw, lineOption),
-      cBar: () => new GEchart(this.draw, barOption),
-      // cRadar: () => new GEchart(this.draw, barOption),
-      cPie: () => new GEchart(this.draw, pieOption),
+      line: () => new GEchart(this.draw, lineOption),
+      bar: () => new GEchart(this.draw, barOption),
+      // radar: () => new GEchart(this.draw, barOption),
+      pie: () => new GEchart(this.draw, pieOption),
     };
 
     const graph = graphMap[type as string] && graphMap[type as string]();
@@ -89,7 +88,13 @@ export class CommandAdapt {
   public deleteGraph() {
     const selected = this.draw.getGraphEvent().getAllSelected();
     if (!selected.length) return;
-    selected.forEach((i) => i.remove());
+    selected.forEach((i) => {
+      const nodeID = i.getAttribute("graphid") as string;
+      const graph = new Graph(this.draw, nodeID);
+      // 广播
+      graph.broadcastGraph("deleteGraph", { nodeID });
+      i.remove();
+    });
     // 执行回调
     nextTick(() => {
       const eventBus = this.draw.getEventBus();

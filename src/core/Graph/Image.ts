@@ -12,8 +12,8 @@ export class SVGImage extends GraphCommon {
     this.image.setAttribute("href", url);
 
     // 将当前创建的元件添加到 svg 下
-    super.addToEditor(this);
     if (width && height) {
+      super.addToEditor(this);
       super.setWidth.call(this, width);
       super.setHeight.call(this, height);
     } else this.analysis(url);

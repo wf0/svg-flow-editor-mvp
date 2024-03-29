@@ -1,3 +1,4 @@
+import { nextTick } from "../../utils/index.ts";
 import { Command } from "../Command/Command.ts";
 import { Draw } from "../Draw/index.ts";
 import { operationTemp } from "../Template/index.ts";
@@ -153,7 +154,31 @@ export class Operation {
       const command = cmd || pcmd;
       if (!command) return;
 
-      console.log(command);
+      console.log("operation menu command =>", command);
+
+      // 获取 dialog 对象
+      const dilaog = this.draw.getDialogDraw();
+
+      // dialog 事件中心
+      const dialogEvent = () => {
+        // 获取 dialog html
+        const main = this.draw.getRoot().querySelector(".sf-editor-dialog");
+
+        // 2. 注册 span 事件
+        main?.querySelectorAll("[command]").forEach((item) => {
+          const command = item.getAttribute("command") as string;
+          console.log("command", command);
+          item.addEventListener("click", (e) =>
+            dilaog.spanClickHandle(e, command)
+          );
+        });
+
+        // 3. 注册 input 事件
+        main?.querySelectorAll("input").forEach((item) => {
+          const id = item.getAttribute("id") as string;
+          item.addEventListener("change", (e) => dilaog.inputHandle(e, id));
+        });
+      };
 
       // 2. 响应事件
       switch (command) {
@@ -166,21 +191,16 @@ export class Operation {
           break;
 
         case "canvas":
+          dilaog.openDialog("画布设置", "canvasSettingTemp"); // 1. 打开弹窗
+          dialogEvent(); // 2. 注册事件
           break;
 
-        case "backgroundcolor":
-          break;
-
-        case "grid":
-          break;
-
-        case "origin":
-          break;
-
-        case "water":
+        case "background":
+          dilaog.openDialog("背景设置", "backgroundSettingTemp");
           break;
 
         case "theme":
+          dilaog.openDialog("切换风格", "themeTemp");
           break;
 
         default:

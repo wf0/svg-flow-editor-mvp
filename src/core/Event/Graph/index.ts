@@ -295,7 +295,7 @@ export class GraphEvent {
   }
 
   /**
-   * 元件右键菜单
+   * 元件右键菜单-调用 editor右键事件
    */
   private contextmenu(e: Event, graph?: IGraph) {
     const editorEvent = this.draw.getEditorEvent();
@@ -308,43 +308,25 @@ export class GraphEvent {
    * 元件点击事件-打开配置弹窗
    */
   private openDialog() {
-    this.draw.getDialogDraw().openDialog("元件配置", "graphInfo");
+    // 获取dialog对象
+    const dialog = this.draw.getDialogDraw();
+
+    // 打开弹窗
+    dialog.openDialog("元件配置", "graphInfoTemp");
+
     // 添加事件
     const dialogMain = this.draw.getRoot().querySelector(".sf-editor-dialog");
-
-    // 提取公共方法
-    const updateGraph = (o: IUpdateGraph) => this.command.executeUpdateGraph(o);
-
-    const spanHandle = (e: Event, command: string) => {
-      // 1. 解析参数
-      const [key, value] = command.split("-");
-      if (key === "stroke") updateGraph({ stroke: `#${value}` });
-      if (key === "fill") updateGraph({ fill: `#${value}` });
-      if (key === "transparent") updateGraph({ fill: "transparent" });
-      if (key === "strokeWidth") updateGraph({strokeWidth:Number(value)});
-      if (key === "radius") updateGraph({ radius: Number(value) });
-
-      e.stopPropagation();
-      e.preventDefault();
-    };
-
-    const inputHandle = (e: Event, id: string) => {
-      const color = (e.target as HTMLInputElement).value;
-      const payload = id === "color" ? { stroke: color } : { fill: color };
-      updateGraph(payload);
-      e.stopPropagation();
-      e.preventDefault();
-    };
 
     // 给 span 添加事件
     dialogMain?.querySelectorAll("[command]").forEach((item) => {
       const command = item.getAttribute("command") as string;
-      item.addEventListener("click", (e) => spanHandle(e, command));
+      item.addEventListener("click", (e) => dialog.spanClickHandle(e, command));
     });
+
     // 给 input 绑定 change 事件
     dialogMain?.querySelectorAll("input").forEach((input) => {
       const id = input.getAttribute("id") as string;
-      input.addEventListener("change", (e) => inputHandle(e, id));
+      input.addEventListener("change", (e) => dialog.inputHandle(e, id));
     });
   }
 

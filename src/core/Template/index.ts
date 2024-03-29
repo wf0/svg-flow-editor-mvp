@@ -1,5 +1,6 @@
 import { userBase } from "../Base64/index.ts";
 
+// 右键菜单模板
 export const contextmenuTemp = `
 <div class="sf-editor-box-contextmenu-main">
 	<!-- svg右键 -->
@@ -103,6 +104,7 @@ export const contextmenuTemp = `
 </div>
 `;
 
+// 底部显示模板
 export const footerTemp = `
 <div class="sf-editor-footer-left">
 	<!-- 多页 -->
@@ -140,6 +142,7 @@ export const footerTemp = `
 </div>
 `;
 
+// 顶部操作区模板
 export const operationTemp = `
 <div class="sf-editor-operation-top">
 	<div class="left">
@@ -325,37 +328,17 @@ export const operationTemp = `
 			画布
 			<div class="sf-left-box">
 				<div class="sf-left-box-item" command="canvas">
-					<span style="padding-left: 25px"> 画布大小 </span>
+					<span style="padding-left: 25px"> 画布设置 </span>
 					<span>
 						<i class="iconfont icon-you"></i>
 					</span>
 				</div>
-				<div class="sf-left-box-item" command="backgroundcolor">
-					<span style="padding-left: 25px"> 背景颜色 </span>
+				<div class="sf-left-box-item" command="background">
+					<span style="padding-left: 25px"> 背景设置 </span>
 					<span>
 						<i class="iconfont icon-you"></i>
 					</span>
 				</div>
-				<div class="line"></div>
-				<div class="sf-left-box-item" command="grid">
-					<span style="padding-left: 25px"> 网格设置 </span>
-					<span>
-						<i class="iconfont icon-you"></i>
-					</span>
-				</div>
-				<div class="sf-left-box-item" command="origin">
-					<span style="padding-left: 25px"> 圆点设置 </span>
-					<span>
-						<i class="iconfont icon-you"></i>
-					</span>
-				</div>
-				<div class="sf-left-box-item" command="water">
-					<span style="padding-left: 25px"> 水印设置 </span>
-					<span>
-						<i class="iconfont icon-you"></i>
-					</span>
-				</div>
-				<div class="line"></div>
 				<div class="sf-left-box-item" command="theme">
 					<span style="padding-left: 25px"> 主题切换 </span>
 					<span>
@@ -430,11 +413,7 @@ export const operationTemp = `
 	<i
 	   class="iconfont icon-ibg"
 	   command="backgroundcolor"
-	   style="
-          color: var(--background);
-          border: solid #ccc 1px;
-          border-radius: 4px;
-        "></i>
+	   style="color: var(--background);border: solid #ccc 1px;padding: 1px"></i>
 	<!-- 插入图片 -->
 	<i class="iconfont icon-tupian" command="upload"></i>
 	<div class="line"></div>
@@ -450,14 +429,13 @@ export const operationTemp = `
 	<i class="iconfont icon-beijingyanse" command="fill"></i>
 	<div class="line"></div>
 	<!-- 连线宽度 -->
-	<i class="iconfont icon-xiantiaokuandu" command="xxx"></i>
+	<i class="iconfont icon-xiantiaokuandu" command="strokeWidth"></i>
 	<!-- 连线样式 -->
-	<i class="iconfont icon-xiantiaoyangshi" command="xxx"></i>
-	<!-- 图层 -->
-	<i class="iconfont icon-zhiyudingceng" command="xxx"></i>
+	<i class="iconfont icon-xiantiaoyangshi" command="dashed"></i>
 </div>
 `;
 
+// 左侧元件库模板
 export const catalogTemp = `
 <!-- 我的图形 -->
 <h3
@@ -573,7 +551,8 @@ export const catalogTemp = `
 <div class="more">更多图形</div>
 `;
 
-export const graphInfo = `
+// 元素单击dialog更新元件信息
+export const graphInfoTemp = `
 <div class="sf-editor-graphBox">
 	<div class="sf-editor-graphBox-item">
 		<span>描边</span>
@@ -606,26 +585,70 @@ export const graphInfo = `
 	<div class="sf-editor-graphBox-item">
 		<span>线宽</span>
 		<div>
-			<span class="lineWidth-one lineWidth" command="strokeWidth-1"></span>
-			<span class="lineWidth-two lineWidth" command="strokeWidth-4"></span>
-			<span class="lineWidth-three lineWidth" command="strokeWidth-7"></span>
+			<span command="strokeWidth-1">
+				<svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 20 20" class="" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M4.167 10h11.666" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+				</svg>
+			</span>
+			<span command="strokeWidth-4">
+				<svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 20 20" class="" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M5 10h10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+				</svg>
+			</span>
+			<span command="strokeWidth-7">
+				<svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 20 20" class="" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M5 10h10" stroke="currentColor" stroke-width="3.75" stroke-linecap="round" stroke-linejoin="round"></path>
+				</svg>
+			</span>
 		</div>
 	</div>
 	<div class="sf-editor-graphBox-item">
 		<span>圆角类型</span>
 		<div>
 			<span class="borderRadius-one borderRadius" command="radius-1"></span>
-			<span class="borderRadius-two borderRadius" command="radius-10"></span>
+			<span class="borderRadius-two borderRadius" command="radius-14"></span>
 			<span class="borderRadius-three borderRadius" command="radius-20"></span>
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item">
+		<span>边框样式</span>
+		<div>
+			<span command="style-solid">
+				<svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 20 20" class="" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M4.167 10h11.666" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+				</svg>
+			</span>
+			<span command="style-5,5">
+				<svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" class="" fill="none" stroke-width="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+					<g stroke-width="2">
+						<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+						<path d="M5 12h2"></path>
+						<path d="M17 12h2"></path>
+						<path d="M11 12h2"></path>
+					</g>
+				</svg>
+			</span>
+			<span command="style-2,2">
+				<svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 24 24" class="" fill="none" stroke-width="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+					<g stroke-width="2">
+						<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+						<path d="M4 12v.01"></path>
+						<path d="M8 12v.01"></path>
+						<path d="M12 12v.01"></path>
+						<path d="M16 12v.01"></path>
+						<path d="M20 12v.01"></path>
+					</g>
+				</svg>
+			</span>
 		</div>
 	</div>
 	<div class="sf-editor-graphBox-item">
 		<span>图层</span>
 		<div>
-			<span class="icon"><i class="iconfont icon-zhiyudingceng"></i></span>
-			<span class="icon"><i class="iconfont icon-zhiyudiceng"></i></span>
-			<span class="icon"><i class="iconfont icon-shangyiyiceng"></i></span>
-			<span class="icon"><i class="iconfont icon-xiayiyiceng"></i></span>
+			<span class="icon" command="layer-top"><i class="iconfont icon-zhiyudingceng"></i></span>
+			<span class="icon" command="layer-bottom"><i class="iconfont icon-zhiyudiceng"></i></span>
+			<span class="icon" command="layer-holdup"><i class="iconfont icon-shangyiyiceng"></i></span>
+			<span class="icon" command="layer-putdown"><i class="iconfont icon-xiayiyiceng"></i></span>
 		</div>
 	</div>
 	<div class="sf-editor-graphBox-item">
@@ -633,10 +656,124 @@ export const graphInfo = `
 		<div>
 			<span class="icon"><i class="iconfont icon-fuzhi"></i></span>
 			<span class="icon"><i class="iconfont icon-shanchu"></i></span>
-			<span class="icon"><i class="iconfont icon-huabumeihua"></i></span>
 			<span class="icon"><i class="iconfont icon-suo"></i></span>
 			<span class="icon"><i class="iconfont icon-jiesuo"></i></span>
 		</div>
 	</div>
 </div>
+`;
+
+// 画布设置
+export const canvasSettingTemp = `
+<div class="sf-editor-graphBox">
+	<div class="sf-editor-graphBox-item">
+		<span>背景颜色</span>
+		<div>
+			<span style="background-color:#e03131" command="bgcolor-e03131"></span>
+			<span style="background-color:#2f9e44" command="bgcolor-2f9e44"></span>
+			<span style="background-color:#1971c2" command="bgcolor-1971c2"></span>
+			<span style="background-color:#f08c00" command="bgcolor-f08c00"></span>
+			<span style="background-color:#A5D8FF" command="bgcolor-A5D8FF"></span>
+			<span style="background-color:#D0BFFF" command="bgcolor-D0BFFF"></span>
+			<span style="background-color:#FCC2D7" command="bgcolor-FCC2D7"></span>
+			<span class="line"></span>
+			<input type="color" value="#E01515" id="bgcolor" />
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item background">
+		<span>常用尺寸</span>
+		<div>
+			<span command="size-A3">A3 尺寸 (1500px*2100px)</span>
+			<span command="size-A4">A4 尺寸 (1050px*1500px)</span>
+			<span command="size-A5">A5 尺寸 (750px*1050px)</span>
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item background">
+		<span>自定义尺寸</span>
+		<div class="custom">
+		</div>
+	</div>
+</div
+`;
+
+// 背景设置
+export const backgroundSettingTemp = `
+<div class="sf-editor-graphBox">
+	<div class="sf-editor-graphBox-item">
+		<span>网格设置</span>
+		<div>
+			<span style="background-color:#e03131" command="stroke-e03131"></span>
+			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>
+			<span style="background-color:#1971c2" command="stroke-1971c2"></span>
+			<span style="background-color:#f08c00" command="stroke-f08c00"></span>
+			<span style="background-color:#A5D8FF" command="stroke-A5D8FF"></span>
+			<span style="background-color:#D0BFFF" command="stroke-D0BFFF"></span>
+			<span style="background-color:#FCC2D7" command="stroke-FCC2D7"></span>
+			<span class="line"></span>
+			<input type="color" value="#E01515" id="color" />
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item">
+		<span>圆点设置</span>
+		<div>
+			<span style="background-color:#e03131" command="stroke-e03131"></span>
+			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>
+			<span style="background-color:#1971c2" command="stroke-1971c2"></span>
+			<span style="background-color:#f08c00" command="stroke-f08c00"></span>
+			<span style="background-color:#A5D8FF" command="stroke-A5D8FF"></span>
+			<span style="background-color:#D0BFFF" command="stroke-D0BFFF"></span>
+			<span style="background-color:#FCC2D7" command="stroke-FCC2D7"></span>
+			<span class="line"></span>
+			<input type="color" value="#E01515" id="color" />
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item">
+		<span>水印设置</span>
+		<div>
+			<span style="background-color:#e03131" command="stroke-e03131"></span>
+			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>
+			<span style="background-color:#1971c2" command="stroke-1971c2"></span>
+			<span style="background-color:#f08c00" command="stroke-f08c00"></span>
+			<span style="background-color:#A5D8FF" command="stroke-A5D8FF"></span>
+			<span style="background-color:#D0BFFF" command="stroke-D0BFFF"></span>
+			<span style="background-color:#FCC2D7" command="stroke-FCC2D7"></span>
+			<span class="line"></span>
+			<input type="color" value="#E01515" id="color" />
+		</div>
+	</div>
+</div
+`;
+
+// 主题切换
+export const themeTemp = `
+<div class="sf-editor-graphBox">
+	<div class="sf-editor-graphBox-item">
+		<span>主题切换</span>
+		<div>
+			<span style="background-color:#e03131" command="stroke-e03131"></span>
+			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>
+			<span style="background-color:#1971c2" command="stroke-1971c2"></span>
+			<span style="background-color:#f08c00" command="stroke-f08c00"></span>
+			<span style="background-color:#A5D8FF" command="stroke-A5D8FF"></span>
+			<span style="background-color:#D0BFFF" command="stroke-D0BFFF"></span>
+			<span style="background-color:#FCC2D7" command="stroke-FCC2D7"></span>
+			<span class="line"></span>
+			<input type="color" value="#E01515" id="color" />
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item">
+		<span>自定义主题</span>
+		<div>
+			<span style="background-color:#e03131" command="stroke-e03131"></span>
+			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>
+			<span style="background-color:#1971c2" command="stroke-1971c2"></span>
+			<span style="background-color:#f08c00" command="stroke-f08c00"></span>
+			<span style="background-color:#A5D8FF" command="stroke-A5D8FF"></span>
+			<span style="background-color:#D0BFFF" command="stroke-D0BFFF"></span>
+			<span style="background-color:#FCC2D7" command="stroke-FCC2D7"></span>
+			<span class="line"></span>
+			<input type="color" value="#E01515" id="color" />
+		</div>
+	</div>
+</div
 `;

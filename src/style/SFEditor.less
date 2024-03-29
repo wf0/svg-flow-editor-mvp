@@ -515,9 +515,15 @@
             border-bottom: solid #ccc 1px;
 
             i {
+                border-radius: 4px;
+                padding: 4px;
+                margin: 0 4px;
                 cursor: pointer;
-                margin: 0 5px;
                 color: #212930;
+
+                &:hover {
+                    background-color: #DFE2E5;
+                }
             }
         }
 
@@ -594,7 +600,7 @@
     // 所有的弹窗信息位置展示
     &-dialog {
         position: absolute;
-        z-index: 99;
+        z-index: 999;
         background-color: #fff;
         right: 0;
         top: 0;
@@ -687,30 +693,6 @@
                     margin: 0 5px;
                 }
 
-                // 线宽
-                .lineWidth::after {
-                    content: "";
-                    position: absolute;
-                    top: 50%;
-                    width: 80%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background-color: var(--mainColor);
-                }
-
-                .lineWidth {
-                    &-one::after {
-                        height: 1px;
-                    }
-
-                    &-two::after {
-                        height: 3px;
-                    }
-
-                    &-three::after {
-                        height: 5px;
-                    }
-                }
 
                 // 圆角
                 .borderRadius::after {
@@ -720,7 +702,7 @@
                     width: 80%;
                     height: 80%;
                     left: -20%;
-                    border: solid var(--mainColor) 2px;
+                    border: solid 2px;
                 }
 
                 .borderRadius {
@@ -744,6 +726,31 @@
                     height: 20px;
                 }
             }
+        }
+
+        // 画布设置相关样式
+        .background {
+            div {
+                flex-direction: column;
+
+                span {
+                    margin: 5px 0;
+                    padding: 12px 20px;
+                    width: 100%;
+                    display: flex;
+                    justify-content: flex-start;
+                }
+
+
+                input {
+                    width: 45%;
+                }
+            }
+
+            .custom {
+                flex-direction: row;
+            }
+
         }
     }
 

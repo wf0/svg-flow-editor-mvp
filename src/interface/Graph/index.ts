@@ -57,4 +57,5 @@ export interface IUpdateGraph {
   fill?: string;
   strokeWidth?: number;
   radius?: number;
+  dasharray?: string;
 }

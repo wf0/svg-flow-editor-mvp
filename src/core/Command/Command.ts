@@ -53,6 +53,9 @@ export class Command {
   /** 更新元件的信息-stroke、fill、线宽、圆角 */
   public executeUpdateGraph: CommandAdapt["updateGraph"];
 
+  // 设置页面大小
+  public setPageSize: CommandAdapt["setPageSize"];
+
   constructor(draw: Draw) {
     const adapt = new CommandAdapt(draw);
 
@@ -95,7 +98,10 @@ export class Command {
     this.executeLock = adapt.lock.bind(adapt);
     this.executeUnLock = adapt.unlock.bind(adapt);
 
-    // 设置rect 圆角
+    // 更新元件信息
     this.executeUpdateGraph = adapt.updateGraph.bind(adapt);
+
+    // 设置页面大小
+    this.setPageSize = adapt.setPageSize.bind(adapt);
   }
 }

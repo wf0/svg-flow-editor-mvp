@@ -15,11 +15,10 @@ export interface IBackground {
 
 // 主题色
 export type IThemeOpt = {
-  [key: string]: string;
-  background: string; // 背景颜色
-  stroke: string; // 元件边框颜色
-  fill: string; // 元件填充颜色
-  text: string; // 文本颜色
-  line: string; // 线条颜色
-  auxiliaryLine: string; // 辅助线颜色
+  background?: string; // 背景颜色
+  stroke?: string; // 元件边框颜色
+  fill?: string; // 元件填充颜色
+  text?: string; // 文本颜色
+  line?: string; // 线条颜色
+  auxiliaryLine?: string; // 辅助线颜色
 };

@@ -234,6 +234,19 @@ export class GraphCommon {
     return graph;
   }
 
+
+  /**
+   * 设置线条样式
+   * @param dasharray 
+   * @returns 
+   */
+  public setStrokeDasharray(dasharray: string) {
+    const graph = this as unknown as IGraph;
+    const element = graph.getElement();
+    element.setAttribute("stroke-dasharray", dasharray);
+    return graph;
+  }
+
   /**
    * 设置位置
    * @param x

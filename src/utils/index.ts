@@ -37,6 +37,7 @@ function setTheme(theme: string, option?: IThemeOpt) {
 
   // 将用户的配置覆盖默认 theme1
   const opt = Object.assign(allTheme[theme], option);
+
   // 动态获取颜色
   for (const key in opt) {
     if (Object.prototype.hasOwnProperty.call(opt, key)) {
@@ -53,6 +54,7 @@ function setTheme(theme: string, option?: IThemeOpt) {
 
   // 给新增的 tag 一个id 应该先删除，再添加
   styleTag.setAttribute("id", "colorful_theme");
+  styleTag.setAttribute("theme-name", theme);
 
   styleTag.innerHTML = `:root{${themeHTML}}`;
 

@@ -233,10 +233,17 @@ export class CommandAdapt {
   public group() {}
   public ungroup() {}
 
+  /** 设置主题 */
   public setTheme(theme: string | IThemeOpt) {
     if (typeof theme === "string") setTheme(theme);
     // 如果用户传入的是自定义的配置项，则需要动态设置 :root 的颜色值
-    else setTheme("colorful_theme1", theme);
+    else {
+      // 这里应该取得是当前的主题
+      const head = document.querySelector("head") as HTMLHeadElement;
+      const themeTag = head.querySelector("#colorful_theme");
+      const themeName = themeTag?.getAttribute("theme-name") as string;
+      setTheme(themeName, theme);
+    }
     console.warn(
       "【注意】样式有权重之分，如果手动设置了样式，则默认样式可能不生效！"
     );
@@ -291,24 +298,6 @@ export class CommandAdapt {
   public beautify() {
     console.log("commandAdapt - beautify");
   }
-  public canvas() {
-    console.log("commandAdapt - canvas");
-  }
-  public backgroundcolor() {
-    console.log("commandAdapt - backgroundcolor");
-  }
-  public grid() {
-    console.log("commandAdapt - grid");
-  }
-  public origin() {
-    console.log("commandAdapt - origin");
-  }
-  public water() {
-    console.log("commandAdapt - water");
-  }
-  public theme() {
-    console.log("commandAdapt - theme");
-  }
   public lock() {
     console.log("commandAdapt - lock");
   }
@@ -316,12 +305,12 @@ export class CommandAdapt {
     console.log("commandAdapt - unlock");
   }
 
-  // 设置元件圆角
+  // 更新元件
   public updateGraph(payload: IUpdateGraph) {
     // rx 和 ry 来实现圆角
     const selected = this.draw.getGraphEvent().getAllSelected();
     if (!selected.length) return;
-    const { stroke, fill, strokeWidth, radius } = payload;
+    const { stroke, fill, strokeWidth, radius, dasharray } = payload;
     selected.forEach((item) => {
       const graphid = item.getAttribute("graphid") as string;
       const graph = new Graph(this.draw, graphid);
@@ -329,6 +318,16 @@ export class CommandAdapt {
       stroke && graph.setStroke(stroke);
       fill && graph.setFill(fill);
       strokeWidth && graph.setStrokeWidth(strokeWidth);
+      dasharray &&
+        graph.setStrokeDasharray(dasharray === "solid" ? "" : dasharray);
     });
+  }
+
+  // 设置页面大小
+  public setPageSize(w: number, h: number) {
+    if (!w || !h) return;
+    const editorBox = this.draw.getEditorBox();
+    editorBox.style.width = w + "px";
+    editorBox.style.height = h + "px";
   }
 }

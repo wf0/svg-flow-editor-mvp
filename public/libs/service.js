@@ -9,7 +9,7 @@ const server = http.createServer((request, response) => {
 });
 
 /**
- * @DESC 导出解压方法
+ * @DESC pako 解压方法
  * @param { Uint8Array } data
  * @returns
  */

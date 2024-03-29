@@ -1,26 +1,30 @@
-import { nanoid } from "nanoid";
+import { messageInfo } from "../Config/index.ts";
+import { Command } from "../Command/Command.ts";
+import { Graph } from "../Graph/index.ts";
 import { Draw } from "../Draw/index.ts";
+import { nanoid } from "nanoid";
+import pako from "pako";
 import {
   IWebsocket,
   socketInfo,
   wsMessage,
 } from "../../interface/Websocket/index.ts";
-import { messageInfo } from "../Config/index.ts";
-import pako from "pako";
-import { Command } from "../Command/Command.ts";
-import { Graph } from "../Graph/index.ts";
 
-// 协同编辑相关类 websocket
+/**
+ * 协同编辑相关类 websocket
+ *  1. 数据传输采用 pako 加密/解密形式
+ *  2. 服务端 demo 在public/libs/service.js，采用 ws 搭建服务，可在服务端进行数据存储、业务处理
+ */
 export class Websocket {
   private draw: Draw;
   private clientID: string; // 当前连接的唯一ID
   private username!: string; // 用户名
   private socketurl!: string; // 连接的 websocket 地址
   private websocket!: WebSocket; // websocket 对象
-  public connection: boolean; // 记录连接状态
   private retryTimer!: number; // 心跳包定时器对象ID
   private retryCount!: number; // 重连次数
   private command: Command;
+  public connection: boolean; // 记录连接状态
 
   constructor(draw: Draw) {
     this.draw = draw;
@@ -82,8 +86,26 @@ export class Websocket {
   }
 
   /**
+   * 主动发送消息
+   * @param message operate value
+   * @returns
+   */
+  public sendMessage(message: wsMessage) {
+    if (!this.connection) return;
+    this.websocket.send(this.gzip(message)); // string | ArrayBufferLike | Blob | ArrayBufferView
+  }
+
+  /**
+   * 主动关闭事件
+   */
+  public closeWebSocket() {
+    if ("WebSocket" in window) this.websocket.close();
+    else console.error(messageInfo.websocket.support);
+  }
+
+  /**
    * pako 加密
-   * @param d
+   * @param d wsMessage
    * @returns
    */
   private gzip(d: wsMessage) {
@@ -96,7 +118,7 @@ export class Websocket {
   }
 
   /**
-   * pako 解密
+   * pako 解密 Blob
    * @param data
    */
   private unzip(data: Blob): Promise<wsMessage & socketInfo> {
@@ -160,22 +182,5 @@ export class Websocket {
       default:
         break;
     }
-  }
-
-  /**
-   * 主动发送消息
-   */
-  public sendMessage(message: wsMessage) {
-    if (!this.connection) return;
-    const gzip = this.gzip(message);
-    this.websocket.send(gzip); // string | ArrayBufferLike | Blob | ArrayBufferView
-  }
-
-  /**
-   * 主动关闭事件
-   */
-  public closeWebSocket() {
-    if ("WebSocket" in window) this.websocket.close();
-    else console.error(messageInfo.websocket.support);
   }
 }

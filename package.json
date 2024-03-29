@@ -16,7 +16,7 @@
     "minor": "npm version minor",
     "major": "npm version major",
     "libs": "npm run patch && npm publish",
-    "service": "cd src/core/Websocket && hotnode service"
+    "service": "cd public/libs && hotnode service"
   },
   "author": {
     "name": "WF",

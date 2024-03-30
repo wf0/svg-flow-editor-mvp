@@ -6,6 +6,7 @@ export interface IWebsocket {
 export type socketInfo = {
   username: string;
   clientID: string;
+  state: string; // 本地 doc 全量数据
 };
 // 定义消息类型
 export type wsMessage = {

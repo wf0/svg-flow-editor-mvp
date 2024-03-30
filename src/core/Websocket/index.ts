@@ -9,13 +9,14 @@ import {
   socketInfo,
   wsMessage,
 } from "../../interface/Websocket/index.ts";
+import { YJS } from "./Yjs.ts";
 
 /**
  * 协同编辑相关类 websocket
  *  1. 数据传输采用 pako 加密/解密形式
  *  2. 服务端 demo 在public/libs/service.js，采用 ws 搭建服务，可在服务端进行数据存储、业务处理
  */
-export class Websocket {
+export class Websocket extends YJS {
   private draw: Draw;
   private clientID: string; // 当前连接的唯一ID
   private username!: string; // 用户名
@@ -27,6 +28,7 @@ export class Websocket {
   public connection: boolean; // 记录连接状态
 
   constructor(draw: Draw) {
+    super();
     this.draw = draw;
     this.clientID = nanoid();
     this.connection = false;
@@ -93,11 +95,14 @@ export class Websocket {
   public sendMessage(message: wsMessage) {
     if (!this.connection) return;
     // 协同数据处理
-    // 1. 进行本地数据同步
+    // 1. 进行本地映射
+    this.setMap(message.operate, message.value);
 
-    // 2. 获取本地计算结果
+    // 2. 获取本地数据
+    const state = this.getState();
+
     // 3. 将本地结果同步到其他客户端
-    this.websocket.send(this.gzip(message)); // string | ArrayBufferLike | Blob | ArrayBufferView
+    this.websocket.send(this.gzip(message, state)); // string | ArrayBufferLike | Blob | ArrayBufferView
   }
 
   /**
@@ -113,10 +118,11 @@ export class Websocket {
    * @param d wsMessage
    * @returns Uint8Array
    */
-  private gzip(d: wsMessage) {
+  private gzip(d: wsMessage, state: string) {
     const payload = Object.assign(d, {
       username: this.username,
       clientID: this.clientID,
+      state,
     });
     const encode = encodeURIComponent(JSON.stringify(payload));
     return pako.gzip(encode);
@@ -148,10 +154,16 @@ export class Websocket {
    */
   private async messageHandle(result: MessageEvent) {
     const data = await this.unzip(result.data);
-    const { operate, value, clientID } = data;
+    const { operate, clientID, state } = data;
     if (clientID === this.clientID) return; // 同一个clientID表示当前用户发起的操作，不响应操作
 
-    // 对其他客户端协同的操作做响应
+    // 1. 收到远端数据后,需要进行本地合并
+    this.mergeState(state);
+
+    // 2. 获取合并后的数据操作
+    const value = this.getMap(operate);
+
+    // 3. 根据合并后的数据,对其他客户端协同的操作做响应
     switch (operate) {
       case "addGraph":
         var { type, width, height, nodeID, x, y } = value;

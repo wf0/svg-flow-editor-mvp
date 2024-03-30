@@ -86,12 +86,17 @@ export class Websocket {
   }
 
   /**
-   * 主动发送消息
+   * 主动发送消息-通过计算差异同步两个客户端
    * @param message operate value
    * @returns
    */
   public sendMessage(message: wsMessage) {
     if (!this.connection) return;
+    // 协同数据处理
+    // 1. 进行本地数据同步
+
+    // 2. 获取本地计算结果
+    // 3. 将本地结果同步到其他客户端
     this.websocket.send(this.gzip(message)); // string | ArrayBufferLike | Blob | ArrayBufferView
   }
 
@@ -106,7 +111,7 @@ export class Websocket {
   /**
    * pako 加密
    * @param d wsMessage
-   * @returns
+   * @returns Uint8Array
    */
   private gzip(d: wsMessage) {
     const payload = Object.assign(d, {
@@ -143,15 +148,14 @@ export class Websocket {
    */
   private async messageHandle(result: MessageEvent) {
     const data = await this.unzip(result.data);
-    if (data.clientID === this.clientID) return; // 同一个clientID不响应操作
-    const { operate, value } = data;
+    const { operate, value, clientID } = data;
+    if (clientID === this.clientID) return; // 同一个clientID表示当前用户发起的操作，不响应操作
 
-    // 对协同的操作做响应
+    // 对其他客户端协同的操作做响应
     switch (operate) {
       case "addGraph":
         var { type, width, height, nodeID, x, y } = value;
-        // 用户添加元件，本地也同步添加元件
-        this.command.executeAddGraph({ type, width, height, nodeID, x, y });
+        this.command.executeAddGraph({ type, width, height, nodeID, x, y }); // 用户添加元件，本地也同步添加元件
         break;
 
       case "updateGraph":
@@ -165,12 +169,9 @@ export class Websocket {
         break;
 
       case "deleteGraph":
-        // 获取 nodeID
-        var { nodeID } = value;
-        // 找到 这个id 的main
-        const mainBox = this.draw.getGraphDraw().getGraphMain(nodeID);
-        mainBox && mainBox.remove();
-
+        var { nodeID } = value; // 获取 nodeID
+        const mainBox = this.draw.getGraphDraw().getGraphMain(nodeID); // 找到 这个id 的main
+        mainBox && mainBox.remove(); // 执行删除
         break;
 
       case "graphClick":

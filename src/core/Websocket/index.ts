@@ -13,19 +13,19 @@ import { YJS } from "./Yjs.ts";
 
 /**
  * 协同编辑相关类 websocket
- *  1. 数据传输采用 pako 加密/解密形式
+ *  1. 数据传输采用 pako 加密/解密形式，加密解密对应的方法在客户端、服务端均有
  *  2. 服务端 demo 在public/libs/service.js，采用 ws 搭建服务，可在服务端进行数据存储、业务处理
- *  3. 冲突处理采用 Yjs 实现，应用的方案是 【交换完整的文档结构以同步客户端数据】
+ *  3. 可运行 yarn service / npm run service 进行 demo 服务启动，以便体验协同
+ *  4. 冲突处理采用 Yjs 实现，应用的方案是 【交换完整的文档结构以同步客户端数据】
  *     https://docs.yjs.dev/api/document-updates#example-sync-two-clients-by-exchanging-the-complete-document-structure
- *  4. 数据传输过程采用 js-base 进行 base64 编码传输，解析时再转换为 Unit8Array 以进行合并操作
- *  5. 在 websocket.onmessage 中的数据，需要取 Yjs 同步后的数据，以达到数据一致性目的
+ *  5. 数据传输过程采用 js-base 进行 base64 编码传输，解析时再转换为 Unit8Array 以进行合并操作
+ *  6. 在 websocket.onmessage 中的数据，需要取 Yjs 同步后的数据，以达到数据一致性目的
  */
 
 export class Websocket extends YJS {
   private draw: Draw;
   private clientID: string; // 当前连接的唯一ID
   private username!: string; // 用户名
-  private socketurl!: string; // 连接的 websocket 地址
   private websocket!: WebSocket; // websocket 对象
   private retryTimer!: number; // 心跳包定时器对象ID
   private retryCount!: number; // 重连次数
@@ -48,9 +48,19 @@ export class Websocket extends YJS {
     if ("WebSocket" in window) {
       // 记录信息
       const { socketurl, username } = payload;
-      this.socketurl = socketurl; // URL 上可能需要进行参数校验
+
       this.username = username || `user_${this.clientID.slice(0, 4)}`;
-      this.websocket = new WebSocket(this.socketurl);
+
+      var wsURL = ""; // URL 上可能需要进行参数校验
+      if (socketurl.indexOf("?") > -1) {
+        // 如果 > -1 表示URL上已经带了参数，则 clientID拼接在后即可
+        wsURL = `${socketurl}&clientID=${this.clientID}`;
+      } else {
+        // 不然就是没有参数，需要手动拼接参数
+        wsURL = `${socketurl}?clientID=${this.clientID}`;
+      }
+      // 连接 websocket
+      this.websocket = new WebSocket(wsURL);
 
       // 1. 连接建立时触发
       this.websocket.onopen = this.openHandle.bind(this);
@@ -95,7 +105,7 @@ export class Websocket extends YJS {
   }
 
   /**
-   * pako 加密
+   * @DESC pako 加密
    * @param { wsMessage } d
    * @param { string } state
    * @returns
@@ -134,17 +144,16 @@ export class Websocket extends YJS {
    * websocket onopen
    */
   private openHandle() {
-    this.connection = true;
-    this.retryCount = 0;
-    console.info(messageInfo.websocket.success, "==>", this.username);
-    // 1. 发送用户连接广播
-    this.sendMessage({
-      operate: "connect",
-      value: {
-        username: this.username,
-        msg: `${this.username} 连接 websocket.`,
-      },
-    });
+    if (this.websocket.readyState !== 1) return; // 检测连接状态
+    this.connection = true; // 重置连接状态
+    this.retryCount = 0; // 重连次数
+    console.info(`## ${messageInfo.websocket.success} ==> [${this.username}]`);
+
+    // 自身连接服务器进行数据初始化
+    this.sendMessage({ operate: "connect" });
+    // 通知其他客户端，我加入协同
+    this.sendMessage({ operate: "join" });
+
     // @ts-ignore 防止websocket长时间不发送消息导致断连
     this.retryTimer = setInterval(() => this.websocket.send("rub"), 60000);
   }
@@ -184,23 +193,31 @@ export class Websocket extends YJS {
    * @param { MessageEvent } result
    */
   private async messageHandle(result: MessageEvent) {
-    const data = await this.unzip(result.data);
-    const { operate, clientID, state, value } = data;
+    const data: wsMessage & socketInfo = await this.unzip(result.data);
+    const { operate, clientID, state, username } = data;
+
     if (clientID === this.clientID) return; // 同一个clientID表示当前用户发起的操作，不响应操作
 
     // 1. 收到远端数据后,需要进行本地合并
-    this.mergeState(state);
+    state && this.mergeState(state);
 
     // 2. 获取合并后的数据操作
-    // const  = this.getMap(operate);
+    const value = this.getMap(operate);
 
     // 3. 根据合并后的数据,对其他客户端协同的操作做响应
     switch (operate) {
       case "connect":
-        console.log(value.msg);
+        // 自己连接，需要进行数据同步
+        console.log("我需要初始化数据");
+        break;
+
+      case "join":
+        // 其他用户加入协同
+        console.log(`${username} 加入协同.`);
         break;
 
       case "addGraph":
+        console.log("收到服务器事件-addGraph");
         var { type, width, height, nodeID, x, y } = value;
         this.command.executeAddGraph({ type, width, height, nodeID, x, y }); // 用户添加元件，本地也同步添加元件
         break;

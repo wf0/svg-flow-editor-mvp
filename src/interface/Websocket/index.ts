@@ -11,10 +11,12 @@ export type socketInfo = {
 // 定义消息类型
 export type wsMessage = {
   operate:
-    | "connect" // 用户连接通知
+    | "connect" // 用户建立新连接
+    | "disconnect" // 用户离开
+    | "join" // 其他用户加入协同连接通知
     | "graphClick" // 元件单击
     | "addGraph" // 添加元件
     | "updateGraph" // 更新元件
     | "deleteGraph"; // 删除元件
-  value: any;
+  value?: any;
 };

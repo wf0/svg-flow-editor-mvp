@@ -10,6 +10,11 @@ export type socketInfo = {
 };
 // 定义消息类型
 export type wsMessage = {
-  operate: "graphClick" | "addGraph" | "updateGraph" | "deleteGraph"; // 操作类型
+  operate:
+    | "connect" // 用户连接通知
+    | "graphClick" // 元件单击
+    | "addGraph" // 添加元件
+    | "updateGraph" // 更新元件
+    | "deleteGraph"; // 删除元件
   value: any;
 };

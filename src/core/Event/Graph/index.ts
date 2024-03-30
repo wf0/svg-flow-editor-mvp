@@ -311,32 +311,6 @@ export class GraphEvent {
   }
 
   /**
-   * 元件点击事件-打开配置弹窗
-   */
-  private openDialog() {
-    // 获取dialog对象
-    const dialog = this.draw.getDialogDraw();
-
-    // 打开弹窗
-    dialog.openDialog("元件配置", "graphInfoTemp");
-
-    // 添加事件
-    const dialogMain = this.draw.getRoot().querySelector(".sf-editor-dialog");
-
-    // 给 span 添加事件
-    dialogMain?.querySelectorAll("[command]").forEach((item) => {
-      const command = item.getAttribute("command") as string;
-      item.addEventListener("click", (e) => dialog.spanClickHandle(e, command));
-    });
-
-    // 给 input 绑定 change 事件
-    dialogMain?.querySelectorAll("input").forEach((input) => {
-      const id = input.getAttribute("id") as string;
-      input.addEventListener("change", (e) => dialog.inputHandle(e, id));
-    });
-  }
-
-  /**
    * 获取所有的 main 用于处理顶层、底层比较
    * @returns
    */

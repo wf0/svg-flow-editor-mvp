@@ -10,10 +10,11 @@ export class SVGImage extends GraphCommon {
     this.image.setAttribute("width", "100%");
     this.image.setAttribute("height", "100%");
     this.image.setAttribute("href", url);
+    // 一定先执行 addTo 不然会报找不到 Element 的错误
+    super.addToEditor(this);
 
     // 将当前创建的元件添加到 svg 下
     if (width && height) {
-      super.addToEditor(this);
       super.setWidth.call(this, width);
       super.setHeight.call(this, height);
     } else this.analysis(url);

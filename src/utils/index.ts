@@ -92,4 +92,56 @@ function type4(p: graphInfo, OFFSET: number) {
   return { ox, oy, x, y };
 }
 
-export { nextTick, isMod, setTheme, type1, type2, type3, type4 };
+/**
+ * 上传本地图片
+ */
+function uploadImage() {
+  return new Promise<string>((resolve) => {
+    const input = document.createElement("input");
+    input.style.display = "none";
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+    input.addEventListener("change", (e) => {
+      var { files } = e.target as HTMLInputElement;
+      const file = files && files[0];
+      if (file && file.type.match("image.*")) {
+        input.remove();
+        resolve(toBlob(file, file.type) as string);
+      }
+    });
+  });
+}
+
+/**
+ * 将本地图片转成 blob 显示
+ * @param file
+ * @param type
+ * @returns
+ */
+function toBlob(file: File, type: string) {
+  let url = null;
+  const blob = new Blob([file], { type });
+  if (window.webkitURL !== undefined) {
+    try {
+      url = window.webkitURL.createObjectURL(blob);
+    } catch (error) {}
+  } else if (window.URL !== undefined) {
+    try {
+      url = window.URL.createObjectURL(blob);
+    } catch (error) {}
+  }
+  return url;
+}
+
+export {
+  nextTick,
+  isMod,
+  setTheme,
+  type1,
+  type2,
+  type3,
+  type4,
+  toBlob,
+  uploadImage,
+};

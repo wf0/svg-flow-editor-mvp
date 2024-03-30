@@ -1,5 +1,6 @@
 import { IBackground } from "../../interface/Draw/index.ts";
 import { IUpdateGraph } from "../../interface/Graph/index.ts";
+import { nextTick } from "../../utils/index.ts";
 import { Command } from "../Command/Command.ts";
 import {
   canvasSettingTemp,
@@ -12,7 +13,6 @@ type dialogTemp =
   | "echartUpdateTemp"
   | "graphInfoTemp"
   | "canvasSettingTemp"
-  | "backgroundSettingTemp"
   | "themeTemp";
 
 export class DialogDraw {
@@ -58,11 +58,35 @@ export class DialogDraw {
     };
     const main = this.dialogBox.querySelector(".main") as HTMLDivElement;
     main.innerHTML = map[temp];
+
+    this.addEvent();
   }
 
   public closeDialog() {
     this.dialogBox.remove();
   }
+
+  // 给当前 span 添加事件
+  private addEvent() {
+    // 获取dialog对象
+    const dialog = this.draw.getDialogDraw();
+
+    // 添加事件
+    const dialogMain = this.draw.getRoot().querySelector(".sf-editor-dialog");
+
+    // 给 span 添加事件
+    dialogMain?.querySelectorAll("[command]").forEach((item) => {
+      const command = item.getAttribute("command") as string;
+      item.addEventListener("click", (e) => dialog.spanClickHandle(e, command));
+    });
+
+    // 给 input 绑定 change 事件
+    dialogMain?.querySelectorAll("input").forEach((input) => {
+      const id = input.getAttribute("id") as string;
+      input.addEventListener("change", (e) => dialog.inputHandle(e, id));
+    });
+  }
+
   // 设置网格水印颜色相干方法
   private setColor(command: string, value: string) {
     // 1. 获取当前 canvas 绘制状态

@@ -149,8 +149,9 @@ export class Websocket extends YJS {
     this.retryCount = 0; // 重连次数
     console.info(`## ${messageInfo.websocket.success} ==> [${this.username}]`);
 
-    // 自身连接服务器进行数据初始化
+    // 自身连接服务器进行数据初始化，类似接口请求数据初始化形式
     this.sendMessage({ operate: "connect" });
+
     // 通知其他客户端，我加入协同
     this.sendMessage({ operate: "join" });
 

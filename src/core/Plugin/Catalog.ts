@@ -4,6 +4,7 @@ import { Draw } from "../Draw/index.ts";
 import { SVGImage } from "../Graph/Image.ts";
 import { logoBase, positionBase } from "../Base64/index.ts";
 import { catalogTemp } from "../Template/index.ts";
+import { uploadImage } from "../../utils/index.ts";
 
 // 元件库
 export class Catalog {
@@ -142,41 +143,8 @@ export class Catalog {
   /**
    * 上传本地图片
    */
-  private upload() {
-    const input = this.draw.createHTMLElement("input");
-    input.style.display = "none";
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.click();
-    input.addEventListener("change", (e) => {
-      var { files } = e.target as HTMLInputElement;
-      const file = files && files[0];
-      if (file && file.type.match("image.*")) {
-        const url = this.toBlob(file, file.type);
-        new SVGImage(this.draw, url as string);
-        input.remove();
-      }
-    });
-  }
-
-  /**
-   * 将本地图片转成 blob 显示
-   * @param file
-   * @param type
-   * @returns
-   */
-  private toBlob(file: File, type: string) {
-    let url = null;
-    const blob = new Blob([file], { type });
-    if (window.webkitURL !== undefined) {
-      try {
-        url = window.webkitURL.createObjectURL(blob);
-      } catch (error) {}
-    } else if (window.URL !== undefined) {
-      try {
-        url = window.URL.createObjectURL(blob);
-      } catch (error) {}
-    }
-    return url;
+  private async upload() {
+    const url = await uploadImage();
+    new SVGImage(this.draw, url);
   }
 }

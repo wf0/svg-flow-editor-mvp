@@ -1,7 +1,8 @@
 import { IBackground } from "../../interface/Draw/index.ts";
-import { nextTick } from "../../utils/index.ts";
+import { nextTick, uploadImage } from "../../utils/index.ts";
 import { Command } from "../Command/Command.ts";
 import { Draw } from "../Draw/index.ts";
+import { SVGImage } from "../Graph/Image.ts";
 import { operationTemp } from "../Template/index.ts";
 
 // 操作区
@@ -50,11 +51,35 @@ export class Operation {
 
     // 2. 给 bottom 的icon 添加事件
     bottom?.querySelectorAll("[command]").forEach((item) => {
-      const command = item.getAttribute("command");
-      item.addEventListener("click", () => {
-        console.log("点击事件-", command);
-      });
+      const command = item.getAttribute("command") as string;
+      item.addEventListener("click", this.commandHandle.bind(this, command));
     });
+  }
+
+  /**
+   * 底部 icon 点击事件
+   * @param command
+   */
+  private commandHandle(command: string) {
+    const eventMap: { [key: string]: () => void } = {
+      revoke: this.command.executeUndo,
+      restore: this.command.executeRedo,
+      beautify: this.command.executeBeautify,
+      backgroundcolor: () =>
+        this.draw.getDialogDraw().openDialog("画布设置", "canvasSettingTemp"),
+      upload: async () => {
+        const url = await uploadImage();
+        new SVGImage(this.draw, url);
+      },
+      // bold
+      // italic
+      // underline
+      // color
+      // fill
+      // strokeWidth
+      // dashed
+    };
+    eventMap[command] && eventMap[command]();
   }
 
   /**
@@ -160,26 +185,6 @@ export class Operation {
       // 获取 dialog 对象
       const dilaog = this.draw.getDialogDraw();
 
-      // dialog 事件中心
-      const dialogEvent = () => {
-        // 获取 dialog html
-        const main = this.draw.getRoot().querySelector(".sf-editor-dialog");
-
-        // 2. 注册 span 事件
-        main?.querySelectorAll("[command]").forEach((item) => {
-          const command = item.getAttribute("command") as string;
-          item.addEventListener("click", (e) =>
-            dilaog.spanClickHandle(e, command)
-          );
-        });
-
-        // 3. 注册 input 事件
-        main?.querySelectorAll("input").forEach((item) => {
-          const id = item.getAttribute("id") as string;
-          item.addEventListener("change", (e) => dilaog.inputHandle(e, id));
-        });
-      };
-
       // 2. 响应事件
       switch (command) {
         case "50":
@@ -192,7 +197,6 @@ export class Operation {
 
         case "canvas":
           dilaog.openDialog("画布设置", "canvasSettingTemp"); // 1. 打开弹窗
-          dialogEvent(); // 2. 注册事件
           break;
 
         case "grid":

@@ -275,26 +275,20 @@ editor.command.executeBackground()
 
 2. 只显示网格 
 editor.command.executeBackground({gridline:true})
-editor.command.executeBackground({gridlineColor:'red'})
-editor.command.executeBackground({gridline:true,gridlineColor:'red'})
 
 3. 只显示圆点 
 editor.command.executeBackground({origin:true})
-editor.command.executeBackground({originColor:'red'})
-editor.command.executeBackground({origin:true,originColor:'red'})
 
 4. 只显示网格 
 editor.command.executeBackground({watermark:true})
-editor.command.executeBackground({watermarkText:'水印文本'})
-editor.command.executeBackground({watermarkColor:'red'})
-... 以及上诉的组合都可以
+
 
 5. 内部实现原理：
- // 网格背景与小圆点背景互斥
-if (gridline || gridlineColor) canvas.gridLine(gridlineColor);
-else if (origin || originColor) canvas.origin(originColor);
+ // 网格背景与小圆点背景互斥-原因是圆点的坐标直接取得网格的交点，导致网格显示后，圆点显示不明显
+if (gridline) canvas.gridLine(gridlineColor);
+else if (origin) canvas.origin(originColor);
 // 水印则是独立存在
-if (watermark || watermarkColor || watermarkText) canvas.waterMark(watermarkText, watermarkColor);
+if (watermark) canvas.waterMark(watermarkText, watermarkColor);
 ~~~
 
 ### executeAddGraph(payload: node)
@@ -505,7 +499,6 @@ editor.eventBus.on('pageScale',(scale)=>{
 ## 内部快捷键
 
 - Ctrl + 左键 多选
-
 - Ctrl + C 复制
 - Ctrl + V 粘贴
 - Ctrl + X 剪切

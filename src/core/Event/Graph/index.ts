@@ -1,4 +1,5 @@
-import { IGraph, IUpdateGraph, node } from "../../../interface/Graph/index.ts";
+import { IGraph, node } from "../../../interface/Graph/index.ts";
+import { nextTick } from "../../../utils/index.ts";
 import { Command } from "../../Command/Command.ts";
 import { Draw } from "../../Draw/index.ts";
 import { GEchart } from "../../Graph/GEchart.ts";
@@ -21,10 +22,12 @@ export class GraphEvent {
   private sy!: number;
   private command: Command;
   private nodes!: node[];
+  private textArray!: string[];
 
   constructor(draw: Draw) {
     this.draw = draw;
     this.command = new Command(draw);
+    this.textArray = [];
   }
 
   /**
@@ -93,58 +96,65 @@ export class GraphEvent {
     // 支持双击文本编辑的容器
     const support = ["rect", "ellipse"];
 
-    // @ts-ignore
+    // @ts-ignore 统计图双击，则是打开配置弹窗
     if (e.target.tagName === "CANVAS")
       return this.draw.getEchartDraw().updateOption(graph as GEchart);
 
-    // @ts-ignore
+    // @ts-ignore 不支持其他类型的文本输入
     if (!support.includes(e.target.tagName)) return;
-    const nodeID = graph.getID();
-    const selector = "div.sf-editor-box-graphs-main-contenteditable";
-
-    const graphDraw = this.draw.getGraphDraw();
 
     // 1. 获取当前 main
-    const graphBox = graphDraw.getGraphMain(nodeID);
+    const selector = "div.sf-editor-box-graphs-main-contenteditable";
+    const graphDraw = this.draw.getGraphDraw();
+    const graphBox = graphDraw.getGraphMain(graph.getID());
 
-    // 2. 创建 editorable
-    this.createContentEditable(graph);
-
-    // 3. 获取 editorable 的div
-    const editor = graphBox.querySelector(selector) as HTMLDivElement;
-
-    // 4. 通过 editor 找parent 找 svg
-    const svg = editor.parentNode?.querySelector("svg") as SVGSVGElement;
-
-    // 5. 通过 svg 找 text 节点
-    const textNode = svg.querySelector("text");
-
-    const input = editor.children[0] as HTMLDivElement;
-
-    // 6. 如果本身节点存在，则取文字出来显示到 input 中，并且删除 text 节点
-    if (textNode) {
-      input.innerHTML = textNode.innerHTML;
-      textNode.remove();
-    }
-
-    // 自动获取焦点
-    input.focus();
+    // 2. 获取 editorable 的div
+    const editorable = graphBox.querySelector(selector) as HTMLDivElement;
 
     // 将光标移动到末尾
-    var range = document.createRange();
-    range.selectNodeContents(input);
-    range.collapse(false);
-    var sel = window.getSelection() as Selection;
-    sel.removeAllRanges();
-    sel.addRange(range);
+    const setRange = (input: HTMLDivElement) => {
+      var range = document.createRange();
+      range.selectNodeContents(input);
+      range.collapse(false);
+      var sel = window.getSelection() as Selection;
+      sel.removeAllRanges();
+      sel.addRange(range);
+    };
 
-    input.addEventListener("blur", () => {
-      // 删除编辑器
-      editor.remove();
+    // 如果 editor 存在，则需要修改 userSelect point-event
+    if (editorable) {
+      editorable.style.pointerEvents = "";
+      editorable.style.userSelect = "";
+      const input = editorable.children[0] as HTMLDivElement;
+      // 自动获取焦点
+      input.focus();
+      setRange(input);
 
-      // 获取用户输入
-      this.setGraphText(graph, input.innerHTML);
-    });
+      input.addEventListener("blur", () => {
+        //  修改样式
+        editorable.style.pointerEvents = "none";
+        editorable.style.userSelect = "none";
+      });
+    } else {
+      // 2. 创建 editorable
+      this.createContentEditable(graph);
+
+      const editor = graphBox.querySelector(selector) as HTMLDivElement;
+
+      // 找 可编辑 div
+      const input = editor.children[0] as HTMLDivElement;
+      console.log("input", input);
+      // 自动获取焦点
+      input.focus();
+
+      setRange(input);
+
+      input.addEventListener("blur", () => {
+        //  修改样式
+        editor.style.pointerEvents = "none";
+        editor.style.userSelect = "none";
+      });
+    }
 
     e.stopPropagation();
     e.preventDefault();
@@ -168,23 +178,24 @@ export class GraphEvent {
    * @param text
    */
   public setGraphText(graph: IGraph, text: string) {
-    const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
-    // 4. 通过 editor 找parent 找 svg
-    const svg = graphBox.querySelector("svg") as SVGSVGElement;
+    // 1. 在当前元件的内部实现
+    const graphBox = this.draw.getGraphDraw().getGraphMain(graph.getID());
 
-    const SVGtext = graphBox.querySelector("text");
+    // 2. 看是否已经存在 editable
+    const selector = "div.sf-editor-box-graphs-main-contenteditable";
+    const editable = graphBox.querySelector(selector) as HTMLDivElement;
 
-    if (SVGtext) return (SVGtext.innerHTML = text);
-
-    // 不然执行创建
-    const st = this.draw.createSVGElement("text") as SVGTextElement;
-    st.style.pointerEvents = "none"; // 不响应用户操作
-    st.style.userSelect = "none"; // 无法实现选择复制
-    st.setAttribute("x", "50%");
-    st.setAttribute("y", "50%");
-    st.setAttribute("text-anchor", "middle");
-    st.innerHTML = text;
-    svg.appendChild(st);
+    if (editable) {
+      const input = editable.querySelector("div") as HTMLDivElement;
+      input.innerText = text;
+    } else {
+      // 执行创建动作
+      const editor = this.createContentEditable(graph);
+      editor.style.pointerEvents = "none";
+      editor.style.userSelect = "none";
+      const input = editor.querySelector("div") as HTMLDivElement;
+      input.innerText = text;
+    }
   }
 
   /**
@@ -192,8 +203,7 @@ export class GraphEvent {
    * @param graph
    */
   public createContentEditable(graph: IGraph) {
-    const nodeID = graph.getID();
-    const graphMain = this.draw.getGraphDraw().getGraphMain(nodeID);
+    const graphMain = this.draw.getGraphDraw().getGraphMain(graph.getID());
 
     const editor = this.draw.createHTMLElement("div") as HTMLDivElement;
     editor.classList.add("sf-editor-box-graphs-main-contenteditable");
@@ -203,6 +213,7 @@ export class GraphEvent {
 
     editor.appendChild(input);
     graphMain.appendChild(editor);
+    return editor;
   }
 
   /**

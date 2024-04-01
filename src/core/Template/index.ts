@@ -804,7 +804,7 @@ export const searchReplaceTemp = `
 	<i class="iconfont icon-xgb" title="关闭"></i>
 </div>
 <div class="sf-editor-search-bottom">
-	<input id="search" placeholder="Replace" autocomplete="off" id="replace" />
+	<input placeholder="Replace" autocomplete="off" id="replace" />
 	<i class="iconfont icon-tihuan" title="替换"></i>
 	<i class="iconfont icon-quanbutihuan" title="全部替换"></i>
 </div>

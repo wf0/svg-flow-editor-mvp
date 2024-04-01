@@ -117,6 +117,16 @@
                         width: calc(100% - 20px);
                         text-align: center;
 
+                        b {
+                            color: var(--mainColor);
+                        }
+
+                        // 这个是选中的
+                        span {
+                            color: #fff;
+                            background-color: var(--mainColor);
+                        }
+
                         &:focus-visible {
                             outline: none;
                         }
@@ -797,7 +807,6 @@
         box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
         position: absolute;
         background-color: #fff;
-        border: solid red 1px;
         border-radius: 4px;
         right: 10px;
         top: 30px;

@@ -151,7 +151,7 @@ export class RegisterEvent {
       {
         key: KeyMap["F"],
         ctrl: true,
-        callback: this.command.executeSearchReplace,
+        callback: () => this.command.executeSearchReplace(""),
       },
       {
         key: KeyMap["EQUAL"],

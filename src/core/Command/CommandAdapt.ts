@@ -334,18 +334,33 @@ export class CommandAdapt {
     editorBox.style.height = h + "px";
   }
 
-  // 搜索替换
-  public searchReplace() {
-    this.draw.getEditorEvent().clickHandle();
+  // 搜索替换-支持用户传递参数
+  public searchReplace(keyword?: string) {
     // 1. 获取系统选区，如果有文本被选中，则直接将选中文本放置于搜索框
     // @ts-ignore 获取 Selection 对象 window.getSelection();
     const { anchorOffset, focusOffset, baseNode } =
       window.getSelection() as Selection;
     const userSelected =
-      baseNode && baseNode.data.substring(anchorOffset, focusOffset);
+      baseNode &&
+      baseNode.data &&
+      baseNode.data.substring(anchorOffset, focusOffset);
     // 2. 创建 搜索替换框
-    this.draw.getDialogDraw().createSearchReplace(userSelected);
-
-    // 3. 将用户选中文本放置到搜索框内
+    this.draw.getDialogDraw().createSearchReplace(userSelected || keyword);
+  }
+  public searchPre() {
+    const dialogDraw = this.draw.getDialogDraw();
+    dialogDraw.searchPre();
+  }
+  public searchNext() {
+    const dialogDraw = this.draw.getDialogDraw();
+    dialogDraw.searchNext();
+  }
+  public replace(newWord: string) {
+    const dialogDraw = this.draw.getDialogDraw();
+    dialogDraw.replace(newWord);
+  }
+  public replaceAll(newWord: string) {
+    const dialogDraw = this.draw.getDialogDraw();
+    dialogDraw.replaceAll(newWord);
   }
 }

@@ -20,10 +20,17 @@ export class DialogDraw {
   private dialogBox: HTMLDivElement;
   private command: Command;
 
+  private index: number; // 记录当前搜索索引 【索引从 0 开始的呀！！！】
+  private all: number; // 记录当前搜索总数
+  private findArr: HTMLDivElement[]; // 当前符合的数组
+  private keyword!: string;
+
   constructor(draw: Draw) {
     this.draw = draw;
     this.command = new Command(draw);
-
+    this.index = 0;
+    this.all = 0;
+    this.findArr = [];
     // 1. 创建抽屉
     this.dialogBox = draw.createHTMLElement("div") as HTMLDivElement;
     this.dialogBox.classList.add("sf-editor-dialog");
@@ -163,39 +170,160 @@ export class DialogDraw {
 
   // 创建搜索替换框
   public createSearchReplace(text: string) {
-    // 1. 关闭 抽屉
     this.closeDialog();
+    this.draw.getEditorEvent().clickHandle();
     const root = this.draw.getRoot();
+    const searchBoxSelector = "div.sf-editor-search";
+    const searchBox = root.querySelector(searchBoxSelector) as HTMLDivElement;
+    const editorBox = this.draw.getEditorBox();
 
-    const searchBox = root.querySelector("div.sf-editor-search");
-    if (searchBox) {
-      // 如果存在，则需要修改属性即可
-      // 5. 如果用户有文本，则添加到搜索框
+    // 关闭事件
+    const closeHandle = () => {
+      root.querySelector(searchBoxSelector)?.remove();
+      // 恢复
+      editorBox
+        .querySelectorAll(".sf-editor-box-graphs-main-contenteditable")
+        .forEach((item) => {
+          const editor = item.querySelector("div") as HTMLDivElement;
+          editor.innerHTML = editor.innerHTML.replace(/<|>|\/|b|span/g, "");
+        });
+    };
+
+    // 搜索框用户输入
+    const sinputHandle = (e: Event) => {
+      // 输入框内容
+      const text = (e.target as HTMLInputElement).value;
+      this.keyword = text;
+      this.findArr = []; // 重置查找结果
+      this.index = 0; // 重置 index
+      this.all = 0; // 重置 all
+      this.setSpanNumber(); // 重置 1/21
+
+      // 全文查找文本
+      editorBox
+        .querySelectorAll(".sf-editor-box-graphs-main-contenteditable")
+        .forEach((item, index) => {
+          // item 是 contenteditableBox 里面的 div 才是内容，index 是当前的索引，通过这个参数实现 1/21
+          const editor = item.querySelector("div") as HTMLDivElement;
+          editor.innerHTML = editor.innerHTML.replace(/<|>|\/|b|span/g, "");
+          const findFlag = editor.innerText.includes(text);
+          findFlag && text && this.findArr.push(item as HTMLDivElement);
+        });
+
+      if (!this.findArr.length) return;
+
+      // 赋值 all
+      this.all = this.findArr.length;
+      this.searchKeyWord();
+      this.setSpanNumber();
+    };
+
+    // 如果搜索替换框已经存在，则直接使用该 DIV
+    const useSearchBox = () => {
       const input = searchBox.querySelector("input#search") as HTMLInputElement;
       input.value = text;
-
-      // 6. 获取焦点
+      // 获取焦点
       input.focus();
-    } else {
-      // 2. 创建搜索替换框
+    };
+
+    // 如果不存在，则需要创建 searchBox
+    const createSearchBox = () => {
       const box = this.draw.createHTMLElement("div") as HTMLDivElement;
       box.classList.add("sf-editor-search");
 
-      // 3. 添加模板
       box.innerHTML = searchReplaceTemp;
-
-      // 4. 添加到 root 下
       root.appendChild(box);
-      box
-        .querySelector(".icon-xgb")
-        ?.addEventListener("click", () => box.remove());
 
-      // 5. 如果用户有文本，则添加到搜索框
-      const input = box.querySelector("input#search") as HTMLInputElement;
-      input.value = text;
+      const sinput = box.querySelector("input#search") as HTMLInputElement; // 搜索
+      const rinput = box.querySelector("input#replace") as HTMLInputElement; // 替换
 
-      // 6. 获取焦点
-      input.focus();
-    }
+      // 如果用户有文本，则添加到搜索框
+      sinput.value = text;
+      sinput.focus();
+
+      // 提供关闭按钮
+      box.querySelector(".icon-xgb")?.addEventListener("click", closeHandle);
+
+      // 提供搜索输入框监听事件
+      sinput.addEventListener("input", sinputHandle);
+
+      // 提供上一处下一处事件
+      const pre = box.querySelector("i.icon-xiangzuo");
+      const next = box.querySelector("i.icon-xiangyou");
+      pre?.addEventListener("click", this.command.executeSearchPre);
+      next?.addEventListener("click", this.command.executeSearchNext);
+
+      // 提供替换 全部 事件
+      const replace = box.querySelector("i.icon-tihuan");
+      const replaceAll = box.querySelector("i.icon-quanbutihuan");
+      replace?.addEventListener("click", () =>
+        this.command.executeReplace(rinput.value)
+      );
+      replaceAll?.addEventListener("click", () =>
+        this.command.executeReplaceAll(rinput.value)
+      );
+    };
+
+    searchBox ? useSearchBox() : createSearchBox();
   }
+
+  private setSpanNumber() {
+    const root = this.draw.getRoot();
+    const searchBoxSelector = "div.sf-editor-search";
+    const searchBox = root.querySelector(searchBoxSelector) as HTMLDivElement;
+    if (!searchBox) return;
+    const span = searchBox.querySelector("span#num") as HTMLSpanElement;
+    if (this.index + 1 && this.all)
+      span.innerHTML = `${this.index + 1}/${this.all}`;
+    else span.innerHTML = "";
+  }
+
+  // searchKeyWord
+  private searchKeyWord() {
+    const text = this.keyword;
+    if (!this.findArr.length) return;
+    // 然后进行业务处理
+    this.findArr.forEach((item, index) => {
+      const editor = item.querySelector("div") as HTMLDivElement;
+      editor.innerHTML = editor.innerHTML.replace(/<|>|\/|b|span/g, "");
+      editor.innerHTML = editor.innerHTML.replace(
+        text,
+        index === this.index ? `<span>${text}</span>` : `<b>${text}</b>` // 【选中的用 span 不然用 b】
+      );
+    });
+  }
+
+  /**
+   * 搜索上一处
+   * @returns
+   */
+  public searchPre() {
+    if (this.index <= 0) this.index = this.all - 1;
+    else this.index--;
+    this.setSpanNumber();
+    this.searchKeyWord();
+  }
+
+  /**
+   * 搜索下一处
+   * @returns
+   */
+  public searchNext() {
+    if (this.index >= this.all - 1) this.index = 0;
+    else this.index++;
+    this.setSpanNumber();
+    this.searchKeyWord();
+  }
+
+  /**
+   * 替换
+   * @param newWord
+   */
+  public replace(newWord: string) {}
+
+  /**
+   * 全部替换
+   * @param newWord
+   */
+  public replaceAll(newWord: string) {}
 }

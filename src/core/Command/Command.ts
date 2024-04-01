@@ -58,6 +58,10 @@ export class Command {
 
   // 搜索替换
   public executeSearchReplace: CommandAdapt["searchReplace"];
+  public executeSearchPre: CommandAdapt["searchPre"]; // 搜索上一处
+  public executeSearchNext: CommandAdapt["searchNext"]; // 搜索下一处
+  public executeReplace: CommandAdapt["replace"]; // 替换当前
+  public executeReplaceAll: CommandAdapt["replaceAll"]; // 替换全部
 
   constructor(draw: Draw) {
     const adapt = new CommandAdapt(draw);
@@ -109,5 +113,9 @@ export class Command {
 
     // 搜索替换
     this.executeSearchReplace = adapt.searchReplace.bind(adapt);
+    this.executeSearchPre = adapt.searchPre.bind(adapt);
+    this.executeSearchNext = adapt.searchNext.bind(adapt);
+    this.executeReplace = adapt.replace.bind(adapt);
+    this.executeReplaceAll = adapt.replaceAll.bind(adapt);
   }
 }

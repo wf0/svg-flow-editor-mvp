@@ -752,7 +752,7 @@ export const canvasSettingTemp = `
 	<div class="sf-editor-graphBox-item">
 		<span>自定义水印文本</span>
 		<div>
-			<input />
+			<input autocomplete="off" id="watertext" />
 		</div>
 	</div>
 </div

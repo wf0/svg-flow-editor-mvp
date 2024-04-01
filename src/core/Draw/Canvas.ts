@@ -144,12 +144,12 @@ export class CanvasDraw {
    */
   public waterMark(waterMarkText?: string, color?: string) {
     if (!this.canvas || !this.ctx) return;
+    const text = waterMarkText || defaultWaterMarkText;
 
     this.background.watermark = true;
     this.background.watermarkColor = color;
-    this.background.watermarkText = waterMarkText;
+    this.background.watermarkText = text;
 
-    const text = waterMarkText || defaultWaterMarkText;
 
     // 定义画布大小和单位长度（每条水平或垂直线所表示的像素数）
     const { height, width } = this.canvas;

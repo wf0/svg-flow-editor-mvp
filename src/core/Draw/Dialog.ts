@@ -164,15 +164,22 @@ export class DialogDraw {
    * @param id
    */
   public inputHandle = (e: Event, id: string) => {
-    const color = (e.target as HTMLInputElement).value;
+    const value = (e.target as HTMLInputElement).value;
     const updateGraph = (o: IUpdateGraph) => this.command.executeUpdateGraph(o);
+    // 设置水印
+    const setWaterText = (watermarkText: string) => {
+      const oldVal = this.draw.getCanvasDraw().getBackground();
+      const payload = Object.assign(oldVal, { watermarkText });
+      this.command.executeBackground(payload);
+    };
 
-    if (id === "color") updateGraph({ stroke: color });
-    if (id === "background") updateGraph({ fill: color });
-    if (id === "bgcolor") this.command.executeSetTheme({ background: color });
-    if (id === "gridcolor") this.setColor(id, color);
-    if (id === "origincolor") this.setColor(id, color);
-    if (id === "watercolor") this.setColor(id, color);
+    if (id === "color") updateGraph({ stroke: value });
+    if (id === "background") updateGraph({ fill: value });
+    if (id === "bgcolor") this.command.executeSetTheme({ background: value });
+    if (id === "gridcolor") this.setColor(id, value);
+    if (id === "origincolor") this.setColor(id, value);
+    if (id === "watercolor") this.setColor(id, value);
+    if (id === "watertext") setWaterText(value);
     e.stopPropagation();
     e.preventDefault();
   };

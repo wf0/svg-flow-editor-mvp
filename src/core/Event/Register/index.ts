@@ -106,7 +106,7 @@ export class RegisterEvent {
     this.defaultEvent = [
       ...moveMap,
       ...copyMap,
-      // ...deleteMap,
+      ...deleteMap,
       {
         key: KeyMap["A"], // Ctrl + A 全选
         ctrl: true,
@@ -309,6 +309,8 @@ export class RegisterEvent {
    * @param e
    */
   public keydownHandle(evt: KeyboardEvent) {
+    // @ts-ignore 非body 不拦截快捷键
+    if (evt.target.tagName !== "BODY") return;
     // 共同实现 用户与默认事件
     const userList = this.draw.getRegister().shortcutList;
     const eventList = [...this.defaultEvent, ...userList];

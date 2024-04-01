@@ -65,8 +65,7 @@ export class Operation {
       revoke: this.command.executeUndo,
       restore: this.command.executeRedo,
       beautify: this.command.executeBeautify,
-      backgroundcolor: () =>
-        this.draw.getDialogDraw().openDialog("画布设置", "canvasSettingTemp"),
+      backgroundcolor: this.openCanvasDialog.bind(this),
       upload: async () => {
         const url = await uploadImage();
         new SVGImage(this.draw, url);
@@ -120,6 +119,21 @@ export class Operation {
     // 阻止事件冒泡
     e.stopPropagation();
     e.preventDefault();
+  }
+
+  /**
+   * 打开背景设置弹窗
+   */
+  private openCanvasDialog() {
+    const dialogDraw = this.draw.getDialogDraw();
+    dialogDraw.openDialog("画布设置", "canvasSettingTemp");
+    // 还需要初始化 water text
+    const { watermarkText } = this.draw.getCanvasDraw().getBackground();
+    const input = this.draw
+      .getRoot()
+      .querySelector(".sf-editor-dialog")
+      ?.querySelector("input#watertext") as HTMLInputElement;
+    input.value = watermarkText as string;
   }
 
   /**
@@ -196,7 +210,7 @@ export class Operation {
           break;
 
         case "canvas":
-          dilaog.openDialog("画布设置", "canvasSettingTemp"); // 1. 打开弹窗
+          this.openCanvasDialog();
           break;
 
         case "grid":

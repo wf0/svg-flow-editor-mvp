@@ -22,7 +22,7 @@ export class DialogDraw {
 
   private index: number; // 记录当前搜索索引 【索引从 0 开始的呀！！！】
   private all: number; // 记录当前搜索总数
-  private findArr: HTMLDivElement[]; // 当前符合的数组
+  private conformList: HTMLDivElement[]; // 当前符合的数组
   private keyword!: string;
 
   constructor(draw: Draw) {
@@ -30,7 +30,7 @@ export class DialogDraw {
     this.command = new Command(draw);
     this.index = 0;
     this.all = 0;
-    this.findArr = [];
+    this.conformList = [];
     // 1. 创建抽屉
     this.dialogBox = draw.createHTMLElement("div") as HTMLDivElement;
     this.dialogBox.classList.add("sf-editor-dialog");
@@ -194,7 +194,7 @@ export class DialogDraw {
       // 输入框内容
       const text = (e.target as HTMLInputElement).value;
       this.keyword = text;
-      this.findArr = []; // 重置查找结果
+      this.conformList = []; // 重置查找结果
       this.index = 0; // 重置 index
       this.all = 0; // 重置 all
       this.setSpanNumber(); // 重置 1/21
@@ -207,13 +207,13 @@ export class DialogDraw {
           const editor = item.querySelector("div") as HTMLDivElement;
           editor.innerHTML = editor.innerHTML.replace(/<|>|\/|b|span/g, "");
           const findFlag = editor.innerText.includes(text);
-          findFlag && text && this.findArr.push(item as HTMLDivElement);
+          findFlag && text && this.conformList.push(item as HTMLDivElement);
         });
 
-      if (!this.findArr.length) return;
+      if (!this.conformList.length) return;
 
       // 赋值 all
-      this.all = this.findArr.length;
+      this.all = this.conformList.length;
       this.searchKeyWord();
       this.setSpanNumber();
     };
@@ -281,9 +281,9 @@ export class DialogDraw {
   // searchKeyWord
   private searchKeyWord() {
     const text = this.keyword;
-    if (!this.findArr.length) return;
+    if (!this.conformList.length) return;
     // 然后进行业务处理
-    this.findArr.forEach((item, index) => {
+    this.conformList.forEach((item, index) => {
       const editor = item.querySelector("div") as HTMLDivElement;
       editor.innerHTML = editor.innerHTML.replace(/<|>|\/|b|span/g, "");
       editor.innerHTML = editor.innerHTML.replace(
@@ -319,11 +319,37 @@ export class DialogDraw {
    * 替换
    * @param newWord
    */
-  public replace(newWord: string) {}
+  public replace(newWord: string) {
+    if (!this.conformList.length) return;
+    this.conformList.forEach((item, index) => {
+      if (index !== this.index) return;
+      // 执行替换
+      const editor = item.querySelector("div") as HTMLDivElement;
+      editor.innerHTML = editor.innerHTML.replace(/<|>|\/|b|span|/g, "");
+      editor.innerHTML = editor.innerHTML.replace(this.keyword, newWord);
+      this.conformList.splice(index, 1);
+    });
+    this.index = 0;
+    this.all = this.conformList.length;
+    this.setSpanNumber();
+    this.searchKeyWord();
+  }
 
   /**
    * 全部替换
    * @param newWord
    */
-  public replaceAll(newWord: string) {}
+  public replaceAll(newWord: string) {
+    if (!this.conformList.length) return;
+    this.conformList.forEach((item) => {
+      const editor = item.querySelector("div") as HTMLDivElement;
+      editor.innerHTML = editor.innerHTML.replace(/<|>|\/|b|span|/g, "");
+      editor.innerHTML = editor.innerHTML.replace(this.keyword, newWord);
+    });
+    this.conformList = [];
+    this.index = 0;
+    this.all = 0;
+    this.setSpanNumber();
+    this.searchKeyWord();
+  }
 }

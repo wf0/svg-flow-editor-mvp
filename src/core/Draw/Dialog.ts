@@ -1,10 +1,10 @@
 import { IBackground } from "../../interface/Draw/index.ts";
 import { IUpdateGraph } from "../../interface/Graph/index.ts";
-import { nextTick } from "../../utils/index.ts";
 import { Command } from "../Command/Command.ts";
 import {
   canvasSettingTemp,
   graphInfoTemp,
+  searchReplaceTemp,
   themeTemp,
 } from "../Template/index.ts";
 import { Draw } from "./index.ts";
@@ -160,4 +160,42 @@ export class DialogDraw {
     e.stopPropagation();
     e.preventDefault();
   };
+
+  // 创建搜索替换框
+  public createSearchReplace(text: string) {
+    // 1. 关闭 抽屉
+    this.closeDialog();
+    const root = this.draw.getRoot();
+
+    const searchBox = root.querySelector("div.sf-editor-search");
+    if (searchBox) {
+      // 如果存在，则需要修改属性即可
+      // 5. 如果用户有文本，则添加到搜索框
+      const input = searchBox.querySelector("input#search") as HTMLInputElement;
+      input.value = text;
+
+      // 6. 获取焦点
+      input.focus();
+    } else {
+      // 2. 创建搜索替换框
+      const box = this.draw.createHTMLElement("div") as HTMLDivElement;
+      box.classList.add("sf-editor-search");
+
+      // 3. 添加模板
+      box.innerHTML = searchReplaceTemp;
+
+      // 4. 添加到 root 下
+      root.appendChild(box);
+      box
+        .querySelector(".icon-xgb")
+        ?.addEventListener("click", () => box.remove());
+
+      // 5. 如果用户有文本，则添加到搜索框
+      const input = box.querySelector("input#search") as HTMLInputElement;
+      input.value = text;
+
+      // 6. 获取焦点
+      input.focus();
+    }
+  }
 }

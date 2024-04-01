@@ -333,4 +333,19 @@ export class CommandAdapt {
     editorBox.style.width = w + "px";
     editorBox.style.height = h + "px";
   }
+
+  // 搜索替换
+  public searchReplace() {
+    this.draw.getEditorEvent().clickHandle();
+    // 1. 获取系统选区，如果有文本被选中，则直接将选中文本放置于搜索框
+    // @ts-ignore 获取 Selection 对象 window.getSelection();
+    const { anchorOffset, focusOffset, baseNode } =
+      window.getSelection() as Selection;
+    const userSelected =
+      baseNode && baseNode.data.substring(anchorOffset, focusOffset);
+    // 2. 创建 搜索替换框
+    this.draw.getDialogDraw().createSearchReplace(userSelected);
+
+    // 3. 将用户选中文本放置到搜索框内
+  }
 }

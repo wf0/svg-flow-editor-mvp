@@ -106,7 +106,7 @@ export class RegisterEvent {
     this.defaultEvent = [
       ...moveMap,
       ...copyMap,
-      ...deleteMap,
+      // ...deleteMap,
       {
         key: KeyMap["A"], // Ctrl + A 全选
         ctrl: true,
@@ -147,6 +147,11 @@ export class RegisterEvent {
         callback: this.beautify.bind(this),
         ctrl: true,
         shift: true,
+      },
+      {
+        key: KeyMap["F"],
+        ctrl: true,
+        callback: this.command.executeSearchReplace,
       },
       {
         key: KeyMap["EQUAL"],

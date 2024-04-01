@@ -56,6 +56,9 @@ export class Command {
   // 设置页面大小
   public setPageSize: CommandAdapt["setPageSize"];
 
+  // 搜索替换
+  public executeSearchReplace: CommandAdapt["searchReplace"];
+
   constructor(draw: Draw) {
     const adapt = new CommandAdapt(draw);
 
@@ -103,5 +106,8 @@ export class Command {
 
     // 设置页面大小
     this.setPageSize = adapt.setPageSize.bind(adapt);
+
+    // 搜索替换
+    this.executeSearchReplace = adapt.searchReplace.bind(adapt);
   }
 }

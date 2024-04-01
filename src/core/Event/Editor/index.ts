@@ -310,7 +310,7 @@ export class EditorEvent {
    * editorBox 单击事件
    * @param e
    */
-  private clickHandle(e: Event) {
+  public clickHandle(e?: Event) {
     // 取消右键菜单
     this.cancelContextmenu();
 
@@ -320,8 +320,8 @@ export class EditorEvent {
     // 取消dialog 显示
     this.draw.getDialogDraw().closeDialog();
 
-    e.stopPropagation();
-    e.preventDefault();
+    e && e.stopPropagation();
+    e && e.preventDefault();
   }
 
   /**

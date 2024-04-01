@@ -63,6 +63,9 @@ export class Command {
   public executeReplace: CommandAdapt["replace"]; // 替换当前
   public executeReplaceAll: CommandAdapt["replaceAll"]; // 替换全部
 
+  // 加粗
+  public executeBold: CommandAdapt["bold"];
+
   constructor(draw: Draw) {
     const adapt = new CommandAdapt(draw);
 
@@ -117,5 +120,8 @@ export class Command {
     this.executeSearchNext = adapt.searchNext.bind(adapt);
     this.executeReplace = adapt.replace.bind(adapt);
     this.executeReplaceAll = adapt.replaceAll.bind(adapt);
+
+    // 加粗
+    this.executeBold = adapt.bold.bind(adapt);
   }
 }

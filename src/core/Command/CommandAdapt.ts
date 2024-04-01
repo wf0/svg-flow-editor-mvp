@@ -194,6 +194,30 @@ export class CommandAdapt {
   }
 
   /**
+   * 加粗
+   */
+  public bold() {
+    const selected = this.draw.getGraphEvent().getAllSelected();
+    if (!selected.length) return;
+    // @ts-ignore需要实现单个元件的用户选择加粗
+    const { anchorOffset, focusOffset, baseNode } =
+      window.getSelection() as Selection;
+    const text =
+      baseNode &&
+      baseNode.data &&
+      baseNode.data.substring(anchorOffset, focusOffset);
+    if (text) {
+      // 如果用户选择文本存在，则不可能是多选，因此直接取第一个做处理即可
+    }
+    selected.forEach((item) => {
+      const input = item
+        .querySelector(".sf-editor-box-graphs-main-contenteditable")
+        ?.querySelector("div") as HTMLDivElement;
+      // const html = input.innerHTML;
+    });
+  }
+
+  /**
    * 置于顶层
    * @returns
    */

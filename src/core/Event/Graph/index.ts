@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { IGraph, node } from "../../../interface/Graph/index.ts";
 import { nextTick } from "../../../utils/index.ts";
 import { Command } from "../../Command/Command.ts";
@@ -22,12 +23,13 @@ export class GraphEvent {
   private sy!: number;
   private command: Command;
   private nodes!: node[];
-  private textArray!: string[];
+
+  // 通过记录鼠标弹起时间，判断是点击还是处于拖动状态 click mousedown-mouseup
+  private st!: number; // 记录时间 Number(dayjs().format("mmssSSS")); 毫秒
 
   constructor(draw: Draw) {
     this.draw = draw;
     this.command = new Command(draw);
-    this.textArray = [];
   }
 
   /**
@@ -75,10 +77,7 @@ export class GraphEvent {
     // 4. 看有没有创建形变锚点
     !format && this.draw.getGraphDraw().createFormatPoint(graph);
 
-    // 5. 显示dialog 配置元件信息 要区分是单击还是在拖动
-    // this.openDialog();
-
-    // 6. 用户单击，需要协同显示用户光标信息
+    // 5. 用户单击，需要协同显示用户光标信息
     const websocket = this.draw.getWebsocket();
     if (websocket.connection) {
       // websocket.sendMessage({ operate: "graphClick", nodeID });
@@ -223,8 +222,9 @@ export class GraphEvent {
    */
   private mouseDownHandle(e: MouseEvent) {
     if (e.button === 2) return;
-
     // 记录点击的时间
+    this.st = Number(dayjs().format("mmssSSS"));
+
     const { offsetX, offsetY } = e as MouseEvent;
     this.move = true;
     this.sx = offsetX;
@@ -285,8 +285,15 @@ export class GraphEvent {
    * @param e
    */
   private mouseUpHandle(_e: MouseEvent) {
+    const et = Number(dayjs().format("mmssSSS"));
+    if (et - this.st <= 120) {
+      //  显示dialog 配置元件信息 要区分是单击还是在拖动
+      const dialog = this.draw.getDialogDraw();
+      dialog.openDialog("元件配置", "graphInfoTemp");
+    }
     // 获取终点坐标
     this.move = false;
+    this.st = 0;
     this.sx = 0;
     this.sy = 0;
     // 取消辅助线

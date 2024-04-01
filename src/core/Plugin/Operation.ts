@@ -70,7 +70,7 @@ export class Operation {
         const url = await uploadImage();
         new SVGImage(this.draw, url);
       },
-      // bold
+      bold: this.command.executeBold,
       // italic
       // underline
       // color
@@ -178,7 +178,7 @@ export class Operation {
       unlock: this.command.executeUnLock, // 解锁
       // download: this.command.executeCopy, // 下载
       // upload: this.command.executeCopy,
-      // bold: this.command.executeCopy,
+      // bold: this.command.executeBold,
       // italic: this.command.executeCopy,
       // underline: this.command.executeCopy,
       // color: this.command.executeCopy,

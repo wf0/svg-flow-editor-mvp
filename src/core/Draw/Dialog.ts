@@ -31,7 +31,8 @@ export class DialogDraw {
     this.index = 0;
     this.all = 0;
     this.conformList = [];
-    // 1. 创建抽屉
+
+    // 1. 创建 dialog
     this.dialogBox = draw.createHTMLElement("div") as HTMLDivElement;
     this.dialogBox.classList.add("sf-editor-dialog");
   }
@@ -69,6 +70,7 @@ export class DialogDraw {
     this.addEvent();
   }
 
+  // 关闭弹窗
   public closeDialog() {
     this.dialogBox.remove();
   }
@@ -114,7 +116,11 @@ export class DialogDraw {
     this.command.executeBackground(payload);
   }
 
-  // dialog 弹窗的 command span 事件
+  /**
+   * dialog 弹窗的 command span 事件
+   * @param e
+   * @param command
+   */
   public spanClickHandle(e: Event, command: string) {
     // 提取公共方法
     const updateGraph = (o: IUpdateGraph) => this.command.executeUpdateGraph(o);
@@ -152,9 +158,12 @@ export class DialogDraw {
     e.preventDefault();
   }
 
-  // dialog 弹窗的 input 事件
+  /**
+   * dialog 弹窗的 input 事件
+   * @param e
+   * @param id
+   */
   public inputHandle = (e: Event, id: string) => {
-    console.log(id);
     const color = (e.target as HTMLInputElement).value;
     const updateGraph = (o: IUpdateGraph) => this.command.executeUpdateGraph(o);
 
@@ -168,7 +177,10 @@ export class DialogDraw {
     e.preventDefault();
   };
 
-  // 创建搜索替换框
+  /**
+   * 创建搜索替换框 - ctrl F 快捷键的响应
+   * @param text
+   */
   public createSearchReplace(text: string) {
     this.closeDialog();
     this.draw.getEditorEvent().clickHandle();
@@ -190,10 +202,10 @@ export class DialogDraw {
     };
 
     // 搜索框用户输入
-    const sinputHandle = (e: Event) => {
+    const sinputHandle = (def?: string, e?: Event) => {
       // 输入框内容
-      const text = (e.target as HTMLInputElement).value;
-      this.keyword = text;
+      const text = (e?.target as HTMLInputElement)?.value;
+      this.keyword = def || text;
       this.conformList = []; // 重置查找结果
       this.index = 0; // 重置 index
       this.all = 0; // 重置 all
@@ -202,12 +214,14 @@ export class DialogDraw {
       // 全文查找文本
       editorBox
         .querySelectorAll(".sf-editor-box-graphs-main-contenteditable")
-        .forEach((item, index) => {
-          // item 是 contenteditableBox 里面的 div 才是内容，index 是当前的索引，通过这个参数实现 1/21
+        .forEach((item) => {
+          // item 是 contenteditableBox 里面的 div 才是内容
           const editor = item.querySelector("div") as HTMLDivElement;
           editor.innerHTML = editor.innerHTML.replace(/<|>|\/|b|span/g, "");
-          const findFlag = editor.innerText.includes(text);
-          findFlag && text && this.conformList.push(item as HTMLDivElement);
+          const findFlag = editor.innerText.includes(this.keyword);
+          findFlag &&
+            this.keyword &&
+            this.conformList.push(item as HTMLDivElement);
         });
 
       if (!this.conformList.length) return;
@@ -224,6 +238,9 @@ export class DialogDraw {
       input.value = text;
       // 获取焦点
       input.focus();
+      this.index = 0;
+      this.all = 0;
+      this.setSpanNumber();
     };
 
     // 如果不存在，则需要创建 searchBox
@@ -240,12 +257,12 @@ export class DialogDraw {
       // 如果用户有文本，则添加到搜索框
       sinput.value = text;
       sinput.focus();
-
+      sinputHandle(text);
       // 提供关闭按钮
       box.querySelector(".icon-xgb")?.addEventListener("click", closeHandle);
 
       // 提供搜索输入框监听事件
-      sinput.addEventListener("input", sinputHandle);
+      sinput.addEventListener("input", (e) => sinputHandle("", e));
 
       // 提供上一处下一处事件
       const pre = box.querySelector("i.icon-xiangzuo");
@@ -267,6 +284,10 @@ export class DialogDraw {
     searchBox ? useSearchBox() : createSearchBox();
   }
 
+  /**
+   * 设置 搜索结果 1/21
+   * @returns
+   */
   private setSpanNumber() {
     const root = this.draw.getRoot();
     const searchBoxSelector = "div.sf-editor-search";
@@ -278,7 +299,10 @@ export class DialogDraw {
     else span.innerHTML = "";
   }
 
-  // searchKeyWord
+  /**
+   * 进行关键字搜索
+   * @returns
+   */
   private searchKeyWord() {
     const text = this.keyword;
     if (!this.conformList.length) return;

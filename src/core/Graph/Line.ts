@@ -283,8 +283,6 @@ export class Line {
           list.splice(i, 1);
         }
         prePoint = p;
-        console.group("开始 A* 算法");
-        console.log("当前点", p);
         // 获取list中 x、y 相同的点，并计算最短路径
         const ps = list.filter((i) => i.x === p.x || i.y === p.y);
 
@@ -298,7 +296,6 @@ export class Line {
 
         ps.sort((a, b) => (a.cost as number) - (b.cost as number));
         // this.drawPoint(ps[0], "blue");
-        console.groupEnd();
         return ps[0];
       };
 

@@ -115,24 +115,32 @@ export class CommandAdapt {
     });
   }
 
-  // 页面缩放
+  /**
+   * 页面重置
+   */
   public pageScaleRecovery() {
     const editorEvent = this.draw.getEditorEvent();
     editorEvent.scalePage("Recovery");
   }
 
+  /**
+   * 页面缩小
+   */
   public pageScaleMinus() {
     const editorEvent = this.draw.getEditorEvent();
     editorEvent.scalePage("Minus");
   }
 
+  /**
+   * 页面放大
+   */
   public pageScaleAdd() {
     const editorEvent = this.draw.getEditorEvent();
     editorEvent.scalePage("Add");
   }
 
   /**
-   *  设置指定值
+   *  设置页面缩放至指定值
    * @param scale 0.4 - 2
    * @returns
    */
@@ -142,7 +150,9 @@ export class CommandAdapt {
     editorEvent.scalePage("Appoint", scale);
   }
 
-  // 全屏
+  /**
+   * 全屏
+   */
   public fullScreen() {
     const root = this.draw.getRoot() as HTMLDivElement;
     root.requestFullscreen && root.requestFullscreen();
@@ -152,7 +162,9 @@ export class CommandAdapt {
     }, 100);
   }
 
-  // 退出全屏
+  /**
+   * 退出全屏
+   */
   public exitFullScreen() {
     try {
       document.exitFullscreen();
@@ -181,7 +193,10 @@ export class CommandAdapt {
     console.log("commandAdapt - redo");
   }
 
-  // 置于顶层
+  /**
+   * 置于顶层
+   * @returns
+   */
   public top() {
     const isSelected = this.draw.getGraphEvent().getSelected();
     if (!isSelected) return;
@@ -197,7 +212,10 @@ export class CommandAdapt {
         index === 1 ? index.toString() : (index + 2).toString();
   }
 
-  // 置于底层
+  /**
+   * 置于底层
+   * @returns
+   */
   public bottom() {
     const isSelected = this.draw.getGraphEvent().getSelected();
     if (!isSelected) return;
@@ -213,7 +231,10 @@ export class CommandAdapt {
         index === 1 ? index.toString() : (index - 2).toString();
   }
 
-  // 上移一层
+  /**
+   * 上移一层
+   * @returns
+   */
   public holdup() {
     const isSelected = this.draw.getGraphEvent().getSelected();
     if (!isSelected) return;
@@ -222,7 +243,10 @@ export class CommandAdapt {
     isSelected.style.zIndex = (index + 1).toString();
   }
 
-  // 下移一层
+  /**
+   * 下移一层
+   * @returns
+   */
   public putdown() {
     const isSelected = this.draw.getGraphEvent().getSelected();
     if (!isSelected) return;
@@ -236,7 +260,10 @@ export class CommandAdapt {
   public group() {}
   public ungroup() {}
 
-  /** 设置主题 */
+  /**
+   * 设置主题
+   * @param theme
+   */
   public setTheme(theme: string | IThemeOpt) {
     if (typeof theme === "string") setTheme(theme);
     // 如果用户传入的是自定义的配置项，则需要动态设置 :root 的颜色值
@@ -308,7 +335,11 @@ export class CommandAdapt {
     console.log("commandAdapt - unlock");
   }
 
-  // 更新元件
+  /**
+   * 更新元件信息-dialog 中修改元件背景、边框、圆角等
+   * @param payload
+   * @returns
+   */
   public updateGraph(payload: IUpdateGraph) {
     // rx 和 ry 来实现圆角
     const selected = this.draw.getGraphEvent().getAllSelected();
@@ -326,7 +357,12 @@ export class CommandAdapt {
     });
   }
 
-  // 设置页面大小
+  /**
+   * 设置画布大小
+   * @param w
+   * @param h
+   * @returns
+   */
   public setPageSize(w: number, h: number) {
     if (!w || !h) return;
     const editorBox = this.draw.getEditorBox();
@@ -334,7 +370,10 @@ export class CommandAdapt {
     editorBox.style.height = h + "px";
   }
 
-  // 搜索替换-支持用户传递参数
+  /**
+   * 搜索替换-支持用户传递参数
+   * @param keyword
+   */
   public searchReplace(keyword?: string) {
     // 1. 获取系统选区，如果有文本被选中，则直接将选中文本放置于搜索框
     // @ts-ignore 获取 Selection 对象 window.getSelection();
@@ -347,6 +386,7 @@ export class CommandAdapt {
     // 2. 创建 搜索替换框
     this.draw.getDialogDraw().createSearchReplace(userSelected || keyword);
   }
+
   public searchPre() {
     const dialogDraw = this.draw.getDialogDraw();
     dialogDraw.searchPre();

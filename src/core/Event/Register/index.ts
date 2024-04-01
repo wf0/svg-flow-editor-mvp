@@ -170,7 +170,6 @@ export class RegisterEvent {
    * graph move 使用 上下左右实现元件的移动
    */
   private graphMoveHandle(payload?: cbParams) {
-    console.log("graphMoveHandle");
     const selected = this.draw.getGraphEvent().getAllSelected();
     if (!selected.length) return;
 

@@ -97,8 +97,10 @@ export class GraphCommon {
   public getText() {
     const graph = this as unknown as IGraph;
     const graphBox = this.draw.getGraphDraw().getGraphBox(graph.getID());
-    const text = graphBox.querySelector("text");
-    return text?.innerHTML;
+    const text = graphBox
+      .querySelector(".sf-editor-box-graphs-main-contenteditable")
+      ?.querySelector("div");
+    return text?.innerText;
   }
 
   /** setter */

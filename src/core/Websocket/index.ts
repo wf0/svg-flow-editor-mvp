@@ -218,7 +218,6 @@ export class Websocket extends YJS {
         break;
 
       case "addGraph":
-        console.log("收到服务器事件-addGraph");
         var { type, width, height, nodeID, x, y } = value;
         this.command.executeAddGraph({ type, width, height, nodeID, x, y }); // 用户添加元件，本地也同步添加元件
         break;

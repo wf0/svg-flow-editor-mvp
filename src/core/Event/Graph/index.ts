@@ -143,7 +143,7 @@ export class GraphEvent {
 
       // 找 可编辑 div
       const input = editor.children[0] as HTMLDivElement;
-      console.log("input", input);
+
       // 自动获取焦点
       input.focus();
 

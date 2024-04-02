@@ -70,7 +70,7 @@ rect.position(100, 100)
 new SFEditor(".flow-box").Rect(100, 70).position(100, 100)
 
 // 示例：执行更换主题API
-editor.command.executeSetTheme('colorful_theme2')
+editor.command.setTheme('colorful_theme2')
 
 // 示例：通过 listener 监听事件
 editor.listener.graphLoaded = ()=> { // your code... }
@@ -321,6 +321,78 @@ editor.command.executeAddGraph({type:"rect",width:100,height:100,text:"demo"})
     **  3.2. 想要椭圆类似，实际处理： setWidth(width*2) setHeight(height*2)
 ```
 
+### executeDeleteGraph()
+
+- 方法说明：删除元件；
+- 返回值：无；
+- 参数说明：无
+
+### setTheme(theme: string | IThemeOpt)
+
+- 方法说明：设置主题；
+- 返回值：无；
+- 参数说明：系统默认主题名称或者自定义的主题对象
+- 用法示例：
+
+~~~javascript
+// 系统默认主题名称
+editor.command.setTheme('colorful_theme1')
+
+// 自定义主题
+editor.command.setTheme({
+  background?: string; // 背景颜色
+  stroke?: string; // 元件边框颜色
+  fill?: string; // 元件填充颜色
+  text?: string; // 文本颜色
+  line?: string; // 线条颜色
+  auxiliaryLine?: string; // 辅助线颜色
+})
+~~~
+
+### executeUpdateGraph(payload: IUpdateGraph)
+
+- 方法说明：更新元件信息-用于 dialog 中修改元件样式；
+- 返回值：void；
+- 参数说明：更新元件基本参数
+- 用法示例：
+
+```javascript
+// demo
+editor.command.executeUpdateGraph({fill:'red'})
+
+// 参数说明
+nodeID?: string[]; // 需要更新的元件 ID 支持数组
+stroke?: string; // 需要修改的边框颜色
+fill?: string; // 需要修改的填充颜色
+strokeWidth?: number; // 需要修改的边框宽度
+radius?: number; // 需要修改的圆角尺寸
+dasharray?: string; // 需要修改的虚线配置 为字符串，类似 '5,5',为svg 虚线配置
+```
+
+### executeTop(nodeID:string)
+
+- 方法说明：置于顶层；
+- 返回值：void；
+- 参数说明：指定某个元件的ID
+
+### executeBottom(nodeID:string)
+
+- 方法说明：置于底层；
+- 返回值：void；
+- 参数说明：指定某个元件的ID
+
+### executeHoldUp(nodeID:string)
+
+- 方法说明：上移一层；
+- 返回值：void；
+- 参数说明：指定某个元件的ID
+
+### executePutDown(nodeID:string)
+
+- 方法说明：下移一层；
+- 返回值：void；
+- 参数说明：指定某个元件的ID
+
 ### executeFullScreen()
 
 - 方法说明：进入全屏；
@@ -351,6 +423,47 @@ editor.command.executeAddGraph({type:"rect",width:100,height:100,text:"demo"})
 - 方法说明：缩放页面至指定倍率；
 - 参数说明： **scale 支持 0.4 至 2 之间**（40% - 200%缩放比）
 - 返回值：void；
+
+### executeSearchReplace(keyword?: string)
+
+- 方法说明：打开搜索替换框；
+- 参数说明： keyword 默认搜索文本 [可选参数]
+- 返回值：void；
+- 用法实例：
+
+```javascript
+// 唤起搜索替换框
+editor.command.executeSearchReplace()
+
+// 唤起搜索替换框，并传入默认搜索关键字
+editor.command.executeSearchReplace('123')
+```
+
+### executeSearchPre()
+
+- 方法说明：搜索上一处；
+- 参数说明： 无
+- 返回值：void；
+
+### executeSearchNext()
+
+- 方法说明：搜索上一处；
+- 参数说明： 无
+- 返回值：void；
+
+### executeReplace(newWord: string)
+
+- 方法说明：替换当前；
+- 参数说明： 替换的新值
+- 返回值：void；
+
+### executeReplaceAll(newWord: string)
+
+- 方法说明：替换全部；
+- 参数说明： 替换的新值
+- 返回值：void；
+
+
 
 
 

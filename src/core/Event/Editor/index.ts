@@ -442,17 +442,19 @@ export class EditorEvent {
    * 绑定右键菜单项的点击事件
    */
   private contextmenuClickHandle(e: Event, command: string | null) {
-    // 定义事件映射
-    const eventMap: { [key: string]: () => void } = {
-      paste: this.command.executePaste,
+    // 层级处理上是需要传递当前选中的 nodeID
+    const selected = this.draw.getGraphEvent().getSelected();
+    const nodeID = selected.getAttribute("graphid") as string;
+    const eventMap: { [key: string]: (i: string) => void } = {
+      // paste: this.command.executePaste,
       top: this.command.executeTop,
       bottom: this.command.executeBottom,
       holdup: this.command.executeHoldUp,
       putdown: this.command.executePutDown,
     };
 
-    command && eventMap[command] && eventMap[command]();
-    console.log(command);
+    command && eventMap[command] && eventMap[command](nodeID);
+    console.log("contextmenu command =>", command);
     this.clickHandle(e);
   }
 

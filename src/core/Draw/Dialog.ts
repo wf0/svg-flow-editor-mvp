@@ -188,7 +188,7 @@ export class DialogDraw {
 
     if (key === "color") updateGraph({ stroke: value, nodeID });
     if (key === "background") updateGraph({ fill: value, nodeID });
-    if (key === "bgcolor") this.command.executeSetTheme({ background: value });
+    if (key === "bgcolor") this.command.setTheme({ background: value });
     if (key === "watertext") setWaterText(value);
     if (key === "stroke") updateGraph({ stroke: `#${value}`, nodeID });
     if (key === "fill") updateGraph({ fill: `#${value}`, nodeID });
@@ -202,7 +202,7 @@ export class DialogDraw {
 
     // 画布大小事件
     if (key === "bgcolor")
-      this.command.executeSetTheme({ background: `#${value}` });
+      this.command.setTheme({ background: `#${value}` });
 
     // 设置具体尺寸
     if (key === "size") {

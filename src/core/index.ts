@@ -49,7 +49,7 @@ class SFEditor {
    * @param height 高度
    * @returns
    */
-  public Rect(width: number, height: number) {
+  public Rect(width: number, height: number): Rect {
     return new Rect(this.draw, width, height);
   }
 
@@ -58,7 +58,7 @@ class SFEditor {
    * @param radius 圆半径
    * @returns
    */
-  public Circle(radius: number) {
+  public Circle(radius: number): Ellipse {
     return new Ellipse(this.draw, radius, radius);
   }
 
@@ -68,7 +68,7 @@ class SFEditor {
    * @param height 椭圆短轴长
    * @returns
    */
-  public Ellipse(width: number, height: number) {
+  public Ellipse(width: number, height: number): Ellipse {
     return new Ellipse(this.draw, width, height);
   }
 
@@ -77,7 +77,7 @@ class SFEditor {
    * @param url
    * @returns
    */
-  public SVGImage(url: string) {
+  public SVGImage(url: string): SVGImage {
     return new SVGImage(this.draw, url);
   }
 
@@ -86,7 +86,7 @@ class SFEditor {
   }
 
   // 加载插件函数
-  public plugin(name: pluginName, payload?: IWebsocket) {
+  public plugin(name: pluginName, payload?: IWebsocket): SEchart | undefined {
     // name 是插件名称
     if (name === "footer") new Footer(this.draw);
     if (name === "operation") new Catalog(this.draw);

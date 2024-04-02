@@ -168,10 +168,6 @@ export class Operation {
       add: this.command.executePageScaleAdd, // 方法
       minus: this.command.executePageScaleMinus, // 缩小
       resize: this.command.executePageScaleRecovery, // 重置
-      top: this.command.executeTop, // 置于顶层
-      bottom: this.command.executeBottom, // 置于底层
-      holdup: this.command.executeHoldUp, // 上移一层
-      putdown: this.command.executePutDown, // 下移一层
       group: this.command.executeGroup, // 分组
       ungroup: this.command.executeUnGroup, // 取消分组
       lock: this.command.executeLock, // 锁定
@@ -185,6 +181,14 @@ export class Operation {
       // fill: this.command.executeCopy,
     };
 
+    // 层级处理需要参数
+    const levelHandle: { [key: string]: (n: string) => void } = {
+      top: this.command.executeTop, // 置于顶层
+      bottom: this.command.executeBottom, // 置于底层
+      holdup: this.command.executeHoldUp, // 上移一层
+      putdown: this.command.executePutDown, // 下移一层
+    };
+
     // 所有子项的事件响应中心
     const eventHandle = (e: Event) => {
       // 1. 解析参数 这个只能通过parent获取属性，用户可能点击i span span div
@@ -193,7 +197,8 @@ export class Operation {
       const pcmd = (target.parentNode as HTMLElement).getAttribute("command");
       const command = cmd || pcmd;
       if (!command) return;
-
+      const selected = this.draw.getGraphEvent().getSelected();
+      const nodeID = selected.getAttribute("graphid") as string;
       console.log("operation menu command =>", command);
 
       // 获取 dialog 对象
@@ -225,6 +230,7 @@ export class Operation {
 
         default:
           eventMap[command] && eventMap[command]();
+          levelHandle[command] && levelHandle[command](nodeID);
           break;
       }
 

@@ -12,7 +12,17 @@ export class Command {
   public executePageScaleMinus: CommandAdapt["pageScaleMinus"]; // 缩小 amplify
   public executePageScaleAdd: CommandAdapt["pageScaleAdd"]; // 放大 reduce
   public setPageScale: CommandAdapt["setPageScale"]; // 缩放至指定比例
-  public executeSetTheme: CommandAdapt["setTheme"]; // 切换主题风格
+  public setTheme: CommandAdapt["setTheme"]; // 切换主题风格
+  public executeSearchReplace: CommandAdapt["searchReplace"]; // 搜索替换
+  public executeSearchPre: CommandAdapt["searchPre"]; // 搜索上一处
+  public executeSearchNext: CommandAdapt["searchNext"]; // 搜索下一处
+  public executeReplace: CommandAdapt["replace"]; // 替换当前
+  public executeReplaceAll: CommandAdapt["replaceAll"]; // 替换全部
+  public executeUpdateGraph: CommandAdapt["updateGraph"]; /** 更新元件的信息-stroke、fill、线宽、圆角 */
+  public executeTop: CommandAdapt["top"]; // 置于顶层
+  public executeBottom: CommandAdapt["bottom"]; // 置于底层
+  public executeHoldUp: CommandAdapt["holdup"]; // 上移一层
+  public executePutDown: CommandAdapt["putdown"]; // 下移一层
 
   // 下列未标定
   // 下列未标定
@@ -26,11 +36,7 @@ export class Command {
   // 撤销与重做
   public executeUndo: CommandAdapt["undo"];
   public executeRedo: CommandAdapt["redo"];
-  // 层级处理
-  public executeTop: CommandAdapt["top"];
-  public executeBottom: CommandAdapt["bottom"];
-  public executeHoldUp: CommandAdapt["holdup"];
-  public executePutDown: CommandAdapt["putdown"];
+
   // 分组
   public executeGroup: CommandAdapt["group"];
   public executeUnGroup: CommandAdapt["ungroup"];
@@ -50,18 +56,8 @@ export class Command {
   public executeLock: CommandAdapt["lock"];
   public executeUnLock: CommandAdapt["unlock"];
 
-  /** 更新元件的信息-stroke、fill、线宽、圆角 */
-  public executeUpdateGraph: CommandAdapt["updateGraph"];
-
   // 设置页面大小
   public setPageSize: CommandAdapt["setPageSize"];
-
-  // 搜索替换
-  public executeSearchReplace: CommandAdapt["searchReplace"];
-  public executeSearchPre: CommandAdapt["searchPre"]; // 搜索上一处
-  public executeSearchNext: CommandAdapt["searchNext"]; // 搜索下一处
-  public executeReplace: CommandAdapt["replace"]; // 替换当前
-  public executeReplaceAll: CommandAdapt["replaceAll"]; // 替换全部
 
   // 加粗
   public executeBold: CommandAdapt["bold"];
@@ -78,7 +74,17 @@ export class Command {
     this.setPageScale = adapt.setPageScale.bind(adapt); // 指定缩放比例
     this.executeFullScreen = adapt.fullScreen.bind(adapt); // 进入全屏
     this.executeExitFullScreen = adapt.exitFullScreen.bind(adapt); // 退出全屏
-    this.executeSetTheme = adapt.setTheme.bind(this); // 切换主题风格
+    this.setTheme = adapt.setTheme.bind(this); // 切换主题风格
+    this.executeSearchReplace = adapt.searchReplace.bind(adapt); // 搜索替换
+    this.executeSearchPre = adapt.searchPre.bind(adapt); // 搜索上一处
+    this.executeSearchNext = adapt.searchNext.bind(adapt); // 搜索下一处
+    this.executeReplace = adapt.replace.bind(adapt); // 替换当前
+    this.executeReplaceAll = adapt.replaceAll.bind(adapt); // 替换全部
+    this.executeUpdateGraph = adapt.updateGraph.bind(adapt); // 更新元件信息
+    this.executeTop = adapt.top.bind(adapt); // 置于顶层
+    this.executeBottom = adapt.bottom.bind(adapt); // 置于底层
+    this.executeHoldUp = adapt.holdup.bind(adapt); // 上移一层
+    this.executePutDown = adapt.putdown.bind(adapt); // 下移一层
 
     // 右键菜单相关事件
     this.executePaste = adapt.paste.bind(adapt);
@@ -86,10 +92,7 @@ export class Command {
     this.executeCut = adapt.cut.bind(adapt);
     this.executeUndo = adapt.undo.bind(adapt);
     this.executeRedo = adapt.redo.bind(adapt);
-    this.executeTop = adapt.top.bind(adapt);
-    this.executeBottom = adapt.bottom.bind(adapt);
-    this.executeHoldUp = adapt.holdup.bind(adapt);
-    this.executePutDown = adapt.putdown.bind(adapt);
+
     this.executeGroup = adapt.group.bind(adapt);
     this.executeUnGroup = adapt.ungroup.bind(adapt);
 
@@ -108,18 +111,8 @@ export class Command {
     this.executeLock = adapt.lock.bind(adapt);
     this.executeUnLock = adapt.unlock.bind(adapt);
 
-    // 更新元件信息
-    this.executeUpdateGraph = adapt.updateGraph.bind(adapt);
-
     // 设置页面大小
     this.setPageSize = adapt.setPageSize.bind(adapt);
-
-    // 搜索替换
-    this.executeSearchReplace = adapt.searchReplace.bind(adapt);
-    this.executeSearchPre = adapt.searchPre.bind(adapt);
-    this.executeSearchNext = adapt.searchNext.bind(adapt);
-    this.executeReplace = adapt.replace.bind(adapt);
-    this.executeReplaceAll = adapt.replaceAll.bind(adapt);
 
     // 加粗
     this.executeBold = adapt.bold.bind(adapt);

@@ -249,6 +249,19 @@ export class GraphCommon {
     return graph;
   }
 
+  public getZIndex() {
+    const graph = this as unknown as IGraph;
+    const graphMain = this.draw.getGraphDraw().getGraphMain(graph.getID());
+    return ~~graphMain.style.zIndex;
+  }
+
+  public setZIndex(zIndex: number) {
+    const graph = this as unknown as IGraph;
+    const graphMain = this.draw.getGraphDraw().getGraphMain(graph.getID());
+    graphMain.style.zIndex = zIndex.toString();
+    return graph;
+  }
+
   /**
    * 设置位置
    * @param x

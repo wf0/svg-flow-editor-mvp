@@ -231,64 +231,69 @@ export class CommandAdapt {
    * 置于顶层
    * @returns
    */
-  public top() {
-    const isSelected = this.draw.getGraphEvent().getSelected();
-    if (!isSelected) return;
-    const allSelected = this.draw.getGraphEvent().getAllGraphMain();
+  public top(nodeID: string) {
+    if (!nodeID) return;
+    const graph = new Graph(this.draw, nodeID);
+    const allGraph = this.draw.getGraphEvent().getAllGraphMain();
 
     var zIndexArr: number[] = [];
-    allSelected.forEach((div) => zIndexArr.push(~~div.style.zIndex));
-    const max = Math.max.apply(Math, zIndexArr);
-    const index = ~~isSelected.style.zIndex;
+
+    allGraph.forEach((div) => zIndexArr.push(~~div.style.zIndex));
+
+    const max = Math.max(...zIndexArr);
+
+    const index = graph.getZIndex();
+
     // 如果自己大于等于最小值，则再减1
-    if (index <= max)
-      isSelected.style.zIndex =
-        index === 1 ? index.toString() : (index + 2).toString();
+    if (index <= max) {
+      const z = index === 1 ? index : index + 2;
+      graph.setZIndex(z);
+    }
   }
 
   /**
    * 置于底层
    * @returns
    */
-  public bottom() {
-    const isSelected = this.draw.getGraphEvent().getSelected();
-    if (!isSelected) return;
-    const allSelected = this.draw.getGraphEvent().getAllGraphMain();
+  public bottom(nodeID: string) {
+    if (!nodeID) return;
+    const graph = new Graph(this.draw, nodeID);
+    const allGraph = this.draw.getGraphEvent().getAllGraphMain();
+
     var zIndexArr: number[] = [];
-    allSelected.forEach((div) => zIndexArr.push(~~div.style.zIndex));
-    // 找到数组中最小的
-    const min = Math.min.apply(Math, zIndexArr);
-    const index = ~~isSelected.style.zIndex;
-    // 如果自己大于等于最小值，则再减1
-    if (index >= min)
-      isSelected.style.zIndex =
-        index === 1 ? index.toString() : (index - 2).toString();
+
+    allGraph.forEach((div) => zIndexArr.push(~~div.style.zIndex));
+
+    const min = Math.min(...zIndexArr);
+
+    const index = graph.getZIndex();
+    if (index >= min) {
+      const z = index === 1 ? index : index - 2;
+      graph.setZIndex(z);
+    }
   }
 
   /**
    * 上移一层
    * @returns
    */
-  public holdup() {
-    const isSelected = this.draw.getGraphEvent().getSelected();
-    if (!isSelected) return;
-    // 获取当前的层级 进行++
-    const index = ~~isSelected.style.zIndex;
-    isSelected.style.zIndex = (index + 1).toString();
+  public holdup(nodeID: string) {
+    if (!nodeID) return;
+    const graph = new Graph(this.draw, nodeID);
+    const index = graph.getZIndex();
+    graph.setZIndex(index + 1);
   }
 
   /**
    * 下移一层
    * @returns
    */
-  public putdown() {
-    const isSelected = this.draw.getGraphEvent().getSelected();
-    if (!isSelected) return;
-    // 获取当前的层级 进行--
-    const index = ~~isSelected.style.zIndex;
+  public putdown(nodeID: string) {
+    if (!nodeID) return;
+    const graph = new Graph(this.draw, nodeID);
+    const index = graph.getZIndex();
     // 不能是 -1 不然就选不到了
-    isSelected.style.zIndex =
-      index === 1 ? index.toString() : (index - 1).toString();
+    graph.setZIndex(index === 1 ? index : index - 1);
   }
 
   public group() {}

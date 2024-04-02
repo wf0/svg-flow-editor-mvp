@@ -3,8 +3,9 @@ import { Ellipse } from "../../core/Graph/Ellipse.ts";
 import { SVGImage } from "../../core/Graph/Image.ts";
 import { Rect } from "../../core/Graph/Rect.ts";
 import { Text } from "../../core/Graph/Text.ts";
+import { Graph } from "../../core/Graph/index.ts";
 
-export type IGraph = Rect | Ellipse | SVGImage | GEchart | Text;
+export type IGraph = Graph | Rect | Ellipse | SVGImage | GEchart | Text;
 
 // 单个节点的信息
 export interface node {
@@ -29,6 +30,7 @@ export interface node {
   fill?: string;
   text?: string;
   url?: string;
+  broadcast?: boolean; // 是否需要广播，用户不可控
 }
 
 // 线中应用的元件参数-宽高位置信息

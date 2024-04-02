@@ -6,6 +6,7 @@ const messageInfo = {
     "The selector is not Available.Maybe you need to wait for Dom rendering to completed.",
   invalidParams: "Invalid input parameter.",
   optionError: "The initialization Echarts parameter cannot be empty.",
+  invalidWH: "Width or Height is necessary.",
   websocket: {
     url: "The WebSocket URL cannot be empty.",
     success: "WebSocket连接成功",

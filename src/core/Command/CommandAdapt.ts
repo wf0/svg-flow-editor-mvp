@@ -55,10 +55,14 @@ export class CommandAdapt {
     // 解析参数
     const { type, nodeID, width, height } = payload;
     const { x, y, stroke, fill, text, rotate, url } = payload;
+    // 宽度或高度是必须的
+    if (!width || !height) throw new Error(messageInfo.invalidWH);
+
     // 1. 根据 type 先构建出元件
     const graphMap: { [key: string]: () => IGraph } = {
       rect: () => new Rect(this.draw, width, height),
       ellipse: () => new Ellipse(this.draw, width / 2, height / 2),
+      circle: () => new Ellipse(this.draw, width / 2, height / 2),
       image: () => new SVGImage(this.draw, url as string, width, height),
       line: () => new GEchart(this.draw, lineOption),
       bar: () => new GEchart(this.draw, barOption),
@@ -76,6 +80,12 @@ export class CommandAdapt {
     graph && stroke && graph.setStroke(stroke);
     graph && fill && graph.setFill(fill);
     graph && text && graph.setText(text);
+
+    // 正在添加元件，广播给其他客户端-添加broadcast标志是防止进入死循环
+    if (payload.broadcast !== false) {
+      const value = { nodeID: graph.getID(), width, height, type, x, y };
+      graph.broadcastGraph("addGraph", value);
+    }
 
     // 返回元件 供链式调用
     return graph;

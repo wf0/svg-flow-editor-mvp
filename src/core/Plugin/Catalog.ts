@@ -124,20 +124,7 @@ export class Catalog {
       radar: { type: "radar", width: 300, height: 150, x, y },
       pie: { type: "pie", width: 300, height: 150, x, y },
     };
-    const graph = this.command.executeAddGraph(typeMap[type as string]);
-    // 正在拖拽添加元件，广播给其他客户端
-    const nodeID = graph.getID();
-    const width = graph.getWidth();
-    const height = graph.getHeight();
-    const value = {
-      nodeID,
-      width,
-      height,
-      type,
-      x: typeMap[type as string].x,
-      y: typeMap[type as string].y,
-    };
-    graph.broadcastGraph("addGraph", value);
+    this.command.executeAddGraph(typeMap[type as string]);
   }
 
   /**

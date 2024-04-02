@@ -52,13 +52,13 @@ export class Websocket extends YJS {
       this.username = username || `user_${this.clientID.slice(0, 4)}`;
 
       var wsURL = ""; // URL 上可能需要进行参数校验
-      if (socketurl.indexOf("?") > -1) {
+
+      if (socketurl.indexOf("?") > -1)
         // 如果 > -1 表示URL上已经带了参数，则 clientID拼接在后即可
         wsURL = `${socketurl}&clientID=${this.clientID}`;
-      } else {
-        // 不然就是没有参数，需要手动拼接参数
-        wsURL = `${socketurl}?clientID=${this.clientID}`;
-      }
+      // 不然就是没有参数，需要手动拼接参数
+      else wsURL = `${socketurl}?clientID=${this.clientID}`;
+
       // 连接 websocket
       this.websocket = new WebSocket(wsURL);
 
@@ -85,7 +85,6 @@ export class Websocket extends YJS {
    */
   public sendMessage(message: wsMessage) {
     if (!this.connection) return;
-    // 协同数据处理
     // 1. 进行本地映射
     this.setMap(message.operate, message.value);
 
@@ -219,17 +218,24 @@ export class Websocket extends YJS {
 
       case "addGraph":
         var { type, width, height, nodeID, x, y } = value;
-        this.command.executeAddGraph({ type, width, height, nodeID, x, y }); // 用户添加元件，本地也同步添加元件
+        const base = { type, width, height, nodeID, x, y };
+        this.command.executeAddGraph({ ...base, broadcast: false }); // 用户添加元件，本地也同步添加元件
         break;
 
       case "updateGraph":
-        var { width, height, x, y, nodeID } = value;
-        // 用户更新
-        var graph = new Graph(this.draw, nodeID);
-        x && graph.setX(x);
-        y && graph.setY(y);
-        width && graph.setWidth(width);
-        height && graph.setHeight(height);
+        try {
+          var { width, height, x, y, nodeID } = value;
+          // 用户更新
+          var graph = new Graph(this.draw, nodeID);
+          x && graph.setX(x);
+          y && graph.setY(y);
+          width && graph.setWidth(width);
+          height && graph.setHeight(height);
+          // 更新锚点
+          const graphDraw = this.draw.getGraphDraw();
+          graphDraw.cancelFormatPoint(graph);
+          graphDraw.cancelLinkPoint(graph);
+        } catch (error) {}
         break;
 
       case "deleteGraph":

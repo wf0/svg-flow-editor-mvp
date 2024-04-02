@@ -178,7 +178,9 @@ export class DialogDraw {
    * @param value
    */
   public findKeyEvent(key: string, value: string, nodeID?: string[]) {
+    // 更新元件信息
     const updateGraph = (o: IUpdateGraph) => this.command.executeUpdateGraph(o);
+
     // 设置水印
     const setWaterText = (watermarkText: string) => {
       const oldVal = this.draw.getCanvasDraw().getBackground();
@@ -186,33 +188,75 @@ export class DialogDraw {
       this.command.executeBackground(payload);
     };
 
-    if (key === "color") updateGraph({ stroke: value, nodeID });
-    if (key === "background") updateGraph({ fill: value, nodeID });
-    if (key === "bgcolor") this.command.setTheme({ background: value });
-    if (key === "watertext") setWaterText(value);
-    if (key === "stroke") updateGraph({ stroke: `#${value}`, nodeID });
-    if (key === "fill") updateGraph({ fill: `#${value}`, nodeID });
-    if (key === "transparent") updateGraph({ fill: "transparent", nodeID });
-    if (key === "strokeWidth")
-      updateGraph({ strokeWidth: Number(value), nodeID });
-    if (key === "radius") updateGraph({ radius: Number(value), nodeID });
-    if (key === "style") updateGraph({ dasharray: value || "", nodeID });
-    if (["gridcolor", "origincolor", "watercolor"].find((i) => i === key))
-      this.setColor(key, value.includes("#") ? value : `#${value}`);
+    // 定义页面尺寸
+    const sizeMap: { [key: string]: number[] } = {
+      A3: [1500, 2100],
+      A4: [1050, 1500],
+      A5: [750, 1050],
+    };
 
-    // 画布大小事件
-    if (key === "bgcolor")
-      this.command.setTheme({ background: `#${value}` });
+    switch (key) {
+      case "color":
+      case "stroke":
+        const stroke = key === "color" ? value : `#${value}`;
+        updateGraph({ stroke, nodeID });
+        break;
 
-    // 设置具体尺寸
-    if (key === "size") {
-      const sizeMap: { [key: string]: number[] } = {
-        A3: [1500, 2100],
-        A4: [1050, 1500],
-        A5: [750, 1050],
-      };
-      const [w, h] = sizeMap[value];
-      this.command.setPageSize(w, h);
+      case "background":
+      case "fill":
+      case "transparent":
+        const fill =
+          key === "fill"
+            ? `#${value}`
+            : key === "transparent"
+            ? "transparent"
+            : value;
+        updateGraph({ fill, nodeID });
+        break;
+
+      case "bgcolor":
+        const background = value.includes("#") ? value : `#${value}`;
+        this.command.setTheme({ background });
+        break;
+
+      case "watertext":
+        setWaterText(value);
+        break;
+
+      case "strokeWidth":
+        updateGraph({ strokeWidth: Number(value), nodeID });
+        break;
+
+      case "radius":
+        updateGraph({ radius: Number(value), nodeID });
+        break;
+
+      case "style":
+        updateGraph({ dasharray: value || "", nodeID });
+        break;
+
+      case "gridcolor":
+      case "origincolor":
+      case "watercolor":
+        this.setColor(key, value.includes("#") ? value : `#${value}`);
+        break;
+
+      case "size":
+        const [w, h] = sizeMap[value];
+        this.command.setPageSize(w, h);
+        break;
+
+      case "textcolor":
+      case "textbgcolor":
+      case "bold":
+      case "italic":
+      case "underline":
+        // 文本颜色、填充、加粗、斜体、下划线 都指向同一个方法
+        this.command.executeUpdateText(nodeID as string[], key, value);
+        break;
+
+      default:
+        break;
     }
   }
 

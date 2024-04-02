@@ -463,6 +463,25 @@ editor.command.executeSearchReplace('123')
 - 参数说明： 替换的新值
 - 返回值：void；
 
+### executeUpdateText(nodeID: string[], key: textType, color?: string)
+
+- 方法说明：进行文本样式调整；
+- 参数说明： 
+  - nodeID 元件 ID 集合
+  - key 支持修改的属性："bold" | "italic" | "underline" | "textcolor"
+  - color: 需要修改的新值（**仅当 key='textcolor'时，color为必传**，仅支持16进制颜色值）
+- 返回值：void；
+- 用法示例：
+
+```javascript
+editor.command.executeUpdateText(['yF48bz3Cptl2egTy1BAv5'],'bold')
+editor.command.executeUpdateText(['yF48bz3Cptl2egTy1BAv5'],'italic')
+editor.command.executeUpdateText(['yF48bz3Cptl2egTy1BAv5'],'bold')
+editor.command.executeUpdateText(['yF48bz3Cptl2egTy1BAv5'],'textcolor','#ccc')
+```
+
+
+
 
 
 

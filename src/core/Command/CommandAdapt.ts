@@ -204,27 +204,41 @@ export class CommandAdapt {
   }
 
   /**
-   * 加粗
+   * 对文本的更新操作 - 加粗、斜体、颜色、填充 等
    */
-  public bold() {
-    const selected = this.draw.getGraphEvent().getAllSelected();
-    if (!selected.length) return;
-    // @ts-ignore需要实现单个元件的用户选择加粗
-    const { anchorOffset, focusOffset, baseNode } =
-      window.getSelection() as Selection;
-    const text =
-      baseNode &&
-      baseNode.data &&
-      baseNode.data.substring(anchorOffset, focusOffset);
-    if (text) {
-      // 如果用户选择文本存在，则不可能是多选，因此直接取第一个做处理即可
-    }
-    // selected.forEach((item) => {
-    //   const input = item
-    //     .querySelector(".sf-editor-box-graphs-main-contenteditable")
-    //     ?.querySelector("div") as HTMLDivElement;
-    //   // const html = input.innerHTML;
-    // });
+  public updateText(
+    nodeID: string[],
+    key: "bold" | "italic" | "underline" | "textcolor",
+    color?: string
+  ) {
+    /**
+     * 仅考虑全量，暂不考虑用户选择某几个文字进行样式更新
+     * 这样就能通过style来处理样式问题，从而不影响 搜索替换时的 span b 标签
+     * 不然得两边做兼容优化
+     */
+    if (!nodeID.length) return;
+    nodeID.forEach((id) => {
+      const graphMain = this.draw.getGraphDraw().getGraphMain(id);
+      const selector = ".sf-editor-box-graphs-main-contenteditable";
+      const editableBox = graphMain.querySelector(selector) as HTMLDivElement;
+      const editor = editableBox.querySelector("div") as HTMLDivElement;
+      // 1. 先获取当前的状态 bold italic underline
+      const { fontWeight, fontStyle, textDecoration } = editor.style;
+      if (key === "bold")
+        fontWeight
+          ? (editor.style.fontWeight = "")
+          : (editor.style.fontWeight = "bold");
+      if (key === "italic")
+        fontStyle
+          ? (editor.style.fontStyle = "")
+          : (editor.style.fontStyle = "italic");
+      if (key === "underline")
+        textDecoration
+          ? (editor.style.textDecoration = "")
+          : (editor.style.textDecoration = "underline");
+      if (key === "textcolor" && color)
+        editor.style.color = color.includes("#") ? color : `#${color}`;
+    });
   }
 
   /**
@@ -317,6 +331,7 @@ export class CommandAdapt {
       "【注意】样式有权重之分，如果手动设置了样式，则默认样式可能不生效！"
     );
   }
+
   // 顶部菜单功能
   public newFile() {
     console.log("commandAdapt -newFile");
@@ -437,18 +452,35 @@ export class CommandAdapt {
     this.draw.getDialogDraw().createSearchReplace(userSelected || keyword);
   }
 
+  /**
+   * 搜索上一处
+   */
   public searchPre() {
     const dialogDraw = this.draw.getDialogDraw();
     dialogDraw.searchPre();
   }
+
+  /**
+   * 搜索下一处
+   */
   public searchNext() {
     const dialogDraw = this.draw.getDialogDraw();
     dialogDraw.searchNext();
   }
+
+  /**
+   * 替换
+   * @param newWord
+   */
   public replace(newWord: string) {
     const dialogDraw = this.draw.getDialogDraw();
     dialogDraw.replace(newWord);
   }
+
+  /**
+   * 全部替换
+   * @param newWord
+   */
   public replaceAll(newWord: string) {
     const dialogDraw = this.draw.getDialogDraw();
     dialogDraw.replaceAll(newWord);

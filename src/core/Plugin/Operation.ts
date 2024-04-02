@@ -61,6 +61,7 @@ export class Operation {
    * @param command
    */
   private commandHandle(command: string) {
+    // 基本事件映射
     const eventMap: { [key: string]: () => void } = {
       revoke: this.command.executeUndo,
       restore: this.command.executeRedo,
@@ -70,14 +71,20 @@ export class Operation {
         const url = await uploadImage();
         new SVGImage(this.draw, url);
       },
-      bold: this.command.executeBold,
-      // italic
-      // underline
-      // color
-      // fill
-      // strokeWidth
-      // dashed
     };
+
+    // 弹窗事件列表
+    const malist = [
+      "bold",
+      "italic",
+      "underline",
+      "color",
+      "fill",
+      "strokeWidth",
+      "dashed",
+    ];
+    if (malist.includes(command))
+      this.draw.getDialogDraw().openDialog("元件配置", "graphInfoTemp");
     eventMap[command] && eventMap[command]();
   }
 

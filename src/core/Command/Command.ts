@@ -23,6 +23,8 @@ export class Command {
   public executeBottom: CommandAdapt["bottom"]; // 置于底层
   public executeHoldUp: CommandAdapt["holdup"]; // 上移一层
   public executePutDown: CommandAdapt["putdown"]; // 下移一层
+  public executeUpdateText: CommandAdapt["updateText"]; // 页面对文本的调整
+  public setPageSize: CommandAdapt["setPageSize"]; // 设置页面大小
 
   // 下列未标定
   // 下列未标定
@@ -56,12 +58,6 @@ export class Command {
   public executeLock: CommandAdapt["lock"];
   public executeUnLock: CommandAdapt["unlock"];
 
-  // 设置页面大小
-  public setPageSize: CommandAdapt["setPageSize"];
-
-  // 加粗
-  public executeBold: CommandAdapt["bold"];
-
   constructor(draw: Draw) {
     const adapt = new CommandAdapt(draw);
 
@@ -85,6 +81,8 @@ export class Command {
     this.executeBottom = adapt.bottom.bind(adapt); // 置于底层
     this.executeHoldUp = adapt.holdup.bind(adapt); // 上移一层
     this.executePutDown = adapt.putdown.bind(adapt); // 下移一层
+    this.executeUpdateText = adapt.updateText.bind(adapt); // 页面对文本的调整
+    this.setPageSize = adapt.setPageSize.bind(adapt); // 设置页面大小
 
     // 右键菜单相关事件
     this.executePaste = adapt.paste.bind(adapt);
@@ -92,7 +90,6 @@ export class Command {
     this.executeCut = adapt.cut.bind(adapt);
     this.executeUndo = adapt.undo.bind(adapt);
     this.executeRedo = adapt.redo.bind(adapt);
-
     this.executeGroup = adapt.group.bind(adapt);
     this.executeUnGroup = adapt.ungroup.bind(adapt);
 
@@ -110,11 +107,5 @@ export class Command {
     this.executeBeautify = adapt.beautify.bind(adapt);
     this.executeLock = adapt.lock.bind(adapt);
     this.executeUnLock = adapt.unlock.bind(adapt);
-
-    // 设置页面大小
-    this.setPageSize = adapt.setPageSize.bind(adapt);
-
-    // 加粗
-    this.executeBold = adapt.bold.bind(adapt);
   }
 }

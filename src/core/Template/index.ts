@@ -604,7 +604,7 @@ export const catalogTemp = `
 export const graphInfoTemp = `
 <div class="sf-editor-graphBox">
 	<div class="sf-editor-graphBox-item">
-		<span>描边</span>
+		<span>元件描边</span>
 		<div>
 			<span style="background-color:#e03131" command="stroke-e03131"></span>
 			<span style="background-color:#2f9e44" command="stroke-2f9e44"></span>
@@ -618,7 +618,7 @@ export const graphInfoTemp = `
 		</div>
 	</div>
 	<div class="sf-editor-graphBox-item">
-		<span>填充</span>
+		<span>元件填充</span>
 		<div>
 			<span class="transparent" title="透明色" command='transparent'></span>
 			<span style="background-color:#e03131" command='fill-e03131'></span>
@@ -629,6 +629,20 @@ export const graphInfoTemp = `
 			<span style="background-color:#FCC2D7" command='fill-FCC2D7'></span>
 			<span class="line"></span>
 			<input type="color" value="#E01515" id="background" />
+		</div>
+	</div>
+	<div class="sf-editor-graphBox-item">
+		<span>文字颜色</span>
+		<div>
+			<span style="background-color:#e03131" command='textcolor-e03131'></span>
+			<span style="background-color:#2f9e44" command="textcolor-2f9e44"></span>
+			<span style="background-color:#1971c2" command='textcolor-1971c2'></span>
+			<span style="background-color:#f08c00" command='textcolor-f08c00'></span>
+			<span style="background-color:#A5D8FF" command='textcolor-A5D8FF'></span>
+			<span style="background-color:#D0BFFF" command='textcolor-D0BFFF'></span>
+			<span style="background-color:#FCC2D7" command='textcolor-FCC2D7'></span>
+			<span class="line"></span>
+			<input type="color" value="#E01515" id="textcolor" />
 		</div>
 	</div>
 	<div class="sf-editor-graphBox-item">
@@ -692,21 +706,17 @@ export const graphInfoTemp = `
 		</div>
 	</div>
 	<div class="sf-editor-graphBox-item">
-		<span>图层</span>
+		<span>其他</span>
 		<div>
-			<span class="icon" command="layer-top"><i class="iconfont icon-zhiyudingceng"></i></span>
-			<span class="icon" command="layer-bottom"><i class="iconfont icon-zhiyudiceng"></i></span>
-			<span class="icon" command="layer-holdup"><i class="iconfont icon-shangyiyiceng"></i></span>
-			<span class="icon" command="layer-putdown"><i class="iconfont icon-xiayiyiceng"></i></span>
-		</div>
-	</div>
-	<div class="sf-editor-graphBox-item">
-		<span>操作</span>
-		<div>
-			<span class="icon"><i class="iconfont icon-fuzhi"></i></span>
-			<span class="icon"><i class="iconfont icon-shanchu"></i></span>
-			<span class="icon"><i class="iconfont icon-suo"></i></span>
-			<span class="icon"><i class="iconfont icon-jiesuo"></i></span>
+			<span title="加粗" command="bold">
+				<i class="iconfont icon-jiacu"></i>
+			</span>
+			<span title="斜体" command="italic">
+				<i class="iconfont icon-xieti"></i>
+			</span>
+			<span title="下划线" command="underline">
+				<i class="iconfont icon-xiahuaxian"></i>
+			</span>
 		</div>
 	</div>
 </div>

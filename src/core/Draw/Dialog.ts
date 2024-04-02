@@ -97,7 +97,7 @@ export class DialogDraw {
   }
 
   // 设置网格水印颜色相干方法
-  private setColor(command: string, value: string) {
+  public setColor(command: string, value: string) {
     // 1. 获取当前 canvas 绘制状态
     const canvasDraw = this.draw.getCanvasDraw();
 
@@ -122,13 +122,63 @@ export class DialogDraw {
    * @param command
    */
   public spanClickHandle(e: Event, command: string) {
-    // 提取公共方法
-    const updateGraph = (o: IUpdateGraph) => this.command.executeUpdateGraph(o);
-
     // 1. 解析参数
     const [key, value] = command.split("-");
 
     // 元件更新事件
+    this.findKeyEvent(key, value);
+
+    // 广播事件
+    const websocket = this.draw.getWebsocket();
+    websocket.sendMessage({
+      operate: "dialogEvent",
+      value: { key, val: value },
+    });
+
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  /**
+   * dialog 弹窗的 input 事件
+   * @param e
+   * @param id
+   */
+  public inputHandle = (e: Event, id: string) => {
+    const value = (e.target as HTMLInputElement).value;
+    this.findKeyEvent(id, value);
+
+    // 广播事件
+    const websocket = this.draw.getWebsocket();
+    websocket.sendMessage({
+      operate: "dialogEvent",
+      value: { key: id, val: value },
+    });
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  /**
+   * dialog 中，key 所对应的事件
+   * @param key
+   * @param value
+   */
+  public findKeyEvent(key: string, value: string) {
+    const updateGraph = (o: IUpdateGraph) => this.command.executeUpdateGraph(o);
+    // 设置水印
+    const setWaterText = (watermarkText: string) => {
+      const oldVal = this.draw.getCanvasDraw().getBackground();
+      const payload = Object.assign(oldVal, { watermarkText });
+      this.command.executeBackground(payload);
+    };
+
+    if (key === "color") updateGraph({ stroke: value });
+    if (key === "background") updateGraph({ fill: value });
+    if (key === "bgcolor") this.command.executeSetTheme({ background: value });
+    if (key === "gridcolor") this.setColor(key, value);
+    if (key === "origincolor") this.setColor(key, value);
+    if (key === "watercolor") this.setColor(key, value);
+    if (key === "watertext") setWaterText(value);
     if (key === "stroke") updateGraph({ stroke: `#${value}` });
     if (key === "fill") updateGraph({ fill: `#${value}` });
     if (key === "transparent") updateGraph({ fill: "transparent" });
@@ -153,36 +203,7 @@ export class DialogDraw {
     }
     if (["gridcolor", "origincolor", "watercolor"].find((i) => i === key))
       this.setColor(key, `#${value}`);
-
-    e.stopPropagation();
-    e.preventDefault();
   }
-
-  /**
-   * dialog 弹窗的 input 事件
-   * @param e
-   * @param id
-   */
-  public inputHandle = (e: Event, id: string) => {
-    const value = (e.target as HTMLInputElement).value;
-    const updateGraph = (o: IUpdateGraph) => this.command.executeUpdateGraph(o);
-    // 设置水印
-    const setWaterText = (watermarkText: string) => {
-      const oldVal = this.draw.getCanvasDraw().getBackground();
-      const payload = Object.assign(oldVal, { watermarkText });
-      this.command.executeBackground(payload);
-    };
-
-    if (id === "color") updateGraph({ stroke: value });
-    if (id === "background") updateGraph({ fill: value });
-    if (id === "bgcolor") this.command.executeSetTheme({ background: value });
-    if (id === "gridcolor") this.setColor(id, value);
-    if (id === "origincolor") this.setColor(id, value);
-    if (id === "watercolor") this.setColor(id, value);
-    if (id === "watertext") setWaterText(value);
-    e.stopPropagation();
-    e.preventDefault();
-  };
 
   /**
    * 创建搜索替换框 - ctrl F 快捷键的响应

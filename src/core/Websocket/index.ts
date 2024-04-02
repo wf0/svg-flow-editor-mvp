@@ -10,6 +10,7 @@ import {
   wsMessage,
 } from "../../interface/Websocket/index.ts";
 import { YJS } from "./Yjs.ts";
+import { IUpdateGraph } from "../../interface/Graph/index.ts";
 
 /**
  * 协同编辑相关类 websocket
@@ -242,6 +243,12 @@ export class Websocket extends YJS {
         var { nodeID } = value; // 获取 nodeID
         const mainBox = this.draw.getGraphDraw().getGraphMain(nodeID); // 找到 这个id 的main
         mainBox && mainBox.remove(); // 执行删除
+        break;
+
+      case "dialogEvent":
+        var { key, val } = value;
+        const dialog = this.draw.getDialogDraw();
+        dialog.findKeyEvent(key, val);
         break;
 
       case "graphClick":

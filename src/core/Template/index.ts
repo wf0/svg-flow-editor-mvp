@@ -1,4 +1,4 @@
-import { userBase } from "../Base64/index.ts";
+import { AIBase, userBase } from "../Base64/index.ts";
 
 // 右键菜单模板
 export const contextmenuTemp = `
@@ -352,13 +352,6 @@ export const operationTemp = `
 						显示水印 
 					</span>
 				</div>
-				<div class="line"></div>
-				<div class="sf-left-box-item" command="theme">
-					<span style="padding-left: 25px"> 主题切换 </span>
-					<span>
-						<i class="iconfont icon-you"></i>
-					</span>
-				</div>
 			</div>
 		</span>
 		<span index="6">
@@ -408,10 +401,52 @@ export const operationTemp = `
 				</div>
 			</div>
 		</span>
+		<span index="7">
+			风格
+			<div class="sf-left-box">
+				<div class="sf-left-box-item" command="top">
+					<span style="padding-left:25px">
+						全部主题
+					</span>
+					<span>
+						<i class="iconfont icon-you"></i>
+					</span>
+				</div>
+				<div class="line"></div>
+				<div class="sf-left-box-item" command="unlock">
+					<span>
+						<i class="iconfont icon-jiesuo"></i>牡丹粉
+					</span>
+				</div>
+				<div class="sf-left-box-item" command="unlock">
+					<span>
+						<i class="iconfont icon-jiesuo"></i>石竹红
+					</span>
+				</div>
+				<div class="sf-left-box-item" command="unlock">
+					<span>
+						<i class="iconfont icon-jiesuo"></i>芝兰紫
+					</span>
+				</div>
+				<div class="sf-left-box-item" command="unlock">
+					<span>
+						<i class="iconfont icon-jiesuo"></i>尼罗蓝
+					</span>
+				</div>
+				<div class="sf-left-box-item" command="unlock">
+					<span>
+						<i class="iconfont icon-jiesuo"></i>晨曦红
+					</span>
+				</div>
+			</div>
+		</span>
 	</div>
 	<div class="right">
-		<div class="right-shear" command="share">分享协作</div>
+		<i class="iconfont icon-xietongzhongxin" title="协同中心"></i>
 		<i class="iconfont icon-xiazai" command="download"></i>
+		<!-- AI 智能助理 -->
+		<img src='${AIBase}' atl="AI智能助手" style="border-radius:0" title="AI智能助手" command="AI" />
+		<div class="right-shear" command="share">分享协作</div>
 		<img src="${userBase}" alt="" />
 	</div>
 </div>

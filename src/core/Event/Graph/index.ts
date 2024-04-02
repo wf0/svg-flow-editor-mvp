@@ -1,9 +1,6 @@
 import dayjs from "dayjs";
 import { IGraph, node } from "../../../interface/Graph/index.ts";
-import { nextTick } from "../../../utils/index.ts";
-import { Command } from "../../Command/Command.ts";
 import { Draw } from "../../Draw/index.ts";
-import { GEchart } from "../../Graph/GEchart.ts";
 import { Line } from "../../Graph/Line.ts";
 import { workerEvent } from "../../Worker/AuxiliaryLine.worker.ts";
 // const worker = new Worker(
@@ -21,7 +18,6 @@ export class GraphEvent {
   private move!: boolean;
   private sx!: number;
   private sy!: number;
-  private command: Command;
   private nodes!: node[];
 
   // 通过记录鼠标弹起时间，判断是点击还是处于拖动状态 click mousedown-mouseup
@@ -29,7 +25,7 @@ export class GraphEvent {
 
   constructor(draw: Draw) {
     this.draw = draw;
-    this.command = new Command(draw);
+    // this.command = new Command(draw);
   }
 
   /**
@@ -96,8 +92,7 @@ export class GraphEvent {
     const support = ["rect", "ellipse"];
 
     // @ts-ignore 统计图双击，则是打开配置弹窗
-    if (e.target.tagName === "CANVAS")
-      return this.draw.getEchartDraw().updateOption(graph as GEchart);
+    if (e.target.tagName === "CANVAS") return;
 
     // @ts-ignore 不支持其他类型的文本输入
     if (!support.includes(e.target.tagName)) return;

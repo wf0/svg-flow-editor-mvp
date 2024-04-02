@@ -1,5 +1,5 @@
 import { IBackground } from "../../interface/Draw/index.ts";
-import { nextTick, uploadImage } from "../../utils/index.ts";
+import { uploadImage } from "../../utils/index.ts";
 import { Command } from "../Command/Command.ts";
 import { Draw } from "../Draw/index.ts";
 import { SVGImage } from "../Graph/Image.ts";

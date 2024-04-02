@@ -10,7 +10,6 @@ import {
   wsMessage,
 } from "../../interface/Websocket/index.ts";
 import { YJS } from "./Yjs.ts";
-import { IUpdateGraph } from "../../interface/Graph/index.ts";
 
 /**
  * 协同编辑相关类 websocket
@@ -246,9 +245,9 @@ export class Websocket extends YJS {
         break;
 
       case "dialogEvent":
-        var { key, val } = value;
+        var { key, val, nodeID } = value;
         const dialog = this.draw.getDialogDraw();
-        dialog.findKeyEvent(key, val);
+        dialog.findKeyEvent(key, val, nodeID);
         break;
 
       case "graphClick":

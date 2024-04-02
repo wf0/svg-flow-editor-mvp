@@ -55,6 +55,7 @@ export type LineKey = {
 };
 
 export interface IUpdateGraph {
+  nodeID?: string[];
   stroke?: string;
   fill?: string;
   strokeWidth?: number;

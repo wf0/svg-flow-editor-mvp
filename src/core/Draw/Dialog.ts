@@ -102,7 +102,6 @@ export class DialogDraw {
     const canvasDraw = this.draw.getCanvasDraw();
 
     const oldVal = canvasDraw.getBackground();
-
     var payload: IBackground = {};
     if (command === "gridcolor")
       payload = Object.assign(oldVal, { gridlineColor: value });
@@ -125,14 +124,21 @@ export class DialogDraw {
     // 1. 解析参数
     const [key, value] = command.split("-");
 
+    // 找到目前页面上选中的
+    var nodeID: string[] = [];
+    const graphEvent = this.draw.getGraphEvent();
+    graphEvent.getAllSelected().forEach((i) => {
+      nodeID.push(i.getAttribute("graphid") as string);
+    });
+
     // 元件更新事件
-    this.findKeyEvent(key, value);
+    this.findKeyEvent(key, value, nodeID);
 
     // 广播事件
     const websocket = this.draw.getWebsocket();
     websocket.sendMessage({
       operate: "dialogEvent",
-      value: { key, val: value },
+      value: { key, val: value, nodeID },
     });
 
     e.stopPropagation();
@@ -146,13 +152,21 @@ export class DialogDraw {
    */
   public inputHandle = (e: Event, id: string) => {
     const value = (e.target as HTMLInputElement).value;
-    this.findKeyEvent(id, value);
+
+    // 找到目前页面上选中的
+    var nodeID: string[] = [];
+    const graphEvent = this.draw.getGraphEvent();
+    graphEvent.getAllSelected().forEach((i) => {
+      nodeID.push(i.getAttribute("graphid") as string);
+    });
+
+    this.findKeyEvent(id, value, nodeID);
 
     // 广播事件
     const websocket = this.draw.getWebsocket();
     websocket.sendMessage({
       operate: "dialogEvent",
-      value: { key: id, val: value },
+      value: { key: id, val: value, nodeID },
     });
     e.stopPropagation();
     e.preventDefault();
@@ -163,7 +177,7 @@ export class DialogDraw {
    * @param key
    * @param value
    */
-  public findKeyEvent(key: string, value: string) {
+  public findKeyEvent(key: string, value: string, nodeID?: string[]) {
     const updateGraph = (o: IUpdateGraph) => this.command.executeUpdateGraph(o);
     // 设置水印
     const setWaterText = (watermarkText: string) => {
@@ -172,20 +186,19 @@ export class DialogDraw {
       this.command.executeBackground(payload);
     };
 
-    if (key === "color") updateGraph({ stroke: value });
-    if (key === "background") updateGraph({ fill: value });
+    if (key === "color") updateGraph({ stroke: value, nodeID });
+    if (key === "background") updateGraph({ fill: value, nodeID });
     if (key === "bgcolor") this.command.executeSetTheme({ background: value });
-    if (key === "gridcolor") this.setColor(key, value);
-    if (key === "origincolor") this.setColor(key, value);
-    if (key === "watercolor") this.setColor(key, value);
     if (key === "watertext") setWaterText(value);
-    if (key === "stroke") updateGraph({ stroke: `#${value}` });
-    if (key === "fill") updateGraph({ fill: `#${value}` });
-    if (key === "transparent") updateGraph({ fill: "transparent" });
-    if (key === "strokeWidth") updateGraph({ strokeWidth: Number(value) });
-    if (key === "radius") updateGraph({ radius: Number(value) });
-    if (key === "style") updateGraph({ dasharray: value || "" });
-    // if (key === "layer") { }
+    if (key === "stroke") updateGraph({ stroke: `#${value}`, nodeID });
+    if (key === "fill") updateGraph({ fill: `#${value}`, nodeID });
+    if (key === "transparent") updateGraph({ fill: "transparent", nodeID });
+    if (key === "strokeWidth")
+      updateGraph({ strokeWidth: Number(value), nodeID });
+    if (key === "radius") updateGraph({ radius: Number(value), nodeID });
+    if (key === "style") updateGraph({ dasharray: value || "", nodeID });
+    if (["gridcolor", "origincolor", "watercolor"].find((i) => i === key))
+      this.setColor(key, value.includes("#") ? value : `#${value}`);
 
     // 画布大小事件
     if (key === "bgcolor")
@@ -201,8 +214,6 @@ export class DialogDraw {
       const [w, h] = sizeMap[value];
       this.command.setPageSize(w, h);
     }
-    if (["gridcolor", "origincolor", "watercolor"].find((i) => i === key))
-      this.setColor(key, `#${value}`);
   }
 
   /**

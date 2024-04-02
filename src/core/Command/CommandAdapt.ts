@@ -219,12 +219,12 @@ export class CommandAdapt {
     if (text) {
       // 如果用户选择文本存在，则不可能是多选，因此直接取第一个做处理即可
     }
-    selected.forEach((item) => {
-      const input = item
-        .querySelector(".sf-editor-box-graphs-main-contenteditable")
-        ?.querySelector("div") as HTMLDivElement;
-      // const html = input.innerHTML;
-    });
+    // selected.forEach((item) => {
+    //   const input = item
+    //     .querySelector(".sf-editor-box-graphs-main-contenteditable")
+    //     ?.querySelector("div") as HTMLDivElement;
+    //   // const html = input.innerHTML;
+    // });
   }
 
   /**
@@ -376,12 +376,12 @@ export class CommandAdapt {
    */
   public updateGraph(payload: IUpdateGraph) {
     // rx 和 ry 来实现圆角
-    const selected = this.draw.getGraphEvent().getAllSelected();
-    if (!selected.length) return;
     const { stroke, fill, strokeWidth, radius, dasharray } = payload;
-    selected.forEach((item) => {
-      const graphid = item.getAttribute("graphid") as string;
-      const graph = new Graph(this.draw, graphid);
+
+    // 不能通过 selected 实现样式更新，不然会导致别的客户端异常
+    if (!payload.nodeID?.length) return;
+    payload.nodeID.forEach((id) => {
+      const graph = new Graph(this.draw, id);
       radius && graph.setRadius(radius);
       stroke && graph.setStroke(stroke);
       fill && graph.setFill(fill);
@@ -389,6 +389,17 @@ export class CommandAdapt {
       dasharray &&
         graph.setStrokeDasharray(dasharray === "solid" ? "" : dasharray);
     });
+
+    // selected.forEach((item) => {
+    //   const graphid = item.getAttribute("graphid") as string;
+    //   const graph = new Graph(this.draw, graphid);
+    //   radius && graph.setRadius(radius);
+    //   stroke && graph.setStroke(stroke);
+    //   fill && graph.setFill(fill);
+    //   strokeWidth && graph.setStrokeWidth(strokeWidth);
+    //   dasharray &&
+    //     graph.setStrokeDasharray(dasharray === "solid" ? "" : dasharray);
+    // });
   }
 
   /**

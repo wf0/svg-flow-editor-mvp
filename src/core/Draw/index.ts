@@ -9,7 +9,6 @@ import { GraphEvent } from "../Event/Graph/index.ts";
 import { GraphDraw } from "./Graph.ts";
 import { EditorEvent } from "../Event/Editor/index.ts";
 import { LineDraw } from "./Line.ts";
-import { EchartDraw } from "./Echart.ts";
 import { DialogDraw } from "./Dialog.ts";
 import { Websocket } from "../Websocket/index.ts";
 
@@ -23,7 +22,6 @@ export class Draw {
   private canvasDraw: CanvasDraw;
   private graphDraw: GraphDraw;
   private lineDraw: LineDraw;
-  private echartDraw: EchartDraw;
 
   private graphEvent: GraphEvent;
   private editorEvent: EditorEvent;
@@ -50,7 +48,6 @@ export class Draw {
     this.lineDraw = new LineDraw(this);
     this.graphEvent = new GraphEvent(this);
     this.editorEvent = new EditorEvent(this);
-    this.echartDraw = new EchartDraw(this);
     this.dialogDraw = new DialogDraw(this);
     this.websocket = new Websocket(this);
 
@@ -207,7 +204,6 @@ export class Draw {
   public getEditorEvent = () => this.editorEvent;
   public getCanvasDraw = () => this.canvasDraw;
   public getLineDraw = () => this.lineDraw;
-  public getEchartDraw = () => this.echartDraw;
   public getDialogDraw = () => this.dialogDraw;
   public getWebsocket = () => this.websocket;
 }

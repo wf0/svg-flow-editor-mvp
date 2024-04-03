@@ -88,6 +88,9 @@ export class GraphEvent {
    * @param e
    */
   private graphDblclickHandle(e: Event, graph: IGraph) {
+    //  显示dialog 配置元件信息 要区分是单击还是在拖动
+    const dialog = this.draw.getDialogDraw();
+    dialog.closeDialog();
     // 支持双击文本编辑的容器
     const support = ["rect", "ellipse"];
 

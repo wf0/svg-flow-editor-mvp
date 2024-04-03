@@ -407,6 +407,13 @@ export class GraphDraw {
     const mainBox = formatBox.parentNode as HTMLDivElement;
     mainBox.style.pointerEvents = "none";
 
+    // 其他所有的 graphMain 都不响应
+    this.draw
+      .getRoot()
+      .querySelectorAll('[type="mainBox"]')
+      // @ts-ignore
+      .forEach((i) => (i.style.pointerEvents = "none"));
+
     // 4. 取消当前节点的锚点
     this.cancelLinkPoint(graph);
     this.cancelFormatPoint(graph);
@@ -424,6 +431,14 @@ export class GraphDraw {
       div.style.pointerEvents = "";
       formatBox.style.pointerEvents = "";
       mainBox.style.pointerEvents = "";
+
+      // 其他所有的 graphMain
+      this.draw
+        .getRoot()
+        .querySelectorAll('[type="mainBox"]')
+        // @ts-ignore
+        .forEach((i) => (i.style.pointerEvents = ""));
+
       // 创建锚点
       this.createLinkPoint(graph);
       this.createFormatPoint(graph);

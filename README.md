@@ -480,7 +480,11 @@ editor.command.executeUpdateText(['yF48bz3Cptl2egTy1BAv5'],'bold')
 editor.command.executeUpdateText(['yF48bz3Cptl2egTy1BAv5'],'textcolor','#ccc')
 ```
 
+### setPageSize(w: number, h: number)
 
+- 方法说明：设置页面尺寸；
+- 参数说明： w - 页面宽度 h - 页面高度
+- 返回值：void；
 
 
 

@@ -71,9 +71,6 @@ export class EditorEvent {
     document.addEventListener("wheel", this._scaleHandle, {
       passive: false,
     });
-
-    // 移除事件测试用
-    // setTimeout(this.removeEvent.bind(this), 2000);
   }
 
   /**

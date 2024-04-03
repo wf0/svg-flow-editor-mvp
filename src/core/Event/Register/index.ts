@@ -306,11 +306,14 @@ export class RegisterEvent {
 
   /**
    * keydown handle 用于实现系统级快捷键 用户快捷键
+   *  快捷键的处理上，会有些问题，需要精细化控制是否阻止默认事件
    * @param e
    */
   public keydownHandle(evt: KeyboardEvent) {
+    console.log("evt.target", evt.target);
     // @ts-ignore 非body 不拦截快捷键
     if (evt.target.tagName !== "BODY") return;
+
     // 共同实现 用户与默认事件
     const userList = this.draw.getRegister().shortcutList;
     const eventList = [...this.defaultEvent, ...userList];
@@ -341,6 +344,11 @@ export class RegisterEvent {
       });
   }
 
+  /**
+   * keyup
+   * @param e
+   * @returns
+   */
   public keyupHandle(e: KeyboardEvent) {
     if (e.key !== " ") return;
     // 1. 清空root move 标志

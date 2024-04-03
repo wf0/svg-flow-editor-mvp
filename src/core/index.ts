@@ -18,6 +18,8 @@ import { IWebsocket } from "../interface/Websocket/index.ts";
 import { messageInfo } from "./Config/index.ts";
 import "../assets/font_4458457_4ftw0i6fgnl/iconfont.css";
 import "../style/SFEditor.less";
+import { GTable } from "./Graph/GTable.ts";
+import { ITableConfig } from "../interface/Graph/index.ts";
 
 // 定义插件类型
 type pluginName = "catalog" | "footer" | "operation" | "echart" | "websocket";
@@ -73,14 +75,27 @@ class SFEditor {
   }
 
   /**
-   * svg 图片
-   * @param url
+   * SVGImageElement
+   * @param url 图片地址
    * @returns
    */
   public SVGImage(url: string): SVGImage {
     return new SVGImage(this.draw, url);
   }
 
+  /**
+   * 表格
+   * @returns
+   */
+  public Table(payload?: ITableConfig) {
+    return new GTable(this.draw, payload);
+  }
+
+  /**
+   * SVGTextElement
+   * @param text 显示文本
+   * @returns
+   */
   public Text(text: string) {
     return new Text(this.draw, text);
   }

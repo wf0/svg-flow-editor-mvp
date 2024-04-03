@@ -4,8 +4,16 @@ import { SVGImage } from "../../core/Graph/Image.ts";
 import { Rect } from "../../core/Graph/Rect.ts";
 import { Text } from "../../core/Graph/Text.ts";
 import { Graph } from "../../core/Graph/index.ts";
+import { GTable } from "../../core/Graph/GTable.ts";
 
-export type IGraph = Graph | Rect | Ellipse | SVGImage | GEchart | Text;
+export type IGraph =
+  | GTable
+  | Graph
+  | Rect
+  | Ellipse
+  | SVGImage
+  | GEchart
+  | Text;
 
 // 单个节点的信息
 export interface node {
@@ -61,4 +69,11 @@ export interface IUpdateGraph {
   strokeWidth?: number;
   radius?: number;
   dasharray?: string;
+}
+
+// 表格控制
+export interface ITableConfig {
+  row?: number;
+  col?: number;
+  stripe?: boolean; // 是否开启斑马纹
 }

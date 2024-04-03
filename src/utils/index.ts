@@ -134,6 +134,11 @@ function toBlob(file: File, type: string) {
   return url;
 }
 
+//去左右空格;
+function trim(s: string) {
+  return s.replace(/(^\s*)|(\s*$)/g, "");
+}
+
 export {
   nextTick,
   isMod,
@@ -144,4 +149,5 @@ export {
   type4,
   toBlob,
   uploadImage,
+  trim,
 };

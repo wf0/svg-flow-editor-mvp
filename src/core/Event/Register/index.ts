@@ -353,7 +353,7 @@ export class RegisterEvent {
     if (e.key !== " ") return;
     // 1. 清空root move 标志
     const root = this.draw.getRoot();
-    root.setAttribute("move", "");
+    root.removeAttribute("move");
     root.style.cursor = "default";
 
     // 2. 恢复事件

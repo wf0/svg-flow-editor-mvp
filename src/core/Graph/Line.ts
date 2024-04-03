@@ -90,8 +90,8 @@ export class Line {
     const eid = this.line.getAttribute("eid") as string;
     const sid = this.line.getAttribute("sid") as string;
     if (!eid || !st || !et) return this.lineBox.remove();
-    this.line.setAttribute("stroke-dasharray", "");
-    this.line.setAttribute("points", "");
+    this.line.removeAttribute("stroke-dasharray");
+    this.line.removeAttribute("points");
     this.line.setAttribute("st", st);
     this.line.setAttribute("et", et);
     // this.lineBox.style.backgroundColor = "rgba(0,0,0,0.1)";

@@ -95,7 +95,11 @@ export class GraphEvent {
     const support = ["rect", "ellipse"];
 
     // @ts-ignore 统计图双击，则是打开配置弹窗
-    if (e.target.tagName === "CANVAS") return;
+    if (e.target.tagName === "CANVAS") {
+      const dialog = this.draw.getDialogDraw();
+      dialog.openDialog("统计图配置", "echartUpdateTemp");
+      return;
+    }
 
     // @ts-ignore 不支持其他类型的文本输入
     if (!support.includes(e.target.tagName)) return;
@@ -140,7 +144,6 @@ export class GraphEvent {
 
       // 找 可编辑 div
       const input = editor.children[0] as HTMLDivElement;
-
       // 自动获取焦点
       input.focus();
 
@@ -287,7 +290,7 @@ export class GraphEvent {
     if (et - this.st <= 120) {
       //  显示dialog 配置元件信息 要区分是单击还是在拖动
       const dialog = this.draw.getDialogDraw();
-      dialog.openDialog("元件配置", "graphInfoTemp");
+      // dialog.openDialog("元件配置", "graphInfoTemp");
     }
     // 获取终点坐标
     this.move = false;

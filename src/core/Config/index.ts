@@ -80,10 +80,6 @@ export const pieOption = {
   tooltip: {
     trigger: "item",
   },
-  legend: {
-    top: "5%",
-    left: "center",
-  },
   series: [
     {
       name: "Access From",
@@ -97,7 +93,7 @@ export const pieOption = {
       emphasis: {
         label: {
           show: true,
-          fontSize: 40,
+          fontSize: 20,
           fontWeight: "bold",
         },
       },

@@ -59,8 +59,10 @@ export class GraphDraw {
     const graphsSelector = ".sf-editor-box-graphs";
     const graphs = editorBox.querySelector(graphsSelector) as HTMLDivElement;
 
-    // 特殊处理 ==> 针对 echart 不需要 svg 包一层
-    if (element.tagName === "DIV") {
+    // 特殊处理 ==> 针对 echart、table 不需要 svg 包一层
+    const special = ["DIV", "TABLE"];
+
+    if (special.includes(element.tagName)) {
       graphBox.appendChild(element);
       element.style.height = "100%";
       element.style.width = "100%";

@@ -221,6 +221,7 @@ export class CommandAdapt {
       const graphMain = this.draw.getGraphDraw().getGraphMain(id);
       const selector = ".sf-editor-box-graphs-main-contenteditable";
       const editableBox = graphMain.querySelector(selector) as HTMLDivElement;
+      if (!editableBox) return; // 元件可能还没有创建文本
       const editor = editableBox.querySelector("div") as HTMLDivElement;
       // 1. 先获取当前的状态 bold italic underline
       const { fontWeight, fontStyle, textDecoration } = editor.style;

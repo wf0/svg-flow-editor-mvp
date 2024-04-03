@@ -4,28 +4,27 @@ import { GraphCommon } from "./Common.ts";
 
 // 实现表格
 export class GTable extends GraphCommon {
-  private table: HTMLTableElement;
+  private tableBox: HTMLDivElement; // 这个是 table的外层盒子，需要使用div装table 来实现滚动优化
   private row: number; // 行
   private col: number; // 列
 
   constructor(draw: Draw, payload?: ITableConfig) {
     super(draw);
-    this.table = draw.createHTMLElement("table") as HTMLTableElement;
-    this.table.classList.add("sf-editor-table");
+
+    // 创建外层盒子
+    this.tableBox = draw.createHTMLElement("div") as HTMLDivElement;
+    this.tableBox.classList.add("sf-editor-table");
 
     // 默认四行三列
     this.row = payload?.row || 4;
     this.col = payload?.col || 3;
 
-    if (payload?.stripe) this.table.classList.add("sf-editor-table--stripe");
+    if (payload?.stripe) this.tableBox.classList.add("sf-editor-table--stripe");
 
     super.addToEditor(this);
 
     super.setWidth.call(this, this.col * 100);
-    super.setHeight.call(this, this.row > 5 ? 5 * 40 : this.row * 40);
-
-    // 优化滚动问题
-    (this.table.parentNode as HTMLDivElement).classList.add('sf-editor-overflow')
+    super.setHeight.call(this, this.row > 5 ? 5 * 30 : (this.row + 1) * 30 + 3);
 
     // 1. 创建头部
     this.createHead(draw);
@@ -39,6 +38,11 @@ export class GTable extends GraphCommon {
 
   // 创建头部 head
   private createHead(draw: Draw) {
+    const div = draw.createHTMLElement("div");
+    div.classList.add("sf-editor-table-title");
+    if (this.row > 5) div.style.width = "calc(100% - 4px)";
+    const table = draw.createHTMLElement("table");
+
     const thead = draw.createHTMLElement("thead");
     const tr = draw.createHTMLElement("tr");
     for (let i = 0; i < this.col; i++) {
@@ -49,11 +53,19 @@ export class GTable extends GraphCommon {
       tr.appendChild(th);
     }
     thead.appendChild(tr);
-    this.table.appendChild(thead);
+    table.appendChild(thead);
+    div.appendChild(table);
+    this.tableBox.appendChild(div);
   }
 
   // 创建 tbody
   private createBody(draw: Draw) {
+    const div = draw.createHTMLElement("div");
+    div.classList.add("sf-editor-table-content");
+    div.classList.add("sf-editor-overflow");
+
+    const table = draw.createHTMLElement("table");
+
     const body = draw.createHTMLElement("tbody");
     for (let i = 0; i < this.row; i++) {
       const tr = draw.createHTMLElement("tr");
@@ -65,7 +77,9 @@ export class GTable extends GraphCommon {
       }
       body.appendChild(tr);
     }
-    this.table.appendChild(body);
+    div.appendChild(table);
+    table.appendChild(body);
+    this.tableBox.appendChild(div);
   }
 
   // 将光标移动到末尾
@@ -80,11 +94,11 @@ export class GTable extends GraphCommon {
 
   // 初始化 双击编辑事件
   private initEvent() {
-    const divs = this.table.querySelectorAll("div");
+    const divs = this.tableBox.querySelectorAll("th div,td div");
     divs.forEach((item) => {
       item.addEventListener("dblclick", () => {
         item.setAttribute("contenteditable", "true");
-        item.focus();
+        (item as HTMLDivElement).focus();
         this.setRange(item);
         item.addEventListener("blur", () =>
           divs.forEach((i) => i.removeAttribute("contenteditable"))
@@ -95,6 +109,6 @@ export class GTable extends GraphCommon {
 
   // 获取Element
   public getElement() {
-    return this.table;
+    return this.tableBox;
   }
 }

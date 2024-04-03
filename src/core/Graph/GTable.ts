@@ -22,7 +22,10 @@ export class GTable extends GraphCommon {
     super.addToEditor(this);
 
     super.setWidth.call(this, this.col * 100);
-    super.setHeight.call(this, this.row * 40);
+    super.setHeight.call(this, this.row > 5 ? 5 * 40 : this.row * 40);
+
+    // 优化滚动问题
+    (this.table.parentNode as HTMLDivElement).classList.add('sf-editor-overflow')
 
     // 1. 创建头部
     this.createHead(draw);

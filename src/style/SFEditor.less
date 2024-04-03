@@ -786,6 +786,8 @@
     // 修改滚动条的样式
     &-overflow {
         position: relative;
+        overflow: hidden;
+        overflow-y: auto;
 
         /* 设置滚动条的宽度 */
         &::-webkit-scrollbar {
@@ -909,6 +911,9 @@
 
     // 表格
     &-table {
+        position: relative;
+        width: 100%;
+        height: 100%;
         border-collapse: collapse;
         user-select: none;
 
@@ -925,8 +930,10 @@
             td,
             th {
                 border: #ebeef5 1px solid;
+                overflow: hidden;
 
                 div {
+                    line-height: 30px;
                     text-align: center;
                     width: 100%;
                     height: 100%;

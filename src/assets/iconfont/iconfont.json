@@ -6,11 +6,81 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1239930",
+      "name": "加载",
+      "font_class": "jiazai",
+      "unicode": "e699",
+      "unicode_decimal": 59033
+    },
+    {
+      "icon_id": "28155355",
+      "name": "协同中心",
+      "font_class": "xietongzhongxin",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "27045125",
+      "name": "协同工作中心",
+      "font_class": "xietonggongzuozhongxin",
+      "unicode": "e6a2",
+      "unicode_decimal": 59042
+    },
+    {
+      "icon_id": "12880771",
+      "name": "替换",
+      "font_class": "tihuan",
+      "unicode": "e674",
+      "unicode_decimal": 58996
+    },
+    {
+      "icon_id": "30008202",
+      "name": "全部替换",
+      "font_class": "quanbutihuan",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "6884483",
+      "name": "向右",
+      "font_class": "xiangyou",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "6884484",
+      "name": "向左",
+      "font_class": "xiangzuo",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "24850061",
+      "name": "左",
+      "font_class": "zuo",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "2331753",
+      "name": "旋转-1",
+      "font_class": "xuanzhuan",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
+    {
       "icon_id": "20186144",
       "name": "关闭close",
       "font_class": "guanbiclose",
       "unicode": "e7c2",
       "unicode_decimal": 59330
+    },
+    {
+      "icon_id": "39771584",
+      "name": "小型-close",
+      "font_class": "xgb",
+      "unicode": "ec40",
+      "unicode_decimal": 60480
     },
     {
       "icon_id": "24850062",
@@ -291,20 +361,6 @@
       "font_class": "kaifazhong",
       "unicode": "e6c5",
       "unicode_decimal": 59077
-    },
-    {
-      "icon_id": "1790025",
-      "name": "复制",
-      "font_class": "fuzhi1",
-      "unicode": "e6dd",
-      "unicode_decimal": 59101
-    },
-    {
-      "icon_id": "1790028",
-      "name": "粘贴",
-      "font_class": "niantie1",
-      "unicode": "e6de",
-      "unicode_decimal": 59102
     },
     {
       "icon_id": "1790495",

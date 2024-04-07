@@ -114,7 +114,7 @@ export class GraphDraw {
    * 创建链接锚点 - 向 graphMain 添加锚点
    * @param graph
    */
-  public createLinkPoint(graph: IGraph) {
+  public async createLinkPoint(graph: IGraph) {
     const nodeID = graph.getID();
     const graphMain = this.getGraphMain(nodeID);
 
@@ -125,36 +125,36 @@ export class GraphDraw {
     graphMain.appendChild(link);
 
     // 2. 根据宽度 高度 绘制 4 个链接锚点
-    nextTick(() => {
-      const fill = "#fff"; // 定义链接锚点的样式
-      const stroke = "#067bef";
-      const points = [];
-      const width = graph.getWidth();
-      const height = graph.getHeight();
-      // type 标记是哪个点，在连接线的时候，需要做处理
-      points.push({ type: "0", x: 0, y: height / 2 });
-      points.push({ type: "1", x: width / 2, y: 0 });
-      points.push({ type: "2", x: width, y: height / 2 });
-      points.push({ type: "3", x: width / 2, y: height });
+    await nextTick();
 
-      points.forEach((item) => {
-        const linkItem = this.draw.createHTMLElement("div") as HTMLDivElement;
-        linkItem.setAttribute("linktype", item.type);
-        linkItem.style.width = radius + "px";
-        linkItem.style.height = radius + "px";
-        linkItem.style.position = "absolute";
-        linkItem.style.left = item.x + radius / 2 + "px";
-        linkItem.style.top = item.y + radius / 2 + "px";
-        linkItem.style.backgroundColor = fill;
-        linkItem.style.borderColor = stroke;
-        linkItem.style.borderRadius = radius + "px";
-        link.appendChild(linkItem);
+    const fill = "#fff"; // 定义链接锚点的样式
+    const stroke = "#067bef";
+    const points = [];
+    const width = graph.getWidth();
+    const height = graph.getHeight();
+    // type 标记是哪个点，在连接线的时候，需要做处理
+    points.push({ type: "0", x: 0, y: height / 2 });
+    points.push({ type: "1", x: width / 2, y: 0 });
+    points.push({ type: "2", x: width, y: height / 2 });
+    points.push({ type: "3", x: width / 2, y: height });
 
-        // 添加事件
-        linkItem.addEventListener("mousedown", () =>
-          this.linkPointMousedown(graph, item.type)
-        );
-      });
+    points.forEach((item) => {
+      const linkItem = this.draw.createHTMLElement("div") as HTMLDivElement;
+      linkItem.setAttribute("linktype", item.type);
+      linkItem.style.width = radius + "px";
+      linkItem.style.height = radius + "px";
+      linkItem.style.position = "absolute";
+      linkItem.style.left = item.x + radius / 2 + "px";
+      linkItem.style.top = item.y + radius / 2 + "px";
+      linkItem.style.backgroundColor = fill;
+      linkItem.style.borderColor = stroke;
+      linkItem.style.borderRadius = radius + "px";
+      link.appendChild(linkItem);
+
+      // 添加事件
+      linkItem.addEventListener("mousedown", () =>
+        this.linkPointMousedown(graph, item.type)
+      );
     });
   }
 

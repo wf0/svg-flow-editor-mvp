@@ -1,4 +1,4 @@
-import { AIBase, userBase } from "../Base64/index.ts";
+import { AIBase, userBase, VIPBase } from "../Base64/index.ts";
 
 // 右键菜单模板
 export const contextmenuTemp = `
@@ -448,9 +448,24 @@ export const operationTemp = `
 	</div>
 	<div class="right">
 		<i class="iconfont icon-xietongzhongxin" title="协同中心"></i>
-		<i class="iconfont icon-xiazai" command="download"></i>
-		<!-- AI 智能助理 -->
-		<img src='${AIBase}' atl="AI智能助手" style="border-radius:0" title="AI智能助手" command="AI" />
+		<i class="iconfont icon-xiazai sf-download" title="导出">
+			<div class="sf-left-box">
+				<div class="sf-left-box-item" command="download-png">
+					<span> PNG </span>
+				</div>
+				<div class="sf-left-box-item" command="download-jpg">
+					<span> JPG </span>
+				</div>
+				<div class="sf-left-box-item" command="download-svg">
+					<span> SVG </span>
+					<img src="${VIPBase}" />
+				</div>
+				<div class="sf-left-box-item" command="download-json">
+					<span> JSON </span>
+					<img src="${VIPBase}" />
+				</div>
+			</div>
+		</i>
 		<div class="right-shear" command="share">分享协作</div>
 		<img src="${userBase}" alt="" />
 	</div>
@@ -543,9 +558,6 @@ export const catalogTemp = `
 	</div>
 	<div draggable="true" class="graph" type="arrow" title='箭头'>
 		<i class="iconfont icon-xingzhuang-jianxing"></i>
-	</div>
-	<div draggable="true" class="graph" type="line" title="直线">
-		<i class="iconfont icon-xian"></i>
 	</div>
 	<div draggable="true" class="graph" type="table" title="表格">
 		<i class="iconfont icon-biaodanzujian-biaoge"></i>
@@ -859,3 +871,10 @@ export const searchReplaceTemp = `
 	<i class="iconfont icon-quanbutihuan" title="全部替换"></i>
 </div>
 `;
+
+export const loadingTemp=`
+<svg t="1712477451466" class="icon" viewBox="0 0 1024 1024" version="1.1"
+    xmlns="http://www.w3.org/2000/svg" p-id="4300" width="200" height="200">
+    <path d="M546.462897 266.292966c-73.410207 0-133.15531-59.727448-133.155311-133.137656C413.307586 59.762759 473.05269 0 546.462897 0c73.410207 0 133.12 59.727448 133.12 133.15531 0 73.410207-59.709793 133.137655-133.12 133.137656z m-283.453794 105.736827c-67.054345 0-121.626483-54.554483-121.626482-121.644138s54.572138-121.644138 121.626482-121.644138a121.767724 121.767724 0 0 1 121.608828 121.644138c0 67.054345-54.554483 121.644138-121.608828 121.644138zM142.547862 647.185655A107.343448 107.343448 0 0 1 35.310345 539.895172a107.343448 107.343448 0 0 1 107.237517-107.237517 107.343448 107.343448 0 0 1 107.219862 107.237517 107.343448 107.343448 0 0 1-107.219862 107.272828z m120.461241 272.595862a91.047724 91.047724 0 0 1-90.941793-90.959448 91.065379 91.065379 0 0 1 90.924138-90.941793 91.065379 91.065379 0 0 1 90.941793 90.941793c0 50.14069-40.783448 90.959448-90.924138 90.959448zM546.462897 1024a79.518897 79.518897 0 0 1-79.448276-79.448276c0-43.820138 35.645793-79.448276 79.448276-79.448276a79.518897 79.518897 0 0 1 79.43062 79.448276c0 43.820138-35.628138 79.448276-79.448276 79.448276z m287.744-134.285241a64.194207 64.194207 0 0 1-64.123587-64.123587 64.194207 64.194207 0 0 1 64.123587-64.123586 64.194207 64.194207 0 0 1 64.123586 64.123586 64.194207 64.194207 0 0 1-64.123586 64.123587z m117.848275-296.695173a52.683034 52.683034 0 0 1-52.612413-52.612414 52.683034 52.683034 0 0 1 52.612413-52.630069 52.70069 52.70069 0 0 1 52.630069 52.612414 52.718345 52.718345 0 0 1-52.630069 52.630069z m-158.667034-338.696827a40.818759 40.818759 0 1 0 81.655172 0.017655 40.818759 40.818759 0 0 0-81.655172 0z" fill="#3080E9" p-id="4301"></path>
+</svg>
+`

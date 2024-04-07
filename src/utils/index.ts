@@ -3,10 +3,13 @@ import { IThemeOpt } from "../interface/Draw/index.ts";
 import { graphInfo } from "../interface/Graph/index.ts";
 
 // 封装 nextTick()
-function nextTick(fn: Function) {
-  const callback = window.requestIdleCallback || window.setTimeout;
-  callback(() => {
-    fn();
+function nextTick(fn?: Function) {
+  return new Promise<void>((resolve) => {
+    const callback = window.requestIdleCallback || window.setTimeout;
+    callback(() => {
+      fn && fn();
+      resolve();
+    });
   });
 }
 

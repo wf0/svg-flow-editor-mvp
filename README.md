@@ -486,7 +486,11 @@ editor.command.executeUpdateText(['yF48bz3Cptl2egTy1BAv5'],'textcolor','#ccc')
 - 参数说明： w - 页面宽度 h - 页面高度
 - 返回值：void；
 
+### executeScreenShot(filetype?:string)
 
+- 方法说明：进行图片下载（截图）；
+- 参数说明：保存的文件类型 - 目前支持 png 、jpg 格式
+- 返回值：void；
 
 
 
@@ -772,3 +776,10 @@ line.setOption(option)
   - 实现 Yjs 关键冲突、合并方法重写
   - 优化 dialog 事件响应机制，拓展dialog应用场景
   - 优化相干BUG
+
+- **1.0.15**
+  - 重写层级相关API，便于实现协同
+  - 修复拖拽经过元素时位置异常问题
+  - 实现GTable表格，优化 table 样式
+  - 实现相关 Command API
+  - 优化 nextTick 实现方式

@@ -1,4 +1,4 @@
-import { IBackground } from "../../interface/Draw/index.ts";
+import { dialogTemp, IBackground } from "../../interface/Draw/index.ts";
 import { IUpdateGraph } from "../../interface/Graph/index.ts";
 import { Command } from "../Command/Command.ts";
 import {
@@ -8,12 +8,6 @@ import {
   themeTemp,
 } from "../Template/index.ts";
 import { Draw } from "./index.ts";
-
-type dialogTemp =
-  | "echartUpdateTemp"
-  | "graphInfoTemp"
-  | "canvasSettingTemp"
-  | "themeTemp";
 
 export class DialogDraw {
   private draw: Draw;
@@ -247,7 +241,6 @@ export class DialogDraw {
         break;
 
       case "textcolor":
-      case "textbgcolor":
       case "bold":
       case "italic":
       case "underline":

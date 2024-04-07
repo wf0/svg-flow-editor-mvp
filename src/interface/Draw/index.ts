@@ -22,3 +22,9 @@ export type IThemeOpt = {
   line?: string; // 线条颜色
   auxiliaryLine?: string; // 辅助线颜色
 };
+
+export type dialogTemp =
+  | "echartUpdateTemp"
+  | "graphInfoTemp"
+  | "canvasSettingTemp"
+  | "themeTemp";

@@ -310,7 +310,6 @@ export class RegisterEvent {
    * @param e
    */
   public keydownHandle(evt: KeyboardEvent) {
-    console.log("evt.target", evt.target);
     // @ts-ignore 非body 不拦截快捷键
     if (evt.target.tagName !== "BODY") return;
 

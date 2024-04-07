@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4458457 */
-  src: url('iconfont.woff2?t=1711528876290') format('woff2'),
-       url('iconfont.woff?t=1711528876290') format('woff'),
-       url('iconfont.ttf?t=1711528876290') format('truetype');
+  src: url('iconfont.woff2?t=1712487876771') format('woff2'),
+       url('iconfont.woff?t=1712487876771') format('woff'),
+       url('iconfont.ttf?t=1712487876771') format('truetype');
 }
 
 .iconfont {
@@ -13,8 +13,48 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-jiazai:before {
+  content: "\e699";
+}
+
+.icon-xietongzhongxin:before {
+  content: "\e638";
+}
+
+.icon-xietonggongzuozhongxin:before {
+  content: "\e6a2";
+}
+
+.icon-tihuan:before {
+  content: "\e674";
+}
+
+.icon-quanbutihuan:before {
+  content: "\e60c";
+}
+
+.icon-xiangyou:before {
+  content: "\e627";
+}
+
+.icon-xiangzuo:before {
+  content: "\e629";
+}
+
+.icon-zuo:before {
+  content: "\e646";
+}
+
+.icon-xuanzhuan:before {
+  content: "\e681";
+}
+
 .icon-guanbiclose:before {
   content: "\e7c2";
+}
+
+.icon-xgb:before {
+  content: "\ec40";
 }
 
 .icon-you:before {
@@ -175,14 +215,6 @@
 
 .icon-kaifazhong:before {
   content: "\e6c5";
-}
-
-.icon-fuzhi1:before {
-  content: "\e6dd";
-}
-
-.icon-niantie1:before {
-  content: "\e6de";
 }
 
 .icon-beijingyanse:before {

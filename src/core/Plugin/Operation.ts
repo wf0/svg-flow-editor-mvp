@@ -54,6 +54,15 @@ export class Operation {
       const command = item.getAttribute("command") as string;
       item.addEventListener("click", this.commandHandle.bind(this, command));
     });
+
+    // 3. 给顶部右侧的 download 添加事件
+    const download = top?.querySelector(".sf-download") as HTMLDivElement;
+    download.addEventListener("click", (e) => {
+      // 展开
+      this.clickHandle(e, download as HTMLSpanElement);
+      download.style.backgroundColor = "";
+      this.addCommandEvent(e, download as HTMLSpanElement);
+    });
   }
 
   /**
@@ -244,6 +253,15 @@ export class Operation {
           name === "mdl" && setTheme("colorful_theme_mdl");
           name === "nll" && setTheme("colorful_theme_nll");
           name === "jgz" && setTheme("colorful_theme_jgz");
+          break;
+        case "download-png":
+        case "download-jpg":
+        case "download-svg":
+        case "download-json":
+          const [, filetype] = command.split("-");
+          if (["svg", "json"].includes(filetype)) console.log("请开通会员");
+          else this.command.executeScreenShot(filetype);
+          this.closeAllSpan();
           break;
 
         case "top":

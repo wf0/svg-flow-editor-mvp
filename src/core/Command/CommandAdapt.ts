@@ -1,4 +1,8 @@
-import { IBackground, IThemeOpt } from "../../interface/Draw/index.ts";
+import {
+  dialogTemp,
+  IBackground,
+  IThemeOpt,
+} from "../../interface/Draw/index.ts";
 import { IGraph, IUpdateGraph, node } from "../../interface/Graph/index.ts";
 import { nextTick, setTheme } from "../../utils/index.ts";
 import { messageInfo } from "../Config/index.ts";
@@ -484,5 +488,32 @@ export class CommandAdapt {
   public replaceAll(newWord: string) {
     const dialogDraw = this.draw.getDialogDraw();
     dialogDraw.replaceAll(newWord);
+  }
+
+  /**
+   * 提供API打开dialog 抽屉
+   * @param type
+   */
+  public openDialog(type: string) {
+    const dialog = this.draw.getDialogDraw();
+    const map: { [key: string]: { title: string; temp: dialogTemp } } = {
+      canvas: { title: "背景设置", temp: "canvasSettingTemp" },
+      theme: { title: "主题设置", temp: "themeTemp" },
+    };
+    const { title, temp } = map[type];
+    dialog.openDialog(title, temp);
+  }
+
+  /**
+   * 利用 html2canvas 截图
+   *  1. ignoreElements 处理截图慢问题: (element) => false 与 root 进行位置比较
+   *  2. x y width height 处理最佳宽高，不出现大量空白
+   *  3. proxy、useCORS、allowTaint 处理跨域图片问题
+   *  4. backgroundColor 支持透明、白色背景（设置null为透明）
+   */
+  public screenShot(filetype?: string) {
+    if (filetype && !["png", "jpg"].includes(filetype)) return;
+    const canvas = this.draw.getCanvasDraw();
+    canvas.screenShot(filetype || "png");
   }
 }

@@ -25,11 +25,14 @@ export class Command {
   public executePutDown: CommandAdapt["putdown"]; // 下移一层
   public executeUpdateText: CommandAdapt["updateText"]; // 页面对文本的调整
   public setPageSize: CommandAdapt["setPageSize"]; // 设置页面大小
+  public executeScreenShot: CommandAdapt["screenShot"]; // 截图
 
   // 下列未标定
   // 下列未标定
   // 下列未标定
   // 下列未标定
+
+  public executeOpenDialog: CommandAdapt["openDialog"]; // 打开弹窗
 
   /** 右键菜单相关API */
   public executePaste: CommandAdapt["paste"];
@@ -83,6 +86,8 @@ export class Command {
     this.executePutDown = adapt.putdown.bind(adapt); // 下移一层
     this.executeUpdateText = adapt.updateText.bind(adapt); // 页面对文本的调整
     this.setPageSize = adapt.setPageSize.bind(adapt); // 设置页面大小
+    this.executeOpenDialog = adapt.openDialog.bind(adapt); // 打开弹窗
+    this.executeScreenShot = adapt.screenShot.bind(adapt); // 截图
 
     // 右键菜单相关事件
     this.executePaste = adapt.paste.bind(adapt);

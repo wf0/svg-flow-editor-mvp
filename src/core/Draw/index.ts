@@ -11,6 +11,7 @@ import { EditorEvent } from "../Event/Editor/index.ts";
 import { LineDraw } from "./Line.ts";
 import { DialogDraw } from "./Dialog.ts";
 import { Websocket } from "../Websocket/index.ts";
+import { loadingTemp } from "../Template/index.ts";
 
 // 重构 draw
 export class Draw {
@@ -31,6 +32,7 @@ export class Draw {
 
   private root!: HTMLDivElement; // 根节点 sf-editor 子节点有 box footer catalog operation
   private editorBox!: HTMLDivElement; // svg、canvas 操作区 sf-editor-box
+  private loading!: HTMLDivElement | null; // 加载元素
 
   constructor(
     selector: string,
@@ -66,6 +68,7 @@ export class Draw {
     // 6. 发布事件
     nextTick(() => {
       console.log("## SFEditor 编辑器初始化完成。");
+      this.hideLoading();
       const graphLoadedSubscribe = this.eventBus.isSubscribe("loaded");
       graphLoadedSubscribe && this.eventBus.emit("loaded");
       this.listener.loaded && this.listener.loaded();
@@ -175,6 +178,22 @@ export class Draw {
   // 创建 svg 元素
   public createSVGElement(tagName: string) {
     return document.createElementNS(xmlns, tagName);
+  }
+
+  // 创建加载元素
+  public showLoading() {
+    this.loading = this.createHTMLElement("div") as HTMLDivElement;
+    this.loading.classList.add("sf-editor-loading");
+    if (!this.root) return console.error("根元素异常");
+    this.loading.innerHTML = loadingTemp;
+    this.root.appendChild(this.loading);
+  }
+
+  // 销毁加载元素
+  public hideLoading() {
+    if (!this.loading) return;
+    this.loading.remove();
+    this.loading = null;
   }
 
   /** SFEditor 销毁事件 */

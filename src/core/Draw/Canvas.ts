@@ -3,6 +3,9 @@ import { hex, keyword } from "color-convert";
 import { Draw } from "./index.ts";
 import pako from "pako"; // imageData 的解压缩
 import { IBackground } from "../../interface/Draw/index.ts";
+import html2canvas from "html2canvas";
+import { nextTick, toBlob } from "../../utils/index.ts";
+import { Graph } from "../Graph/index.ts";
 
 // canvas 相关绘制类
 export class CanvasDraw {
@@ -150,7 +153,6 @@ export class CanvasDraw {
     this.background.watermarkColor = color;
     this.background.watermarkText = text;
 
-
     // 定义画布大小和单位长度（每条水平或垂直线所表示的像素数）
     const { height, width } = this.canvas;
 
@@ -280,6 +282,82 @@ export class CanvasDraw {
 
   // 供顶部菜单展开时，决定显示谁已经勾选
   public getBackground = () => this.background;
+
+  /**
+   * 利用 html2canvas 截图
+   *  1. ignoreElements 处理截图慢问题: (element) => false 与 root 进行位置比较
+   *  2. x y width height 处理最佳宽高，不出现大量空白
+   *  3. proxy、useCORS、allowTaint 处理跨域图片问题
+   *  4. backgroundColor 支持透明、白色背景（设置null为透明）
+   * @param filetype 保存的文件类型，支持 png svg jpg json
+   */
+  public async screenShot(filetype?: string) {
+    this.draw.getEditorEvent().clickHandle();
+
+    await nextTick();
+
+    const box = this.draw.getEditorBox();
+
+    this.draw.showLoading();
+    // 处理x y height width - 相对于 editor box 的位置关系
+    var minx = 0;
+    var miny = 0;
+    var maxx = 0;
+    var maxy = 0;
+    // 获取 editor box 的宽高
+    const graphlist = this.draw.getGraphEvent().getAllGraphMain();
+    if (graphlist.length) {
+      const firstGraph = new Graph(
+        this.draw,
+        graphlist[0].getAttribute("graphid") as string
+      );
+      minx = firstGraph.getX();
+      miny = firstGraph.getY();
+
+      graphlist.forEach((item) => {
+        // 需要得到最小和最大位置的graph
+        const nodeID = item.getAttribute("graphid") as string;
+        const graph = new Graph(this.draw, nodeID);
+        minx = Math.min(minx, graph.getX());
+        miny = Math.min(miny, graph.getY());
+        maxx = Math.max(maxx, graph.getX() + graph.getWidth() + 20);
+        maxy = Math.max(maxy, graph.getY() + graph.getHeight() + 20);
+      });
+    }
+
+    const option = {
+      x: minx,
+      y: miny,
+      width: maxx - minx,
+      height: maxy - miny,
+      ignoreElements: (ele: HTMLElement) => {
+        // this.editorBox compareDocumentPosition
+        // 1： 没有关系，这两个节点不属于同一个文档
+        // 2： 第一节点（P1）位于第二个节点后（P2）
+        // 4： 第一节点（P1）定位在第二节点（P2）前
+        // 8： 第一节点（P1）位于第二节点内（P2）
+        // 16：第二节点（P2）位于第一节点内（P1）
+        // 还可能是上诉值的和！返回 20 意味着在 p2 在 p1 内部（16），并且 p1 在 p2 之前（4）
+        const index = box.compareDocumentPosition(ele);
+        if ([1, 2, 4].includes(index)) return false;
+      },
+    };
+
+    // @ts-ignore
+    const canvas = await html2canvas(this.draw.getEditorBox(), option);
+    // base64 使用服务器存储方案  const base64 = canvas.toDataURL("image/png");
+
+    canvas.toBlob((b: File) => {
+      const url = toBlob(b, "image/png") as string;
+      const a = this.draw.createHTMLElement("a");
+      a.setAttribute("href", url);
+      a.setAttribute("download", `SFEditor.${filetype}`);
+      this.draw.hideLoading();
+      // window.open(url);
+      a.click(); // 触发下载
+      a.remove();
+    });
+  }
 
   /**
    * 销毁 canvas

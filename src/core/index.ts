@@ -16,7 +16,7 @@ import { SEchart } from "./Plugin/Echart.ts";
 import { Text } from "./Graph/Text.ts";
 import { IWebsocket } from "../interface/Websocket/index.ts";
 import { messageInfo } from "./Config/index.ts";
-import "../assets/font_4458457_4ftw0i6fgnl/iconfont.css";
+import "../assets/iconfont/iconfont.css";
 import "../style/SFEditor.less";
 import { GTable } from "./Graph/GTable.ts";
 import { ITableConfig } from "../interface/Graph/index.ts";
@@ -41,6 +41,8 @@ class SFEditor {
     this.eventBus = new EventBus();
     this.register = new Register();
     this.draw = new Draw(selector, this.listener, this.eventBus, this.register);
+    // 开启动画加载
+    this.draw.showLoading();
     this.global = new Global(this.draw);
     this.command = new Command(this.draw);
   }

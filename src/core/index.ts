@@ -106,8 +106,8 @@ class SFEditor {
   public plugin(name: pluginName, payload?: IWebsocket): SEchart | undefined {
     // name 是插件名称
     if (name === "footer") new Footer(this.draw);
-    if (name === "operation") new Catalog(this.draw);
-    if (name === "catalog") new Operation(this.draw);
+    if (name === "catalog") new Catalog(this.draw);
+    if (name === "operation") new Operation(this.draw);
     // echart 的插件需要向外提供操作对象，方法都在 Echart 对象中
     if (name === "echart") return new SEchart(this.draw);
     // 支持 websocket 协同插件

@@ -18,15 +18,17 @@ export type IGraph =
 // 单个节点的信息
 export interface node {
   type?:
-    | "rect"
-    | "circle"
-    | "ellipse"
-    | "image"
-    | "text"
-    | "line" // 这个是折线图
-    | "bar"
-    | "radar"
-    | "pie";
+    | "table" // 表格
+    | "rect" // 矩形
+    | "circle" // 圆
+    | "ellipse" // 椭圆
+    | "image" // 图片
+    | "text" // 文本
+    | "echart"; // 统计图 - 不做折线区分，直接与使用传入的 option 进行渲染即可
+  row?: number; // table 的配置项
+  col?: number; // table 的配置项
+  stripe?: boolean; // table 的配置项
+  option?: any;
   nodeID?: string;
   width: number;
   height: number;
@@ -73,7 +75,7 @@ export interface IUpdateGraph {
 
 // 表格控制
 export interface ITableConfig {
-  row?: number;
-  col?: number;
+  row?: number; // 行
+  col?: number; // 列
   stripe?: boolean; // 是否开启斑马纹
 }

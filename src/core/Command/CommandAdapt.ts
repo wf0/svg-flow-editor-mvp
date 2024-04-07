@@ -1,15 +1,11 @@
 import { IBackground, IThemeOpt } from "../../interface/Draw/index.ts";
 import { IGraph, IUpdateGraph, node } from "../../interface/Graph/index.ts";
 import { nextTick, setTheme } from "../../utils/index.ts";
-import {
-  barOption,
-  lineOption,
-  messageInfo,
-  pieOption,
-} from "../Config/index.ts";
+import { messageInfo } from "../Config/index.ts";
 import { Draw } from "../Draw/index.ts";
 import { Ellipse } from "../Graph/Ellipse.ts";
 import { GEchart } from "../Graph/GEchart.ts";
+import { GTable } from "../Graph/GTable.ts";
 import { SVGImage } from "../Graph/Image.ts";
 import { Graph } from "../Graph/index.ts";
 import { Rect } from "../Graph/Rect.ts";
@@ -64,10 +60,13 @@ export class CommandAdapt {
       ellipse: () => new Ellipse(this.draw, width / 2, height / 2),
       circle: () => new Ellipse(this.draw, width / 2, height / 2),
       image: () => new SVGImage(this.draw, url as string, width, height),
-      line: () => new GEchart(this.draw, lineOption),
-      bar: () => new GEchart(this.draw, barOption),
-      // radar: () => new GEchart(this.draw, barOption),
-      pie: () => new GEchart(this.draw, pieOption),
+      echart: () => new GEchart(this.draw, payload?.option),
+      table: () =>
+        new GTable(this.draw, {
+          col: payload?.col || 3,
+          row: payload?.row || 3,
+          stripe: payload?.stripe || true,
+        }),
     };
 
     const graph = graphMap[type as string] && graphMap[type as string]();

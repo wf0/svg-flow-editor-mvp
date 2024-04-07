@@ -404,38 +404,43 @@ export const operationTemp = `
 		<span index="7">
 			风格
 			<div class="sf-left-box">
-				<div class="sf-left-box-item" command="top">
-					<span style="padding-left:25px">
-						全部主题
+				<div class="sf-left-box-item" command="theme-all">
+					<span>
+						<i class="iconfont icon-zhutise"></i>全部主题
 					</span>
 					<span>
 						<i class="iconfont icon-you"></i>
 					</span>
 				</div>
 				<div class="line"></div>
-				<div class="sf-left-box-item" command="unlock">
+				<div class="sf-left-box-item" command="theme-mdf">
 					<span>
-						<i class="iconfont icon-jiesuo"></i>牡丹粉
+						<span class="sf-left-box-item-color mdf"></span>
+						牡丹粉
 					</span>
 				</div>
-				<div class="sf-left-box-item" command="unlock">
+				<div class="sf-left-box-item" command="theme-szh">
 					<span>
-						<i class="iconfont icon-jiesuo"></i>石竹红
+						<span class="sf-left-box-item-color szh"></span>
+						石竹红
 					</span>
 				</div>
-				<div class="sf-left-box-item" command="unlock">
+				<div class="sf-left-box-item" command="theme-mdl">
 					<span>
-						<i class="iconfont icon-jiesuo"></i>芝兰紫
+						<span class="sf-left-box-item-color mdl"></span>
+						美蝶绿
 					</span>
 				</div>
-				<div class="sf-left-box-item" command="unlock">
+				<div class="sf-left-box-item" command="theme-nll">
 					<span>
-						<i class="iconfont icon-jiesuo"></i>尼罗蓝
+						<span class="sf-left-box-item-color nll"></span>
+						尼罗蓝
 					</span>
 				</div>
-				<div class="sf-left-box-item" command="unlock">
+				<div class="sf-left-box-item" command="theme-jgz">
 					<span>
-						<i class="iconfont icon-jiesuo"></i>晨曦红
+						<span class="sf-left-box-item-color jgz"></span>
+						桔梗紫
 					</span>
 				</div>
 			</div>

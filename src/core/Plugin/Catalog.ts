@@ -5,6 +5,7 @@ import { SVGImage } from "../Graph/Image.ts";
 import { logoBase, positionBase } from "../Base64/index.ts";
 import { catalogTemp } from "../Template/index.ts";
 import { uploadImage } from "../../utils/index.ts";
+import { barOption, lineOption, pieOption } from "../Config/index.ts";
 
 // 元件库
 export class Catalog {
@@ -38,7 +39,7 @@ export class Catalog {
 
     // 还需要实现 dragStart dragEnd 事件
     catalogBox.querySelectorAll("[draggable]").forEach((item) => {
-      const type = item.getAttribute("type");
+      const type = item.getAttribute("type") as string;
       item.addEventListener("dragend", (e) => this.dragend(e, type));
     });
 
@@ -88,7 +89,7 @@ export class Catalog {
    * @param e
    * @param type
    */
-  private dragend(e: Event, type: string | null) {
+  private dragend(e: Event, type: string) {
     const catalogBox = this.draw
       .getRoot()
       .querySelector(".sf-editor-catalog") as HTMLDivElement;
@@ -119,12 +120,20 @@ export class Catalog {
       rect: { type: "rect", width: 150, height: 80, x, y },
       circle: { type: "ellipse", width: 50, height: 50, x, y },
       ellipse: { type: "ellipse", width: 50, height: 30, x, y },
-      line: { type: "line", width: 300, height: 150, x, y },
-      bar: { type: "bar", width: 300, height: 150, x, y },
-      radar: { type: "radar", width: 300, height: 150, x, y },
-      pie: { type: "pie", width: 300, height: 150, x, y },
+      line: {
+        type: "echart",
+        width: 300,
+        height: 150,
+        x,
+        y,
+        option: lineOption,
+      },
+      bar: { type: "echart", width: 300, height: 150, x, y, option: barOption },
+      // radar: { type: "echart", width: 300, height: 150, x, y ,option:},
+      pie: { type: "echart", width: 300, height: 150, x, y, option: pieOption },
+      table: { type: "table", width: 300, height: 300, x, y },
     };
-    this.command.executeAddGraph(typeMap[type as string]);
+    typeMap[type] && this.command.executeAddGraph(typeMap[type]);
   }
 
   /**

@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // editor.Rect(100, 100).position(200, 100).setText("567");
   editor.Table({ col: 3, row: 3, stripe: true }).position(200, 200);
   // 加载插件
-  // editor.plugin("catalog");
-  // editor.plugin("footer");
-  // editor.plugin("operation");
+  editor.plugin("catalog");
+  editor.plugin("footer");
+  editor.plugin("operation");
   // editor.plugin("websocket", { socketurl: "ws://localhost:9999" });
 });

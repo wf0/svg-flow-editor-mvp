@@ -1,5 +1,5 @@
 import { IBackground } from "../../interface/Draw/index.ts";
-import { uploadImage } from "../../utils/index.ts";
+import { setTheme, uploadImage } from "../../utils/index.ts";
 import { Command } from "../Command/Command.ts";
 import { Draw } from "../Draw/index.ts";
 import { SVGImage } from "../Graph/Image.ts";
@@ -172,13 +172,10 @@ export class Operation {
       cut: this.command.executeCut, // 剪切
       beautify: this.command.executeBeautify, // 一键美化
       delete: this.command.executeDeleteGraph, // 删除
-      add: this.command.executePageScaleAdd, // 方法
+      add: this.command.executePageScaleAdd, // 放大
       minus: this.command.executePageScaleMinus, // 缩小
       resize: this.command.executePageScaleRecovery, // 重置
-      group: this.command.executeGroup, // 分组
-      ungroup: this.command.executeUnGroup, // 取消分组
-      lock: this.command.executeLock, // 锁定
-      unlock: this.command.executeUnLock, // 解锁
+
       // download: this.command.executeCopy, // 下载
       // upload: this.command.executeCopy,
       // bold: this.command.executeBold,
@@ -188,12 +185,16 @@ export class Operation {
       // fill: this.command.executeCopy,
     };
 
-    // 层级处理需要参数
+    // 层级处理、分组、锁定需要参数
     const levelHandle: { [key: string]: (n: string) => void } = {
       top: this.command.executeTop, // 置于顶层
       bottom: this.command.executeBottom, // 置于底层
       holdup: this.command.executeHoldUp, // 上移一层
       putdown: this.command.executePutDown, // 下移一层
+      group: this.command.executeGroup, // 分组
+      ungroup: this.command.executeUnGroup, // 取消分组
+      lock: this.command.executeLock, // 锁定
+      unlock: this.command.executeUnLock, // 解锁
     };
 
     // 所有子项的事件响应中心
@@ -204,8 +205,7 @@ export class Operation {
       const pcmd = (target.parentNode as HTMLElement).getAttribute("command");
       const command = cmd || pcmd;
       if (!command) return;
-      const selected = this.draw.getGraphEvent().getSelected();
-      const nodeID = selected.getAttribute("graphid") as string;
+
       console.log("operation menu command =>", command);
 
       // 获取 dialog 对象
@@ -231,13 +231,35 @@ export class Operation {
           canvasHandle(command);
           break;
 
-        case "theme":
-          dilaog.openDialog("切换风格", "themeTemp");
+        case "theme-all":
+        case "theme-mdf":
+        case "theme-szh":
+        case "theme-mdl":
+        case "theme-nll":
+        case "theme-jgz":
+          const [, name] = command.split("-");
+          name === "all" && dilaog.openDialog("切换风格", "themeTemp");
+          name === "mdf" && setTheme("colorful_theme_mdf");
+          name === "szh" && setTheme("colorful_theme_szh");
+          name === "mdl" && setTheme("colorful_theme_mdl");
+          name === "nll" && setTheme("colorful_theme_nll");
+          name === "jgz" && setTheme("colorful_theme_jgz");
+          break;
+
+        case "top":
+        case "bottom":
+        case "holdup":
+        case "putdown":
+          try {
+            const selected = this.draw.getGraphEvent().getSelected();
+            const nodeID = selected.getAttribute("graphid") as string;
+            levelHandle[command] && levelHandle[command](nodeID);
+          } catch (error) {}
+
           break;
 
         default:
           eventMap[command] && eventMap[command]();
-          levelHandle[command] && levelHandle[command](nodeID);
           break;
       }
 

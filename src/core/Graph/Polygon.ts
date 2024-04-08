@@ -1,16 +1,12 @@
 // 五角星
 
+import { IPolygon } from "../../interface/Graph/index.ts";
 import { Draw } from "../Draw/index.ts";
 import { GraphCommon } from "./Common.ts";
 
 export class Polygon extends GraphCommon {
   private polygon: SVGPolygonElement;
-  constructor(
-    draw: Draw,
-    t: "triangle" | "star" | "arrow",
-    width: number,
-    height: number
-  ) {
+  constructor(draw: Draw, t: IPolygon, width: number, height: number) {
     super(draw);
     // 创建 五角星
     this.polygon = draw.createSVGElement("polygon") as SVGPolygonElement;
@@ -32,7 +28,7 @@ export class Polygon extends GraphCommon {
    * 根据类型更新顶点位置 设置 public 是因因为 graph move 过程中，需要调用此函数
    * @param t
    */
-  public initPoints(t: "triangle" | "star" | "arrow"): void {
+  public initPoints(t: IPolygon): void {
     const width = this.getWidth();
     const height = this.getHeight();
     // 根据宽高自动解析points的位置
@@ -56,6 +52,15 @@ export class Polygon extends GraphCommon {
         ${height}  ${width * 0.75} ${height * 0.75} ${0} ${height * 0.75}`;
         // 根据宽高设置箭头的points
         this.polygon.setAttribute("points", ap);
+        break;
+
+      case "diamond":
+        // 根据宽高设置菱形的points
+        this.polygon.setAttribute(
+          "points",
+          `${width / 2} ${0} ${width} ${height / 2} 
+          ${width / 2} ${height} ${0} ${height / 2}`
+        );
         break;
     }
   }

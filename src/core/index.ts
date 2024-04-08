@@ -19,7 +19,7 @@ import { messageInfo } from "./Config/index.ts";
 import "../assets/iconfont/iconfont.css";
 import "../style/SFEditor.less";
 import { GTable } from "./Graph/GTable.ts";
-import { ITableConfig } from "../interface/Graph/index.ts";
+import { IPolygon, ITableConfig } from "../interface/Graph/index.ts";
 import { Polygon } from "./Graph/Polygon.ts";
 
 // 定义插件类型
@@ -110,7 +110,7 @@ class SFEditor {
    * @param { number } h 高度
    * @returns
    */
-  public Polygon(type: "triangle" | "star" | "arrow", w: number, h: number) {
+  public Polygon(type: IPolygon, w: number, h: number) {
     return new Polygon(this.draw, type, w, h);
   }
 

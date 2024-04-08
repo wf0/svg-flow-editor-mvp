@@ -20,11 +20,18 @@
   - 矩形 rect  
   - 圆形 circle  
   - 椭圆 ellipse
+  - 菱形 diamond
+  - 三角形 triangle
+  - 五角星 star
+  - 箭头 arrow
+  - 表格 table
   - 统计图 echarts
   - 自定义图片 image
   - 自定义图标 icon
 - 元件基本操作
   - 创建、删除、移动、旋转、定位、属性修改、框选、多选（ctrl）、层级处理、文本显示等
+- 工具类
+  - 图片导出
 - 直角折线
 - 全局 API
 - Command API
@@ -32,23 +39,20 @@
 - 快捷键（内部、自定义）
 - event Bus 、 listener 事件监听机制
 - Canvas 实现背景网格、圆点、水印、辅助线
-- catalog、operation、footer、echart 插件化
+- catalog、operation、footer、echart、websocket协同 插件化
 
 
 
 ## 待开发 - TODO
 
 - 拓展元件类型
-  - 多边形 polygon
-  - 三角形 triangle
-  - 菱形 diamond
   - 线段 line
   - HTML html
 - history 历史记录管理器（redo、undo、history）
-- tool工具类： 一键美化、图片导出、组合/取消组合、锁定/取消锁定、
+- tool工具类： 一键美化、组合/取消组合、锁定/取消锁定、
 - network协同： 支持用户光标、用户操作、聊天通信
 - 可视区渲染优化算法
-- uni-Flow : 项目重构-使用 canvas 实现绘制、考虑性能与渲染
+- uni-Flow : 项目重构-使用 canvas 实现绘制（可考虑使用 konva.js 作为底层技术支持）、考虑性能与渲染
 
 
 

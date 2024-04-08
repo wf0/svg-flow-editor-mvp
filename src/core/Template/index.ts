@@ -540,9 +540,6 @@ export const catalogTemp = `
 	</div>
 	<div draggable="true" class="graph" type="rect" title="矩形">
 		<i class="iconfont icon-xingzhuang-juxing"></i>
-	</div>	
-	<div draggable="true" class="graph" type="curve" title="曲线">
-		<i class="iconfont icon-quxian"></i>
 	</div>
 	<div draggable="true" class="graph" type="circle" title="圆形">
 		<i class="iconfont icon-xingzhuang-tuoyuanxing"></i>
@@ -557,8 +554,11 @@ export const catalogTemp = `
 		<i class="iconfont icon-xingzhuang-xingxing"></i>
 	</div>
 	<div draggable="true" class="graph" type="arrow" title='箭头'>
-		<i class="iconfont icon-xingzhuang-jianxing"></i>
+		<i class="iconfont icon-xingzhuang-jianxing" style="transform: rotate(45deg);"></i>
 	</div>
+	<div draggable="true" class="graph" type="diamond" title="菱形">
+		<i class="iconfont icon-xingzhuang-juxing" style="transform: rotate(45deg);"></i>
+	</div>	
 	<div draggable="true" class="graph" type="table" title="表格">
 		<i class="iconfont icon-biaodanzujian-biaoge"></i>
 	</div>

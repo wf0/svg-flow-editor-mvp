@@ -75,6 +75,7 @@ export class CommandAdapt {
       triangle: () => new Polygon(this.draw, "triangle", width, height),
       star: () => new Polygon(this.draw, "star", width, height),
       arrow: () => new Polygon(this.draw, "arrow", width, height),
+      diamond: () => new Polygon(this.draw, "diamond", width, height),
     };
 
     const graph = graphMap[type as string] && graphMap[type as string]();

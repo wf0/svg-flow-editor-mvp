@@ -7,6 +7,18 @@ import { Graph } from "../../core/Graph/index.ts";
 import { GTable } from "../../core/Graph/GTable.ts";
 import { Polygon } from "../../core/Graph/Polygon.ts";
 
+export type IGraphType =
+  | "polygon"
+  | "table"
+  | "graph"
+  | "rect"
+  | "ellipse"
+  | "text"
+  | "image";
+
+// 定义多边形的类型
+export type IPolygon = "triangle" | "star" | "arrow" | "diamond";
+
 export type IGraph =
   | Polygon
   | GTable
@@ -20,6 +32,7 @@ export type IGraph =
 // 单个节点的信息
 export interface node {
   type?:
+    | "diamond" // 菱形
     | "triangle" // 三角形
     | "star" // 五角星
     | "arrow" // 箭头

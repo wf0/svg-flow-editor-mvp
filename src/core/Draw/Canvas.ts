@@ -326,6 +326,8 @@ export class CanvasDraw {
     }
 
     const option = {
+      useCORS: true, // 允许跨域
+      removeContainer: true, // 清除临时创建的克隆dom元素
       x: minx,
       y: miny,
       width: maxx - minx,
@@ -345,7 +347,7 @@ export class CanvasDraw {
 
     // @ts-ignore
     const canvas = await html2canvas(this.draw.getEditorBox(), option);
-    // base64 使用服务器存储方案  const base64 = canvas.toDataURL("image/png");
+    // base64 => File 使用服务器存储方案  const base64 = canvas.toDataURL("image/png");
 
     canvas.toBlob((b: File) => {
       const url = toBlob(b, "image/png") as string;
@@ -355,7 +357,7 @@ export class CanvasDraw {
       this.draw.hideLoading();
       // window.open(url);
       a.click(); // 触发下载
-      a.remove();
+      a.remove(); // 移除元素
     });
   }
 

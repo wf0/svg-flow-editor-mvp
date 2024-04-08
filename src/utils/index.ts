@@ -117,7 +117,7 @@ function uploadImage() {
 }
 
 /**
- * 将本地图片转成 blob 显示
+ * 将File转成 blob URL显示
  * @param file
  * @param type
  * @returns

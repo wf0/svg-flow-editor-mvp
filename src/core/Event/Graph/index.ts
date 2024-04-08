@@ -92,7 +92,7 @@ export class GraphEvent {
     const dialog = this.draw.getDialogDraw();
     dialog.closeDialog();
     // 支持双击文本编辑的容器
-    const support = ["rect", "ellipse"];
+    const support = ["rect", "ellipse", "polygon"];
 
     // @ts-ignore 统计图双击，则是打开配置弹窗
     if (e.target.tagName === "CANVAS") {
@@ -257,6 +257,7 @@ export class GraphEvent {
 
     // 还需要处理 line 的移动更新
     const graphid = (e.target as SVGAElement).getAttribute("graphid");
+
     // graphid 可能是线的 sid 也可能是 eid
     var lines: SVGPolygonElement[] = [];
     this.draw
@@ -289,7 +290,7 @@ export class GraphEvent {
     const et = Number(dayjs().format("mmssSSS"));
     if (et - this.st <= 120) {
       //  显示dialog 配置元件信息 要区分是单击还是在拖动
-      const dialog = this.draw.getDialogDraw();
+      // const dialog = this.draw.getDialogDraw();
       // dialog.openDialog("元件配置", "graphInfoTemp");
     }
     // 获取终点坐标

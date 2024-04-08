@@ -17,7 +17,7 @@ export class SVGImage extends GraphCommon {
     if (width && height) {
       super.setWidth.call(this, width);
       super.setHeight.call(this, height);
-    } else this.analysis(url);
+    } else this.analysis(url, draw);
   }
 
   // 特有属性 - 设置 href 属性
@@ -31,7 +31,7 @@ export class SVGImage extends GraphCommon {
   }
 
   // 解析图片宽高
-  private analysis(url: string) {
+  private analysis(url: string, draw: Draw) {
     var img = new Image();
     img.onload = () => {
       var flag = false;
@@ -40,7 +40,11 @@ export class SVGImage extends GraphCommon {
       super.setHeight.call(this, flag ? img.height / 10 : img.height);
 
       // 需要重置锚点，不然图片加载是异步的，会导致宽高为0 的情况
-      super.updatePoint(this);
+      const graphDraw = draw.getGraphDraw();
+      graphDraw.cancelLinkPoint(this);
+      graphDraw.createLinkPoint(this);
+      graphDraw.cancelFormatPoint(this);
+      graphDraw.createFormatPoint(this);
     };
     img.src = url;
   }

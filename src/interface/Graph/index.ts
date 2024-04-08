@@ -5,8 +5,10 @@ import { Rect } from "../../core/Graph/Rect.ts";
 import { Text } from "../../core/Graph/Text.ts";
 import { Graph } from "../../core/Graph/index.ts";
 import { GTable } from "../../core/Graph/GTable.ts";
+import { Polygon } from "../../core/Graph/Polygon.ts";
 
 export type IGraph =
+  | Polygon
   | GTable
   | Graph
   | Rect
@@ -18,6 +20,9 @@ export type IGraph =
 // 单个节点的信息
 export interface node {
   type?:
+    | "triangle" // 三角形
+    | "star" // 五角星
+    | "arrow" // 箭头
     | "table" // 表格
     | "rect" // 矩形
     | "circle" // 圆

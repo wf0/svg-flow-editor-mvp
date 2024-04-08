@@ -12,6 +12,7 @@ import { GEchart } from "../Graph/GEchart.ts";
 import { GTable } from "../Graph/GTable.ts";
 import { SVGImage } from "../Graph/Image.ts";
 import { Graph } from "../Graph/index.ts";
+import { Polygon } from "../Graph/Polygon.ts";
 import { Rect } from "../Graph/Rect.ts";
 
 // Command Adapt API 操作核心库
@@ -71,6 +72,9 @@ export class CommandAdapt {
           row: payload?.row || 3,
           stripe: payload?.stripe || true,
         }),
+      triangle: () => new Polygon(this.draw, "triangle", width, height),
+      star: () => new Polygon(this.draw, "star", width, height),
+      arrow: () => new Polygon(this.draw, "arrow", width, height),
     };
 
     const graph = graphMap[type as string] && graphMap[type as string]();

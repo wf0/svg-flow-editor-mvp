@@ -99,7 +99,7 @@ export class Catalog {
 
     const x = offsetX - catalogBox.clientWidth + 50;
     const y = offsetY + 100;
-
+    console.log(type);
     const typeMap: { [key: string]: node } = {
       logo: {
         type: "image",
@@ -132,6 +132,9 @@ export class Catalog {
       // radar: { type: "echart", width: 300, height: 150, x, y ,option:},
       pie: { type: "echart", width: 300, height: 150, x, y, option: pieOption },
       table: { type: "table", width: 300, height: 300, x, y },
+      triangle: { type: "triangle", width: 100, height: 100, x, y },
+      star: { type: "star", width: 100, height: 100, x, y },
+      arrow: { type: "arrow", width: 100, height: 50, x, y },
     };
     typeMap[type] && this.command.executeAddGraph(typeMap[type]);
   }

@@ -2,6 +2,7 @@ import { IGraph } from "../../interface/Graph/index.ts";
 import { wsMessage } from "../../interface/Websocket/index.ts";
 import { Draw } from "../Draw/index.ts";
 import { nanoid } from "nanoid";
+import { Polygon } from "./Polygon.ts";
 
 /**
  * GraphCommon graph 公共类
@@ -294,16 +295,18 @@ export class GraphCommon {
     websocket.sendMessage({ operate, value });
   }
 
+  public getType() {
+    const graph = this as unknown as IGraph;
+    return graph.getElement().tagName;
+  }
+
   /**
-   * 更新锚点
-   * @param graph
+   * 供 graph 构造新对象，move 时重新计算点的坐标
    */
-  protected updatePoint(graph: IGraph) {
-    // 获取 graphDraw
-    const graphDraw = this.draw.getGraphDraw();
-    graphDraw.cancelLinkPoint(graph);
-    graphDraw.createLinkPoint(graph);
-    graphDraw.cancelFormatPoint(graph);
-    graphDraw.createFormatPoint(graph);
+  public updatePoints() {
+    const graph = this as unknown as Polygon;
+    type tp = "triangle" | "star" | "arrow";
+    const t = graph.getElement().getAttribute("tp") as tp;
+    graph.initPoints(t);
   }
 }

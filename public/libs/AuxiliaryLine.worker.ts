@@ -1,5 +1,12 @@
-import { node } from "../../interface/Graph/index.ts";
-// 目前无法处理worker的路径问题，因此暂用同步实现
+// 单个节点的信息
+interface node {
+  nodeID?: string;
+  width: number;
+  height: number;
+  x?: number;
+  y?: number;
+}
+
 /**
  * WebWorker 实现辅助线位置关系计算
  * @param event {current, nodes} 当前元素与所有元素
@@ -39,6 +46,7 @@ self.onmessage = (event) => {
   postMessage(result);
 };
 
+// 目前无法处理worker的路径问题，因此暂用同步实现
 export const workerEvent = (current: node, nodes: node[]) => {
   const { v1, v2, v3, h1, h2, h3 } = computedLine(current);
   const varr = [v1, v2, v3];

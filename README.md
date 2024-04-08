@@ -24,6 +24,7 @@
   - 三角形 triangle
   - 五角星 star
   - 箭头 arrow
+  - 便签 note
   - 表格 table
   - 统计图 echarts
   - 自定义图片 image
@@ -48,8 +49,9 @@
 - 拓展元件类型
   - 线段 line
   - HTML html
+- 移动过程中，对齐辅助线吸附
 - history 历史记录管理器（redo、undo、history）
-- tool工具类： 一键美化、组合/取消组合、锁定/取消锁定、
+- tool工具类： 一键美化、组合/取消组合、锁定/取消锁定
 - network协同： 支持用户光标、用户操作、聊天通信
 - 可视区渲染优化算法
 - uni-Flow : 项目重构-使用 canvas 实现绘制（可考虑使用 konva.js 作为底层技术支持）、考虑性能与渲染

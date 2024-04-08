@@ -92,7 +92,7 @@ export class GraphEvent {
     const dialog = this.draw.getDialogDraw();
     dialog.closeDialog();
     // 支持双击文本编辑的容器
-    const support = ["rect", "ellipse", "polygon"];
+    const support = ["rect", "ellipse", "polygon", "path"];
 
     // @ts-ignore 统计图双击，则是打开配置弹窗
     if (e.target.tagName === "CANVAS") {

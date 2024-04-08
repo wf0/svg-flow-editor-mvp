@@ -562,7 +562,7 @@ export const catalogTemp = `
 	<div draggable="true" class="graph" type="table" title="表格">
 		<i class="iconfont icon-biaodanzujian-biaoge"></i>
 	</div>
-	<div draggable="true" class="graph" type="tab" title="便签">
+	<div draggable="true" class="graph" type="note" title="便签">
 		<i class="iconfont icon-bianqian"></i>
 	</div>
 </div>

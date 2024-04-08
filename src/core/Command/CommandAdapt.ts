@@ -12,6 +12,7 @@ import { GEchart } from "../Graph/GEchart.ts";
 import { GTable } from "../Graph/GTable.ts";
 import { SVGImage } from "../Graph/Image.ts";
 import { Graph } from "../Graph/index.ts";
+import { Path } from "../Graph/Path.ts";
 import { Polygon } from "../Graph/Polygon.ts";
 import { Rect } from "../Graph/Rect.ts";
 
@@ -76,6 +77,7 @@ export class CommandAdapt {
       star: () => new Polygon(this.draw, "star", width, height),
       arrow: () => new Polygon(this.draw, "arrow", width, height),
       diamond: () => new Polygon(this.draw, "diamond", width, height),
+      note: () => new Path(this.draw, "note", width, height),
     };
 
     const graph = graphMap[type as string] && graphMap[type as string]();

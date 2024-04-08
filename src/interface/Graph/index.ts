@@ -6,6 +6,7 @@ import { Text } from "../../core/Graph/Text.ts";
 import { Graph } from "../../core/Graph/index.ts";
 import { GTable } from "../../core/Graph/GTable.ts";
 import { Polygon } from "../../core/Graph/Polygon.ts";
+import { Path } from "../../core/Graph/Path.ts";
 
 export type IGraphType =
   | "polygon"
@@ -19,7 +20,11 @@ export type IGraphType =
 // 定义多边形的类型
 export type IPolygon = "triangle" | "star" | "arrow" | "diamond";
 
+// 定义路径类型 便签
+export type IPath = "note";
+
 export type IGraph =
+  | Path
   | Polygon
   | GTable
   | Graph
@@ -32,6 +37,7 @@ export type IGraph =
 // 单个节点的信息
 export interface node {
   type?:
+    | "note" // 便签
     | "diamond" // 菱形
     | "triangle" // 三角形
     | "star" // 五角星
@@ -96,4 +102,5 @@ export interface ITableConfig {
   row?: number; // 行
   col?: number; // 列
   stripe?: boolean; // 是否开启斑马纹
+  data?: any[];
 }

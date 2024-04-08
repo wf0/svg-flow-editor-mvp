@@ -136,6 +136,7 @@ export class Catalog {
       star: { type: "star", width: 100, height: 100, x, y },
       arrow: { type: "arrow", width: 100, height: 50, x, y },
       diamond: { type: "diamond", width: 100, height: 100, x, y },
+      note: { type: "note", width: 150, height: 100, x, y },
     };
     typeMap[type] && this.command.executeAddGraph(typeMap[type]);
   }

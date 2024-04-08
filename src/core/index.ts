@@ -19,8 +19,9 @@ import { messageInfo } from "./Config/index.ts";
 import "../assets/iconfont/iconfont.css";
 import "../style/SFEditor.less";
 import { GTable } from "./Graph/GTable.ts";
-import { IPolygon, ITableConfig } from "../interface/Graph/index.ts";
+import { IPath, IPolygon, ITableConfig } from "../interface/Graph/index.ts";
 import { Polygon } from "./Graph/Polygon.ts";
+import { Path } from "./Graph/Path.ts";
 
 // 定义插件类型
 type pluginName = "catalog" | "footer" | "operation" | "echart" | "websocket";
@@ -88,6 +89,7 @@ class SFEditor {
 
   /**
    * 表格
+   * @param payload {col,row,stripe,data}
    * @returns
    */
   public Table(payload?: ITableConfig) {
@@ -105,7 +107,7 @@ class SFEditor {
 
   /**
    * 多边形-三角形、五角星、箭头，都通用一个类实现
-   * @param { string } type 创建的元素类型 - triangle、star、arrow
+   * @param { string } type 创建的元素类型 - triangle、star、arrow、domain
    * @param { number } w 宽度
    * @param { number } h 高度
    * @returns
@@ -114,7 +116,23 @@ class SFEditor {
     return new Polygon(this.draw, type, w, h);
   }
 
-  // 加载插件函数
+  /**
+   * 路径 用于构建复杂的图形 - 便签
+   * @param t
+   * @param w
+   * @param h
+   * @returns
+   */
+  public Path(t: IPath, w: number, h: number) {
+    return new Path(this.draw, t, w, h);
+  }
+
+  /**
+   * 加载插件函数
+   * @param name
+   * @param payload
+   * @returns
+   */
   public plugin(name: pluginName, payload?: IWebsocket): SEchart | undefined {
     // name 是插件名称
     if (name === "footer") new Footer(this.draw);

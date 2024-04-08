@@ -1,8 +1,9 @@
-import { IGraph } from "../../interface/Graph/index.ts";
+import { IGraph, IPath, IPolygon } from "../../interface/Graph/index.ts";
 import { wsMessage } from "../../interface/Websocket/index.ts";
 import { Draw } from "../Draw/index.ts";
 import { nanoid } from "nanoid";
 import { Polygon } from "./Polygon.ts";
+import { Path } from "./Path.ts";
 
 /**
  * GraphCommon graph 公共类
@@ -305,8 +306,16 @@ export class GraphCommon {
    */
   public updatePoints() {
     const graph = this as unknown as Polygon;
-    type tp = "triangle" | "star" | "arrow";
-    const t = graph.getElement().getAttribute("tp") as tp;
+    const t = graph.getElement().getAttribute("tp") as IPolygon;
     graph.initPoints(t);
+  }
+
+  /**
+   * 供 graph 构造新对象，move 时重新计算 path
+   */
+  public updatePath() {
+    const graph = this as unknown as Path;
+    const t = graph.getElement().getAttribute("tp") as IPath;
+    graph.initPath(t, this.draw);
   }
 }

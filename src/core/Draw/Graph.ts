@@ -547,6 +547,9 @@ export class GraphDraw {
       graph.setHeight(height);
       // 然后需要判断是否是 polygon ，是的话，需要进行updatePoints 操作
       if (graph.getType() === "polygon") graph.updatePoints();
+
+      // 判断是否是path，是的话，需要进行更新 path 路径
+      if (graph.getType() === "g") graph.updatePath();
     }
   }
 

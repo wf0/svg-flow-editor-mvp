@@ -1,6 +1,5 @@
-// 五角星
-
-import { IPolygon } from "../../interface/Graph/index.ts";
+//  多边形
+import { IPath, IPolygon } from "../../interface/Graph/index.ts";
 import { Draw } from "../Draw/index.ts";
 import { GraphCommon } from "./Common.ts";
 
@@ -28,7 +27,7 @@ export class Polygon extends GraphCommon {
    * 根据类型更新顶点位置 设置 public 是因因为 graph move 过程中，需要调用此函数
    * @param t
    */
-  public initPoints(t: IPolygon): void {
+  public initPoints(t: IPolygon | IPath): void {
     const width = this.getWidth();
     const height = this.getHeight();
     // 根据宽高自动解析points的位置

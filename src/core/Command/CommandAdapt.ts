@@ -556,4 +556,15 @@ export class CommandAdapt {
     const canvas = this.draw.getCanvasDraw();
     canvas.screenShot(filetype || "png");
   }
+
+  /**
+   * 设置用户头像
+   * @param avatar
+   * @returns
+   */
+  public setAvatar(avatar: string) {
+    if (!avatar) return;
+    const userImg = this.draw.getRoot().querySelector("#sf-editor-user-img");
+    if (userImg) userImg.setAttribute("src", avatar);
+  }
 }

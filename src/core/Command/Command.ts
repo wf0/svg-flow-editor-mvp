@@ -33,6 +33,10 @@ export class Command {
   // 下列未标定
 
   public executeOpenDialog: CommandAdapt["openDialog"]; // 打开弹窗
+  // public executeCloseDialog: CommandAdapt["closeDialog"]; // 关闭弹窗
+
+  // 设置用户头像
+  public executeSetAvatar: CommandAdapt["setAvatar"];
 
   /** 右键菜单相关API */
   public executePaste: CommandAdapt["paste"];
@@ -114,5 +118,7 @@ export class Command {
     this.executeBeautify = adapt.beautify.bind(adapt);
     this.executeLock = adapt.lock.bind(adapt);
     this.executeUnLock = adapt.unlock.bind(adapt);
+
+    this.executeSetAvatar = adapt.setAvatar.bind(adapt);
   }
 }

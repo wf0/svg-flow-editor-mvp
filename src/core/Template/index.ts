@@ -246,13 +246,13 @@ export const operationTemp = `
 				<div class="line"></div>
 				<div class="sf-left-box-item" command="copy">
 					<span>
-						<i class="iconfont icon-fuzhi1"></i>复制
+						<i class="iconfont icon-fuzhi"></i>复制
 					</span>
 					<span>Ctrl + C</span>
 				</div>
 				<div class="sf-left-box-item" command="paste">
 					<span>
-						<i class="iconfont icon-niantie1"></i>粘贴
+						<i class="iconfont icon-niantie"></i>粘贴
 					</span>
 					<span>Ctrl + V</span>
 				</div>
@@ -467,7 +467,7 @@ export const operationTemp = `
 			</div>
 		</i>
 		<div class="right-shear" command="share">分享协作</div>
-		<img src="${userBase}" alt="" />
+		<img src="${userBase}" id="sf-editor-user-img" alt="" />
 	</div>
 </div>
 <div class="sf-editor-operation-bottom">

@@ -479,6 +479,7 @@ editor.command.executeSearchReplace('123')
 - 用法示例：
 
 ```javascript
+// nodeID 可通过创建的实例对象的 getID 方法获取
 editor.command.executeUpdateText(['yF48bz3Cptl2egTy1BAv5'],'bold')
 editor.command.executeUpdateText(['yF48bz3Cptl2egTy1BAv5'],'italic')
 editor.command.executeUpdateText(['yF48bz3Cptl2egTy1BAv5'],'bold')
@@ -497,7 +498,17 @@ editor.command.executeUpdateText(['yF48bz3Cptl2egTy1BAv5'],'textcolor','#ccc')
 - 参数说明：保存的文件类型 - 目前支持 png 、jpg 格式
 - 返回值：void；
 
+### executeSetAvatar(avatar: string)
 
+- 方法说明：设置用户头像（需要在加载了operation插件后使用）；
+- 参数说明：用户头像地址：http在线地址、blob、base64 均支持
+- 返回值：void；
+
+### executePreview()
+
+- 方法说明：进行预览；
+- 参数说明：无
+- 返回值：void；
 
 
 
@@ -782,9 +793,19 @@ line.setOption(option)
   - 优化 dialog 事件响应机制，拓展dialog应用场景
   - 优化相干BUG
 
-- **1.0.15**
+- **1.0.14**
   - 重写层级相关API，便于实现协同
   - 修复拖拽经过元素时位置异常问题
   - 实现GTable表格，优化 table 样式
   - 实现相关 Command API
   - 优化 nextTick 实现方式
+- **1.1.0**
+  - 优化 config 结构
+  - 优化 dialog 事件实现
+  - 实现文件保存为图片
+- **1.1.1**
+  - 实现 path 便签
+  - 实现 polygon 三角形、菱形、五角星、箭头
+  - 修复插件加载异常问题
+  - 修复Yjs协同异常
+  - 新增预览、设置头像 API

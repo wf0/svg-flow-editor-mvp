@@ -26,6 +26,8 @@ export class Command {
   public executeUpdateText: CommandAdapt["updateText"]; // 页面对文本的调整
   public setPageSize: CommandAdapt["setPageSize"]; // 设置页面大小
   public executeScreenShot: CommandAdapt["screenShot"]; // 截图
+  public executeSetAvatar: CommandAdapt["setAvatar"]; // 设置用户头像
+  public executePreview: CommandAdapt["preview"]; // 预览
 
   // 下列未标定
   // 下列未标定
@@ -35,13 +37,11 @@ export class Command {
   public executeOpenDialog: CommandAdapt["openDialog"]; // 打开弹窗
   // public executeCloseDialog: CommandAdapt["closeDialog"]; // 关闭弹窗
 
-  // 设置用户头像
-  public executeSetAvatar: CommandAdapt["setAvatar"];
-
   /** 右键菜单相关API */
   public executePaste: CommandAdapt["paste"];
   public executeCopy: CommandAdapt["copy"];
   public executeCut: CommandAdapt["cut"];
+
   // 撤销与重做
   public executeUndo: CommandAdapt["undo"];
   public executeRedo: CommandAdapt["redo"];
@@ -50,10 +50,13 @@ export class Command {
   public executeGroup: CommandAdapt["group"];
   public executeUnGroup: CommandAdapt["ungroup"];
 
+  // 锁定
+  public executeLock: CommandAdapt["lock"];
+  public executeUnLock: CommandAdapt["unlock"];
+
   /** operation 相关操作API */
   public executeNewFile: CommandAdapt["newFile"];
   public executeReName: CommandAdapt["rename"];
-  public executePreview: CommandAdapt["preview"];
   public executeSave: CommandAdapt["save"];
   public executeSaveAs: CommandAdapt["saveas"];
   public executeShare: CommandAdapt["share"];
@@ -62,10 +65,6 @@ export class Command {
   public executeHistory: CommandAdapt["history"];
   public executeClose: CommandAdapt["close"];
   public executeBeautify: CommandAdapt["beautify"];
-
-  // 锁定
-  public executeLock: CommandAdapt["lock"];
-  public executeUnLock: CommandAdapt["unlock"];
 
   constructor(draw: Draw) {
     const adapt = new CommandAdapt(draw);
@@ -94,6 +93,8 @@ export class Command {
     this.setPageSize = adapt.setPageSize.bind(adapt); // 设置页面大小
     this.executeOpenDialog = adapt.openDialog.bind(adapt); // 打开弹窗
     this.executeScreenShot = adapt.screenShot.bind(adapt); // 截图
+    this.executeSetAvatar = adapt.setAvatar.bind(adapt); // 设置头像
+    this.executePreview = adapt.preview.bind(adapt); // 预览
 
     // 右键菜单相关事件
     this.executePaste = adapt.paste.bind(adapt);
@@ -107,7 +108,6 @@ export class Command {
     /** operation 相关操作API */
     this.executeNewFile = adapt.newFile.bind(adapt);
     this.executeReName = adapt.rename.bind(adapt);
-    this.executePreview = adapt.preview.bind(adapt);
     this.executeSave = adapt.save.bind(adapt);
     this.executeSaveAs = adapt.saveas.bind(adapt);
     this.executeShare = adapt.share.bind(adapt);
@@ -118,7 +118,5 @@ export class Command {
     this.executeBeautify = adapt.beautify.bind(adapt);
     this.executeLock = adapt.lock.bind(adapt);
     this.executeUnLock = adapt.unlock.bind(adapt);
-
-    this.executeSetAvatar = adapt.setAvatar.bind(adapt);
   }
 }

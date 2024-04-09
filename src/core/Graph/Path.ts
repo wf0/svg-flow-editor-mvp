@@ -12,7 +12,7 @@ export class Path extends GraphCommon {
 
     // 标记tp类型
     this.gpath.setAttribute("tp", t);
-    this.gpath.setAttribute("stroke-width", '2');
+    this.gpath.setAttribute("stroke-width", "2");
 
     // 将当前创建的元件添加到 svg 下
     super.addToEditor(this);
@@ -32,8 +32,8 @@ export class Path extends GraphCommon {
   public initPath(t: IPath | IPolygon, draw: Draw) {
     // 1. 清空 gpath 内部的所有元素
     this.gpath.innerHTML = "";
-    const w = this.getWidth();
-    const h = this.getHeight();
+    const w = super.getWidth();
+    const h = super.getHeight();
     // 定义圆角直径
     const R = 10;
     // 定义间距

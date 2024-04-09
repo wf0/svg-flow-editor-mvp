@@ -22,7 +22,7 @@ import { YJS } from "./Yjs.ts";
  *  6. 在 websocket.onmessage 中的数据，需要取 Yjs 同步后的数据，以达到数据一致性目的
  */
 
-export class Websocket extends YJS {
+export class Websocket {
   private draw: Draw;
   private clientID: string; // 当前连接的唯一ID
   private username!: string; // 用户名
@@ -31,9 +31,10 @@ export class Websocket extends YJS {
   private retryCount!: number; // 重连次数
   private command: Command;
   public connection: boolean; // 记录连接状态
+  private yjs: YJS;
 
   constructor(draw: Draw) {
-    super();
+    this.yjs = new YJS();
     this.draw = draw;
     this.clientID = nanoid();
     this.connection = false;
@@ -86,10 +87,10 @@ export class Websocket extends YJS {
   public sendMessage(message: wsMessage) {
     if (!this.connection) return;
     // 1. 进行本地映射
-    this.setMap(message.operate, message.value);
+    this.yjs.setMap(message.operate, message.value);
 
     // 2. 获取本地数据
-    const state = this.getState();
+    const state = this.yjs.getState();
 
     // 3. 将本地结果同步到其他客户端
     this.websocket.send(this.gzip(message, state)); // string | ArrayBufferLike | Blob | ArrayBufferView
@@ -199,10 +200,10 @@ export class Websocket extends YJS {
     if (clientID === this.clientID) return; // 同一个clientID表示当前用户发起的操作，不响应操作
 
     // 1. 收到远端数据后,需要进行本地合并
-    state && this.mergeState(state);
+    state && this.yjs.mergeState(state);
 
     // 2. 获取合并后的数据操作
-    const value = this.getMap(operate);
+    const value = this.yjs.getMap(operate);
 
     // 3. 根据合并后的数据,对其他客户端协同的操作做响应
     switch (operate) {

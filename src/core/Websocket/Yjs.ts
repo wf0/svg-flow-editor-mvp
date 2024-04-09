@@ -14,27 +14,27 @@ export class YJS {
   }
 
   // 添加 key
-  protected setMap(key: string, value: any) {
+  public setMap(key: string, value: any) {
     this.ymap.set(key, value);
   }
 
   // 获取 key 的 value 值
-  protected getMap(key: string) {
+  public getMap(key: string) {
     return this.ymap.get(key);
   }
 
   // 删除 key
-  protected deleteMap(key: string) {
+  public deleteMap(key: string) {
     this.ymap.delete(key);
   }
 
   // 获取本地doc全量数据
-  protected getState(): string {
+  public getState(): string {
     return fromUint8Array(Y.encodeStateAsUpdate(this.doc));
   }
 
   // 应用更新
-  protected mergeState(state: string) {
+  public mergeState(state: string) {
     const binaryEncoded = toUint8Array(state);
     Y.applyUpdate(this.doc, binaryEncoded);
   }

@@ -350,9 +350,42 @@ export class CommandAdapt {
   public rename() {
     console.log("commandAdapt - rename");
   }
-  public preview() {
-    console.log("commandAdapt - preview");
+
+  /**
+   * 预览相关实现
+   *  1. 全屏
+   *  2. 添加退出预览按钮
+   */
+  public async preview() {
+    // 调用全屏方法
+    this.fullScreen();
+
+    // 卸载插件
+    const root = this.draw.getRoot();
+    const footer = root.querySelector(".sf-editor-footer");
+    footer && footer.remove();
+    const operation = root.querySelector(".sf-editor-operation");
+    operation && operation.remove();
+    const catalog = root.querySelector(".sf-editor-catalog");
+    catalog && catalog.remove();
+
+    // 重置画布
+    this.draw.resize();
+
+    // 监听退出全屏事件
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement) {
+        //  如果原来有插件，则重新添加
+        footer && root.appendChild(footer);
+        operation && root.appendChild(operation);
+        catalog && root.appendChild(catalog);
+
+        // 重置画布
+        this.draw.resize();
+      }
+    });
   }
+
   public save() {
     console.log("commandAdapt - save");
     // 执行回调 触发 Save 事件

@@ -13,7 +13,9 @@ import { DialogDraw } from "./Dialog.ts";
 import { Websocket } from "../Websocket/index.ts";
 import { loadingTemp } from "../Template/index.ts";
 
-// 重构 draw
+/**
+ * 绘图类
+ */
 export class Draw {
   private listener: Listener;
   private eventBus: EventBus<EventBusMap>;
@@ -135,8 +137,15 @@ export class Draw {
     this.editorBox.appendChild(div);
   }
 
-  /** 重置宽高信息 */
+  /**
+   * 重置宽高信息 - 用于插件加载、卸载过程中 canva 背景的调整
+   */
   public resize() {
+    // 重置 editorBox 宽高
+    this.editorBox.style.width = `100%`;
+    this.editorBox.style.height = `100%`;
+    this.editorBox.style.top = `0`;
+    this.editorBox.style.left = `0`;
     // 有 footer
     const footerBox = this.root.querySelector(
       ".sf-editor-footer"
@@ -170,17 +179,28 @@ export class Draw {
     this.canvasDraw.resetCanvas();
   }
 
-  /** 创建 html 元素 */
+  /**
+   * 创建 html 元素
+   * @param tagName 需要创建的 html 元素
+   * @returns
+   */
   public createHTMLElement(tagName: string) {
     return document.createElement(tagName);
   }
 
-  // 创建 svg 元素
+  /**
+   * 创建 svg 元素
+   * @param tagName 需要创建的 svg 元素
+   * @returns
+   */
   public createSVGElement(tagName: string) {
     return document.createElementNS(xmlns, tagName);
   }
 
-  // 创建加载元素
+  /**
+   * 创建加载元素 用于某些场景下，需要用户等待
+   * @returns
+   */
   public showLoading() {
     this.loading = this.createHTMLElement("div") as HTMLDivElement;
     this.loading.classList.add("sf-editor-loading");
@@ -189,14 +209,19 @@ export class Draw {
     this.root.appendChild(this.loading);
   }
 
-  // 销毁加载元素
+  /**
+   * 销毁加载元素
+   * @returns
+   */
   public hideLoading() {
     if (!this.loading) return;
     this.loading.remove();
     this.loading = null;
   }
 
-  /** SFEditor 销毁事件 */
+  /**
+   * SFEditor 销毁事件
+   */
   public destroy() {
     this.root.remove();
     // canvas 也需要销毁

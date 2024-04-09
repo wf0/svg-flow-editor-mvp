@@ -7,7 +7,9 @@ import html2canvas from "html2canvas";
 import { nextTick, toBlob } from "../../utils/index.ts";
 import { Graph } from "../Graph/index.ts";
 
-// canvas 相关绘制类
+/**
+ * canvas 相关绘制类
+ */
 export class CanvasDraw {
   private canvas!: HTMLCanvasElement;
   private ctx!: CanvasRenderingContext2D;

@@ -58,6 +58,8 @@ export class Command {
   public executeHistory: CommandAdapt["history"];
   public executeClose: CommandAdapt["close"];
   public executeBeautify: CommandAdapt["beautify"];
+
+  // 锁定
   public executeLock: CommandAdapt["lock"];
   public executeUnLock: CommandAdapt["unlock"];
 

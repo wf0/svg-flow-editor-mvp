@@ -12,7 +12,9 @@ const MIN_HEIGHT = 50;
 const MAX_WIDTH = 500;
 const MAX_HEIGHT = 500;
 
-//  graph svg 元图相关绘制类
+/**
+ * graph svg 元图相关绘制类
+ */
 export class GraphDraw {
   private draw: Draw;
   private move = false;

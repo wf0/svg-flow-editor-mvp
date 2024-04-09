@@ -9,6 +9,11 @@ import {
 } from "../Template/index.ts";
 import { Draw } from "./index.ts";
 
+/**
+ * 弹窗绘制类
+ *  包含了 搜索替换、主题、画布设置、图信息、背景的配置、抽屉实现
+ */
+
 export class DialogDraw {
   private draw: Draw;
   private dialogBox: HTMLDivElement;

@@ -16,13 +16,12 @@ import { SEchart } from "./Plugin/Echart.ts";
 import { Text } from "./Graph/Text.ts";
 import { IWebsocket } from "../interface/Websocket/index.ts";
 import { messageInfo } from "./Config/index.ts";
-import "../assets/iconfont/iconfont.css";
-import "../style/SFEditor.less";
 import { GTable } from "./Graph/GTable.ts";
 import { IPath, IPolygon, ITableConfig } from "../interface/Graph/index.ts";
 import { Polygon } from "./Graph/Polygon.ts";
 import { Path } from "./Graph/Path.ts";
-
+import "../assets/iconfont/iconfont.css";
+import "../style/SFEditor.less";
 // 定义插件类型
 type pluginName = "catalog" | "footer" | "operation" | "echart" | "websocket";
 
@@ -60,7 +59,7 @@ class SFEditor {
   }
 
   /**
-   * 圆 - 为了使得在形变过程中容易操作，故而底层使用椭圆进行重构
+   * 圆 - 为了使得在形变过程中容易操作，故而底层使用椭圆实现
    * @param radius 圆半径
    * @returns
    */
@@ -148,6 +147,26 @@ class SFEditor {
         const websocket = this.draw.getWebsocket();
         websocket.openWebSocket(payload);
       }
+    }
+  }
+
+  /**
+   * 卸载插件
+   * @param name
+   */
+  public unPlugin(name: pluginName) {
+    const root = this.draw.getRoot();
+    if (name === "footer") {
+      const footer = root.querySelector(".sf-editor-footer");
+      footer && footer.remove();
+    }
+    if (name === "catalog") {
+      const catalog = root.querySelector(".sf-editor-catalog");
+      catalog && catalog.remove();
+    }
+    if (name === "operation") {
+      const operation = root.querySelector(".sf-editor-operation");
+      operation && operation.remove();
     }
   }
 }

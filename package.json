@@ -8,10 +8,6 @@
     "type": "git",
     "url": "git+https://github.com/wf0/svg-flow-editor-mvp.git"
   },
-  "files": [
-    "public/",
-    "dist/"
-  ],
   "scripts": {
     "dev": "vite",
     "preview": "vite preview",

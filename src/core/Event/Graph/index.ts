@@ -2,13 +2,13 @@ import dayjs from "dayjs";
 import { IGraph, node } from "../../../interface/Graph/index.ts";
 import { Draw } from "../../Draw/index.ts";
 import { Line } from "../../Graph/Line.ts";
-// import { workerEvent } from "../../Worker/AuxiliaryLine.worker.ts";
-const worker = new Worker(
-  new URL("/public/libs/AuxiliaryLine.worker.ts", import.meta.url),
-  {
-    type: "module",
-  }
-);
+import { workerEvent } from "../../Worker/AuxiliaryLine.worker.ts";
+// const worker = new Worker(
+//   new URL("/src/core/Worker/AuxiliaryLine.worker.ts", import.meta.url),
+//   {
+//     type: "module",
+//   }
+// );
 
 /**
  * graph 元件事件响应
@@ -313,22 +313,11 @@ export class GraphEvent {
     const x = graph.getX();
     const y = graph.getY();
     const current: node = { nodeID, width, height, x, y };
-
-    // worker 方案
-    worker.postMessage({ current, nodes: this.nodes });
-    worker.onmessage = ({ data }) => {
-      // 清空所有的辅助线
-      if (!data.length) return this.draw.getCanvasDraw().unDrawAuxiliaryLine();
-      // 不然绘制辅助线
-      this.draw.getCanvasDraw().drawAuxiliaryLine(data);
-    };
-
-    // 同步方案
-    // const data = workerEvent(current, this.nodes);
-    // // 清空所有的辅助线
-    // if (!data.length) return this.draw.getCanvasDraw().unDrawAuxiliaryLine();
-    // // 不然绘制辅助线
-    // this.draw.getCanvasDraw().drawAuxiliaryLine(data);
+    const data = workerEvent(current, this.nodes);
+    // 清空所有的辅助线
+    if (!data.length) return this.draw.getCanvasDraw().unDrawAuxiliaryLine();
+    // 不然绘制辅助线
+    this.draw.getCanvasDraw().drawAuxiliaryLine(data);
   }
 
   /**
